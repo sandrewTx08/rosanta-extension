@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+
+  "name": "React TS starter for browser extensions",
+  "description": "Chrome Extension, TypeScript, React, Cross-platform",
+  "version": "1.0.0",
+
+  "background": {
+    "service_worker": "js/background.js"
+  },
+
+  "options_ui": {
+    "page": "options.html"
+  },
+
+  "action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  },
+
+  "host_permissions": ["*://*.roblox.com/*"],
+
+  "content_scripts": [
+    {
+      "matches": ["*://*.roblox.com/*"],
+      "js": ["js/vendor.js", "js/content_script.js"]
+    }
+  ],
+
+  "permissions": ["storage", "tabs", "webRequest"]
+}

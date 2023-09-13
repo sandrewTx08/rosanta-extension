@@ -6,9 +6,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const srcDir = join(__dirname, '..', 'src');
 
-export const isChromium = process.argv.indexOf('CHROMIUM') > -1;
-
 export default {
+  mode: 'production',
   entry: {
     popup: join(srcDir, 'popup.tsx'),
     options: join(srcDir, 'options.tsx'),
@@ -54,7 +53,7 @@ export default {
       patterns: [
         { from: 'icon.png', to: '../', context: 'public' },
         {
-          from: isChromium ? 'manifest-v2.json' : 'manifest-v2.json',
+          from: 'manifest-v3.json',
           to: '../manifest.json',
           context: 'public'
         },

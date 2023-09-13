@@ -27,5 +27,5 @@
     }
   ],
 
-  "permissions": ["storage", "tabs", "webRequest"]
+  "permissions": ["storage", "tabs", "webRequest", "notifications"]
 }

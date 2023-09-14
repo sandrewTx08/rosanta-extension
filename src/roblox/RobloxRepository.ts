@@ -38,7 +38,7 @@ export default class RobloxRepository {
   ): Promise<PurchasesProductsResponse> {
     return fetch(`https://economy.roblox.com/v1/purchases/products/${productId}`, {
       method: 'POST',
-      headers: { 'X-CSRF-TOKEN': xcsrftoken, 'x-csrf-token': xcsrftoken },
+      headers: { 'X-CSRF-TOKEN': xcsrftoken },
       body: JSON.stringify(productPurchaseDTO)
     }).then((response) => response.json());
   }

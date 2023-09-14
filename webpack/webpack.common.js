@@ -9,10 +9,9 @@ const srcDir = join(__dirname, '..', 'src');
 export default {
   mode: 'production',
   entry: {
-    popup: join(srcDir, 'popup.tsx'),
-    options: join(srcDir, 'options.tsx'),
-    background: join(srcDir, 'background.ts'),
-    content_script: join(srcDir, 'content_script.tsx')
+    popup: join(srcDir, 'components', 'Popup', 'index.tsx'),
+    options: join(srcDir, 'components', 'Options', 'index.tsx'),
+    background: join(srcDir, 'background.ts')
   },
   output: {
     path: join(__dirname, '../dist/js'),

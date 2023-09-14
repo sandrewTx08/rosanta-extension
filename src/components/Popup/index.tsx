@@ -1,7 +1,7 @@
 import { StrictMode, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Browser from 'webextension-polyfill';
-import AssetsPurchaser from './roblox/AssetsPurchaser';
+import AssetsPurchaser from '../../roblox/AssetsPurchaser';
 
 export const Popup = () => {
   const [enableBot, setEnableBot] = useState(false);

@@ -20,12 +20,5 @@
 
   "host_permissions": ["*://*.roblox.com/*"],
 
-  "content_scripts": [
-    {
-      "matches": ["*://*.roblox.com/*"],
-      "js": ["js/vendor.js", "js/content_script.js"]
-    }
-  ],
-
   "permissions": ["storage", "tabs", "webRequest", "notifications"]
 }

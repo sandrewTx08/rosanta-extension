@@ -6,7 +6,7 @@ import { robloxService } from '../roblox';
 import AlarmsTypes from '../AlarmsTypes';
 
 export default class Background {
-  SCHEDULER_MINUTES = 1;
+  ALERT_SCHEDULER_MINUTES = 1;
 
   constructor() {
     Browser.runtime.onInstalled.addListener(() => {
@@ -32,8 +32,8 @@ export default class Background {
         if (enableBot.newValue && !!Browser.alarms.get(AlarmsTypes.ACTIVE_BOT)) {
           this.fetchAssets();
           Browser.alarms.create(AlarmsTypes.ACTIVE_BOT, {
-            delayInMinutes: this.SCHEDULER_MINUTES,
-            periodInMinutes: this.SCHEDULER_MINUTES
+            delayInMinutes: this.ALERT_SCHEDULER_MINUTES,
+            periodInMinutes: this.ALERT_SCHEDULER_MINUTES
           });
         } else {
           Browser.alarms.clearAll();
@@ -51,7 +51,7 @@ export default class Background {
           data.productId,
           new CatalogItemsDetailsShedulerData(
             data,
-            new Date(Date.now() + this.SCHEDULER_MINUTES * i).toISOString()
+            new Date(Date.now() + this.ALERT_SCHEDULER_MINUTES * 60_000 * i).toISOString()
           )
         ])
       } as Storage);

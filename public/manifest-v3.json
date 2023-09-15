@@ -1,9 +1,14 @@
 {
   "manifest_version": 3,
 
-  "name": "React TS starter for browser extensions",
-  "description": "Chrome Extension, TypeScript, React, Cross-platform",
-  "version": "1.0.0",
+  "name": "RoSanta - Roblox free items",
+  "description": "Extension buy the newest and favorites free items from Roblox catalog in one click.",
+  "version": "0.1.0",
+  "author": "sandrewtx08@pm.me",
+
+  "icons": {
+    "128": "icon.png"
+  },
 
   "background": {
     "service_worker": "js/background.js"

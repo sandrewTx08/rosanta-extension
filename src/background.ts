@@ -7,6 +7,7 @@ interface Storage {
   catalogAssetDetails: [number, AssetsPurchaser][];
   enableBot: boolean;
   purchasesNotification: boolean;
+  catalogAssetDetailsTotal: number;
 }
 
 const PURCHASE_TIMEOUT = 60_000;
@@ -46,30 +47,32 @@ setInterval(() => {
 
           Browser.storage.local.set({
             catalogAssetDetails: catalogAssetDetails.filter(
-              ([p_id]) => p_id != catalogAssetDetails[0][0]
+              ([id]) => id != catalogAssetDetails[0][0]
             )
           });
         });
       }
     });
-}, (PURCHASE_TIMEOUT * 10) / 100);
+}, PURCHASE_TIMEOUT);
 
 Browser.runtime.onInstalled.addListener(() => {
   Browser.storage.local.set({
     enableBot: false,
     catalogAssetDetails: [],
-    purchasesNotification: true
+    purchasesNotification: true,
+    catalogAssetDetailsTotal: 0
   } as Storage);
 });
 
 Browser.storage.local.onChanged.addListener(({ enableBot }) => {
   if (enableBot?.newValue) {
     // @ts-ignore
-    Roblox.service.findManyFreeItemsAssetDetails().then((data: any[]) => {
+    Roblox.service.findManyFreeItemsAssetDetails().then((data) => {
       Browser.storage.local.set({
+        catalogAssetDetailsTotal: data.length,
         catalogAssetDetails: data.map<[number, AssetsPurchaser]>((data, i) => [
           data.productId,
-          { data, nextBuy: new Date(Date.now() + PURCHASE_TIMEOUT * i).toISOString() }
+          new AssetsPurchaser(data, new Date(Date.now() + PURCHASE_TIMEOUT * i).toISOString())
         ])
       });
     });

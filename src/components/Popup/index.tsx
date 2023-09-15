@@ -1,17 +1,25 @@
 import { StrictMode, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import Browser from 'webextension-polyfill';
-import AssetsPurchaser from '../../roblox/AssetsPurchaser';
+import Storage from '../../Storage';
+import CatalogItemsDetailsShedulerData from '../../roblox/CatalogItemsDetailsShedulerData';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export const Popup = () => {
   const [enableBot, setEnableBot] = useState(false);
   const [purchasesNotification, setpurchasesNotification] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [catalogAssetDetails, setCatalogAssetDetails] = useState<[number, AssetsPurchaser][]>([]);
-  const process = () =>
-    ((catalogAssetDetailsTotal - catalogAssetDetails.length) * 100) / catalogAssetDetailsTotal || 0;
+  const [catalogAssetDetails, setCatalogAssetDetails] = useState<
+    [number, CatalogItemsDetailsShedulerData][]
+  >([]);
   const [catalogAssetDetailsTotal, setCatalogAssetDetailsTotal] = useState(0);
+
+  function process() {
+    return (
+      ((catalogAssetDetailsTotal - catalogAssetDetails.length) * 100) / catalogAssetDetailsTotal ||
+      0
+    );
+  }
 
   useEffect(() => {
     setLoading(true);
@@ -22,9 +30,11 @@ export const Popup = () => {
         'catalogAssetDetails',
         'purchasesNotification',
         'catalogAssetDetailsTotal'
-      ])
+      ] as (keyof Storage)[])
       .then(
-        ({ enableBot, catalogAssetDetails, purchasesNotification, catalogAssetDetailsTotal }) => {
+        // prettier-ignore
+        // @ts-ignore
+        ({ enableBot, catalogAssetDetails, purchasesNotification, catalogAssetDetailsTotal }: Storage) => {
           setpurchasesNotification(purchasesNotification);
           setEnableBot(enableBot);
           setCatalogAssetDetails(catalogAssetDetails);
@@ -129,7 +139,7 @@ export const Popup = () => {
       )}
 
       {catalogAssetDetails.length > 0 ? (
-        <ul className="list-group overflow-y-scroll border-1" style={{ maxHeight: 120 }}>
+        <ul className="list-group overflow-y-scroll border" style={{ maxHeight: 120 }}>
           {catalogAssetDetails.map(([_, a], i) => (
             <li key={a.data.id} className={'list-group-item small' + (i == 0 && ' active')}>
               <b>{a.data.name}</b>
@@ -138,7 +148,9 @@ export const Popup = () => {
 
               <span className="muted">
                 {
-                  new Date(new Date(a.nextBuy).getTime() - new Date().getTimezoneOffset() * 60_000)
+                  new Date(
+                    new Date(a.alertISODate).getTime() - new Date().getTimezoneOffset() * 60_000
+                  )
                     .toISOString()
                     .split('T')[1]
                     .replace('Z', '')

@@ -1,12 +1,12 @@
 import Browser from 'webextension-polyfill';
 import ProductPurchaseDTO from '../roblox/ProductPurchaseDTO';
-import AssetsPurchaser from '../roblox/AssetsPurchaser';
+import CatalogItemsDetailsShedulerData from '../roblox/CatalogItemsDetailsShedulerData';
 import Storage from '../Storage';
 import { robloxService } from '../roblox';
 import AlarmsTypes from '../AlarmsTypes';
 
 export default class Background {
-  PURCHASE_TIMEOUT = 60_000;
+  SCHEDULER_MINUTES = 1;
 
   constructor() {
     Browser.runtime.onInstalled.addListener(() => {
@@ -31,7 +31,10 @@ export default class Background {
       if (enableBot) {
         if (enableBot.newValue && !!Browser.alarms.get(AlarmsTypes.ACTIVE_BOT)) {
           this.fetchAssets();
-          Browser.alarms.create(AlarmsTypes.ACTIVE_BOT, { delayInMinutes: 1, periodInMinutes: 1 });
+          Browser.alarms.create(AlarmsTypes.ACTIVE_BOT, {
+            delayInMinutes: this.SCHEDULER_MINUTES,
+            periodInMinutes: this.SCHEDULER_MINUTES
+          });
         } else {
           Browser.alarms.clearAll();
         }
@@ -44,23 +47,26 @@ export default class Background {
     robloxService.findManyFreeItemsAssetDetails().then((data) => {
       Browser.storage.local.set({
         catalogAssetDetailsTotal: data.length,
-        catalogAssetDetails: data.map<[number, AssetsPurchaser]>((data, i) => [
+        catalogAssetDetails: data.map<Storage['catalogAssetDetails'][0]>((data, i) => [
           data.productId,
-          new AssetsPurchaser(data, new Date(Date.now() + this.PURCHASE_TIMEOUT * i).toISOString())
+          new CatalogItemsDetailsShedulerData(
+            data,
+            new Date(Date.now() + this.SCHEDULER_MINUTES * i).toISOString()
+          )
         ])
-      });
+      } as Storage);
     });
   }
 
   purchaseFirstItem() {
     Browser.storage.local
-      .get(['catalogAssetDetails', 'enableBot', 'purchasesNotification'])
+      .get(['catalogAssetDetails', 'enableBot', 'purchasesNotification'] as (keyof Storage)[])
       // @ts-ignore
       .then(({ catalogAssetDetails, enableBot, purchasesNotification }: Storage) => {
         if (
           catalogAssetDetails &&
           enableBot &&
-          Date.now() >= new Date(catalogAssetDetails[0][1].nextBuy).getTime()
+          Date.now() >= new Date(catalogAssetDetails[0][1].alertISODate).getTime()
         ) {
           robloxService.getXCsrfToken().then((xcsrftoken) => {
             robloxService

@@ -1,7 +1,7 @@
-import AssetsPurchaser from './roblox/AssetsPurchaser';
+import CatalogItemsDetailsShedulerData from './roblox/CatalogItemsDetailsShedulerData';
 
 export default interface Storage {
-  catalogAssetDetails: [number, AssetsPurchaser][];
+  catalogAssetDetails: [number, CatalogItemsDetailsShedulerData][];
   enableBot: boolean;
   purchasesNotification: boolean;
   catalogAssetDetailsTotal: number;

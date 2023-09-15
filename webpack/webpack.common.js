@@ -11,7 +11,7 @@ export default {
   entry: {
     popup: join(srcDir, 'components', 'Popup', 'index.tsx'),
     options: join(srcDir, 'components', 'Options', 'index.tsx'),
-    background: join(srcDir, 'background.ts')
+    background: join(srcDir, 'background', 'index.ts')
   },
   output: {
     path: join(__dirname, '../dist/js'),

@@ -25,5 +25,5 @@
 
   "host_permissions": ["*://*.roblox.com/*"],
 
-  "permissions": ["storage", "tabs", "webRequest", "notifications"]
+  "permissions": ["storage", "tabs", "webRequest", "notifications", "alarms"]
 }

@@ -21,14 +21,20 @@ export default class RobloxService {
     );
   }
 
-  async findManyFreeItemsAssetDetails(totalPages = 5) {
+  async findManyFreeItemsAssetDetails(totalPages = 6) {
     const d: CatalogItemsDetailsQueryResponse['data'] = [];
 
     let c = await this.findOneFreeItemAssetDetails();
 
-    for (let i = 0; i <= totalPages; i++) {
-      c = await this.findOneFreeItemAssetDetails(c.nextPageCursor);
+    if (totalPages > 1) {
+      for (let i = 0; i < totalPages; i++) {
+        c = await this.findOneFreeItemAssetDetails(c.nextPageCursor);
 
+        for (const p of c.data) {
+          d.push(p);
+        }
+      }
+    } else {
       for (const p of c.data) {
         d.push(p);
       }

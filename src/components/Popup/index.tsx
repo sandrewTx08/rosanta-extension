@@ -6,16 +6,25 @@ import CatalogItemsDetailsShedulerData from '../../roblox/CatalogItemsDetailsShe
 import './index.scss';
 import { Form, Tab, Tabs } from 'react-bootstrap';
 import CatalogItemsLink from '../../roblox/CatalogItemsLink';
+import RobloxSchedulerBackground from '../../background/RobloxSchedulerBackground';
 
 const Popup = () => {
-  const [catalogItemsAutoBuyerEnabled, setcatalogItemsAutoBuyerEnabled] = useState(false);
-  const [catalogItemsAutoBuyerNotification, setcatalogItemsAutoBuyerNotification] = useState(false);
+  const [catalogItemsAutoBuyerEnabled, setcatalogItemsAutoBuyerEnabled] = useState(
+    RobloxSchedulerBackground.INITIAL_STORAGE.catalogItemsAutoBuyerEnabled
+  );
+  const [catalogItemsAutoBuyerNotification, setcatalogItemsAutoBuyerNotification] = useState(
+    RobloxSchedulerBackground.INITIAL_STORAGE.catalogItemsAutoBuyerNotification
+  );
   const [loading, setloading] = useState(false);
   const [catalogItemsAutoBuyerAssets, setcatalogItemsAutoBuyerAssets] = useState<
     [number, CatalogItemsDetailsShedulerData][]
-  >([]);
-  const [catalogItemsAutoBuyerAssetsTotal, setcatalogItemsAutoBuyerAssetsTotal] = useState(0);
-  const [catalogItemsAutoBuyerTotalPages, setcatalogItemsAutoBuyerTotalPages] = useState(0);
+  >(RobloxSchedulerBackground.INITIAL_STORAGE.catalogItemsAutoBuyerAssets);
+  const [catalogItemsAutoBuyerAssetsTotal, setcatalogItemsAutoBuyerAssetsTotal] = useState(
+    RobloxSchedulerBackground.INITIAL_STORAGE.catalogItemsAutoBuyerAssetsTotal
+  );
+  const [catalogItemsAutoBuyerTotalPages, setcatalogItemsAutoBuyerTotalPages] = useState(
+    RobloxSchedulerBackground.INITIAL_STORAGE.catalogItemsAutoBuyerTotalPages
+  );
 
   function processPercentage() {
     return (
@@ -28,13 +37,7 @@ const Popup = () => {
     setloading(true);
 
     Browser.storage.local
-      .get([
-        'catalogItemsAutoBuyerEnabled',
-        'catalogItemsAutoBuyerAssets',
-        'catalogItemsAutoBuyerNotification',
-        'catalogItemsAutoBuyerAssetsTotal',
-        'catalogItemsAutoBuyerTotalPages'
-      ] as (keyof Storage)[])
+      .get(null)
       .then(
         // prettier-ignore
         // @ts-ignore
@@ -83,7 +86,10 @@ const Popup = () => {
                 });
               } else {
                 Browser.storage.local
-                  .set({ catalogItemsAutoBuyerAssets: [], catalogItemsAutoBuyerEnabled: false })
+                  .set({
+                    catalogItemsAutoBuyerAssets: [] as any[],
+                    catalogItemsAutoBuyerEnabled: false
+                  } as Storage)
                   .then(() => {
                     setcatalogItemsAutoBuyerAssets([]);
                   })
@@ -122,10 +128,9 @@ const Popup = () => {
           )}
         </Form.Label>
         <Form.Range
-          disabled={catalogItemsAutoBuyerTotalPages <= 0}
           min={1}
           value={catalogItemsAutoBuyerTotalPages}
-          max={10}
+          max={RobloxSchedulerBackground.INITIAL_STORAGE.catalogItemsAutoBuyerTotalPages}
           onChange={(event) => {
             const value = Number.parseInt(event.target.value);
 

@@ -8,10 +8,9 @@ export default class CatalogItemsLink {
     switch (itemType) {
       case 'Bundle':
         return `https://www.roblox.com/bundles/${id}`;
+      default:
       case 'Asset':
         return `https://www.roblox.com/catalog/${id}`;
-      default:
-        throw new Error('Invalid item type');
     }
   }
 

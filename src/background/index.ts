@@ -1,3 +1,3 @@
-import Background from './Background';
+import RobloxSchedulerBackground from './RobloxSchedulerBackground';
 
-export const background = new Background();
+export const robloxSchedulerBackground = new RobloxSchedulerBackground();

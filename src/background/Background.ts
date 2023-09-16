@@ -4,6 +4,7 @@ import CatalogItemsDetailsShedulerData from '../roblox/CatalogItemsDetailsShedul
 import Storage from '../Storage';
 import { robloxService } from '../roblox';
 import AlarmsTypes from '../AlarmsTypes';
+import CatalogItemsLink from '../roblox/CatalogItemsLink';
 
 export default class Background {
   ALERT_SCHEDULER_MINUTES = 1;
@@ -83,10 +84,9 @@ export default class Background {
                     iconUrl: '../icon.png',
                     type: 'basic',
                     isClickable: true,
-                    contextMessage:
-                      catalogAssetDetails[0][1].data.itemType == 'Bundle'
-                        ? `https://www.roblox.com/bundles/${catalogAssetDetails[0][1].data.id}`
-                        : `https://www.roblox.com/catalog/${catalogAssetDetails[0][0]}`
+                    contextMessage: CatalogItemsLink.parseCatalogDetails(
+                      catalogAssetDetails[0][1].data
+                    )
                   });
                 }
               });

@@ -78,7 +78,14 @@ export const Popup = () => {
                 enableBot: event.target.checked
               });
             } else {
-              setLoading(false);
+              Browser.storage.local
+                .set({ catalogAssetDetails: [], enableBot: false })
+                .then(() => {
+                  setCatalogAssetDetails([]);
+                })
+                .finally(() => {
+                  setLoading(false);
+                });
             }
           }}
         />

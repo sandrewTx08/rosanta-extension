@@ -7,58 +7,60 @@ import './index.scss';
 import { Tab, Tabs } from 'react-bootstrap';
 import CatalogItemsLink from '../../roblox/CatalogItemsLink';
 
-export const Popup = () => {
-  const [enableBot, setEnableBot] = useState(false);
-  const [purchasesNotification, setpurchasesNotification] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [catalogAssetDetails, setCatalogAssetDetails] = useState<
+const Popup = () => {
+  const [catalogItemsAutoBuyerEnabled, setcatalogItemsAutoBuyerEnabled] = useState(false);
+  const [catalogItemsAutoBuyerNotification, setcatalogItemsAutoBuyerNotification] = useState(false);
+  const [loading, setloading] = useState(false);
+  const [catalogItemsAutoBuyerAssets, setcatalogItemsAutoBuyerAssets] = useState<
     [number, CatalogItemsDetailsShedulerData][]
   >([]);
-  const [catalogAssetDetailsTotal, setCatalogAssetDetailsTotal] = useState(0);
+  const [catalogItemsAutoBuyerAssetsTotal, setcatalogItemsAutoBuyerAssetsTotal] = useState(0);
 
-  function process() {
+  function processPercentage() {
     return (
-      ((catalogAssetDetailsTotal - catalogAssetDetails.length) * 100) / catalogAssetDetailsTotal ||
-      0
+      ((catalogItemsAutoBuyerAssetsTotal - catalogItemsAutoBuyerAssets.length) * 100) /
+        catalogItemsAutoBuyerAssetsTotal || 0
     );
   }
 
   useEffect(() => {
-    setLoading(true);
+    setloading(true);
 
     Browser.storage.local
       .get([
-        'enableBot',
-        'catalogAssetDetails',
-        'purchasesNotification',
-        'catalogAssetDetailsTotal'
+        'catalogItemsAutoBuyerEnabled',
+        'catalogItemsAutoBuyerAssets',
+        'catalogItemsAutoBuyerNotification',
+        'catalogItemsAutoBuyerAssetsTotal'
       ] as (keyof Storage)[])
       .then(
         // prettier-ignore
         // @ts-ignore
-        ({ enableBot, catalogAssetDetails, purchasesNotification, catalogAssetDetailsTotal }: Storage) => {
-          setpurchasesNotification(purchasesNotification);
-          setEnableBot(enableBot);
-          setCatalogAssetDetails(catalogAssetDetails);
-          setCatalogAssetDetailsTotal(catalogAssetDetailsTotal);
+        ({ catalogItemsAutoBuyerEnabled, catalogItemsAutoBuyerAssets, catalogItemsAutoBuyerNotification, catalogItemsAutoBuyerAssetsTotal }: Storage) => {
+          setcatalogItemsAutoBuyerNotification(catalogItemsAutoBuyerNotification);
+          setcatalogItemsAutoBuyerEnabled(catalogItemsAutoBuyerEnabled);
+          setcatalogItemsAutoBuyerAssets(catalogItemsAutoBuyerAssets);
+          setcatalogItemsAutoBuyerAssetsTotal(catalogItemsAutoBuyerAssetsTotal);
         }
       )
       .finally(() => {
-        setLoading(false);
+        setloading(false);
       });
 
     Browser.storage.local.onChanged.addListener(
-      ({ catalogAssetDetails, catalogAssetDetailsTotal }) => {
-        if (catalogAssetDetails) {
-          setCatalogAssetDetails(catalogAssetDetails.newValue);
-          setCatalogAssetDetailsTotal((value) => catalogAssetDetailsTotal?.newValue || value);
-          setLoading(false);
+      ({ catalogItemsAutoBuyerAssets, catalogItemsAutoBuyerAssetsTotal }) => {
+        if (catalogItemsAutoBuyerAssets) {
+          setcatalogItemsAutoBuyerAssets(catalogItemsAutoBuyerAssets.newValue);
+          setcatalogItemsAutoBuyerAssetsTotal(
+            (value) => catalogItemsAutoBuyerAssetsTotal?.newValue || value
+          );
+          setloading(false);
         }
       }
     );
   }, []);
 
-  function FreeItemsAutoBuyer() {
+  function CatalogItemsAutoBuyerTab() {
     return (
       <div className="p-3 d-flex flex-column gap-3">
         <div className="form-check form-switch">
@@ -67,23 +69,23 @@ export const Popup = () => {
             type="checkbox"
             role="switch"
             disabled={loading}
-            checked={enableBot}
+            checked={catalogItemsAutoBuyerEnabled}
             onChange={(event) => {
-              setLoading(true);
-              setEnableBot(event.target.checked);
+              setloading(true);
+              setcatalogItemsAutoBuyerEnabled(event.target.checked);
 
               if (event.target.checked) {
                 Browser.storage.local.set({
-                  enableBot: event.target.checked
+                  catalogItemsAutoBuyerEnabled: event.target.checked
                 });
               } else {
                 Browser.storage.local
-                  .set({ catalogAssetDetails: [], enableBot: false })
+                  .set({ catalogItemsAutoBuyerAssets: [], catalogItemsAutoBuyerEnabled: false })
                   .then(() => {
-                    setCatalogAssetDetails([]);
+                    setcatalogItemsAutoBuyerAssets([]);
                   })
                   .finally(() => {
-                    setLoading(false);
+                    setloading(false);
                   });
               }
             }}
@@ -96,38 +98,43 @@ export const Popup = () => {
             className="form-check-input"
             disabled={loading}
             type="checkbox"
-            checked={purchasesNotification}
+            checked={catalogItemsAutoBuyerNotification}
             onChange={(event) => {
-              setpurchasesNotification(event.target.checked);
+              setcatalogItemsAutoBuyerNotification(event.target.checked);
 
               Browser.storage.local.set({
-                purchasesNotification: event.target.checked
+                catalogItemsAutoBuyerNotification: event.target.checked
               });
             }}
           />
           <label className="form-check-label">Notifications</label>
         </div>
 
-        {catalogAssetDetails.length > 0 ? (
+        {catalogItemsAutoBuyerAssets.length > 0 ? (
           <div className="d-flex gap-3 flex-column">
             <div className="progress">
-              <div className="progress-bar" role="progressbar" style={{ width: `${process()}%` }}>
-                {process().toFixed(0)}%
+              <div
+                className="progress-bar"
+                role="progressbar"
+                style={{ width: `${processPercentage()}%` }}
+              >
+                {processPercentage().toFixed(0)}%
               </div>
             </div>
 
             <div>
-              Progress <b>{catalogAssetDetailsTotal - catalogAssetDetails.length}</b> of{' '}
-              <b>{catalogAssetDetailsTotal}</b>
+              Progress{' '}
+              <b>{catalogItemsAutoBuyerAssetsTotal - catalogItemsAutoBuyerAssets.length}</b> of{' '}
+              <b>{catalogItemsAutoBuyerAssetsTotal}</b>
             </div>
 
             <ul className="list-group overflow-y-scroll border" style={{ maxHeight: 120 }}>
-              {catalogAssetDetails.map(([_, a], i) => (
+              {catalogItemsAutoBuyerAssets.map(([_, a], i) => (
                 <li key={a.data.id} className={'list-group-item' + (i == 0 ? ' active' : '')}>
                   <small>
                     <b>
                       <a
-                        className={'' + (i == 0 ? 'text-light' : 'text-black')}
+                        className={'' + (i == 0 ? ' text-light' : ' text-black')}
                         href={CatalogItemsLink.parseCatalogDetails(a.data)}
                         target="_blank"
                       >
@@ -156,18 +163,18 @@ export const Popup = () => {
             <button
               type="button"
               className="btn btn-sm btn-warning rounded-pill"
-              disabled={catalogAssetDetails.length <= 0}
+              disabled={catalogItemsAutoBuyerAssets.length <= 0}
               onClick={() => {
-                setLoading(true);
-                setEnableBot(false);
+                setloading(true);
+                setcatalogItemsAutoBuyerEnabled(false);
 
                 Browser.storage.local
-                  .set({ catalogAssetDetails: [], enableBot: false })
+                  .set({ catalogItemsAutoBuyerAssets: [], catalogItemsAutoBuyerEnabled: false })
                   .then(() => {
-                    setCatalogAssetDetails([]);
+                    setcatalogItemsAutoBuyerAssets([]);
                   })
                   .finally(() => {
-                    setLoading(false);
+                    setloading(false);
                   });
               }}
             >
@@ -195,7 +202,7 @@ export const Popup = () => {
 
       <Tabs defaultActiveKey="tab1" justify>
         <Tab eventKey="tab1" title="Free items auto-buyer">
-          <FreeItemsAutoBuyer />
+          <CatalogItemsAutoBuyerTab />
         </Tab>
         <Tab eventKey="tab2" title="UGC limited notifier" disabled></Tab>
       </Tabs>

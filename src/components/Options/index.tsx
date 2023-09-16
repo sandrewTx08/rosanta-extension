@@ -1,11 +1,10 @@
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
+import './index.scss';
 
 const Options = () => {
-  return <h1>Nothing here.</h1>;
+  return <div className="display-1">Nothing here.</div>;
 };
-
-export default Options;
 
 ReactDOM.render(
   <StrictMode>

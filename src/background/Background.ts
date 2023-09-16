@@ -12,10 +12,10 @@ export default class Background {
   constructor() {
     Browser.runtime.onInstalled.addListener(() => {
       Browser.storage.local.set({
-        enableBot: false,
-        catalogAssetDetails: [],
-        purchasesNotification: true,
-        catalogAssetDetailsTotal: 0
+        catalogItemsAutoBuyerEnabled: false,
+        catalogItemsAutoBuyerAssets: [],
+        catalogItemsAutoBuyerNotification: true,
+        catalogItemsAutoBuyerAssetsTotal: 0
       } as Storage);
     });
 
@@ -28,9 +28,9 @@ export default class Background {
       }
     });
 
-    Browser.storage.local.onChanged.addListener(({ enableBot }) => {
-      if (enableBot) {
-        if (enableBot.newValue && !!Browser.alarms.get(AlarmsTypes.ACTIVE_BOT)) {
+    Browser.storage.local.onChanged.addListener(({ catalogItemsAutoBuyerEnabled }) => {
+      if (catalogItemsAutoBuyerEnabled) {
+        if (catalogItemsAutoBuyerEnabled.newValue && !!Browser.alarms.get(AlarmsTypes.ACTIVE_BOT)) {
           this.fetchAssets();
           Browser.alarms.create(AlarmsTypes.ACTIVE_BOT, {
             delayInMinutes: this.ALERT_SCHEDULER_MINUTES,
@@ -47,57 +47,73 @@ export default class Background {
     // @ts-ignore
     robloxService.findManyFreeItemsAssetDetails().then((data) => {
       Browser.storage.local.set({
-        catalogAssetDetailsTotal: data.length,
-        catalogAssetDetails: data.map<Storage['catalogAssetDetails'][0]>((data, i) => [
-          data.productId,
-          new CatalogItemsDetailsShedulerData(
-            data,
-            new Date(Date.now() + this.ALERT_SCHEDULER_MINUTES * 60_000 * i).toISOString()
-          )
-        ])
+        catalogItemsAutoBuyerAssetsTotal: data.length,
+        catalogItemsAutoBuyerAssets: data.map<Storage['catalogItemsAutoBuyerAssets'][0]>(
+          (data, i) => [
+            data.productId,
+            new CatalogItemsDetailsShedulerData(
+              data,
+              new Date(Date.now() + this.ALERT_SCHEDULER_MINUTES * 60_000 * i).toISOString()
+            )
+          ]
+        )
       } as Storage);
     });
   }
 
   purchaseFirstItem() {
     Browser.storage.local
-      .get(['catalogAssetDetails', 'enableBot', 'purchasesNotification'] as (keyof Storage)[])
-      // @ts-ignore
-      .then(({ catalogAssetDetails, enableBot, purchasesNotification }: Storage) => {
-        if (
-          catalogAssetDetails &&
-          enableBot &&
-          Date.now() >= new Date(catalogAssetDetails[0][1].alertISODate).getTime()
-        ) {
-          robloxService.getXCsrfToken().then((xcsrftoken) => {
-            robloxService
-              .purchaseProduct(
-                catalogAssetDetails[0][0],
-                new ProductPurchaseDTO(0, 0, catalogAssetDetails[0][1].data.creatorTargetId),
-                xcsrftoken
-              )
-              .then(({ purchased }) => {
-                if (purchased && purchasesNotification) {
-                  Browser.notifications.create({
-                    message: catalogAssetDetails[0][1].data.description,
-                    title: catalogAssetDetails[0][1].data.name,
-                    iconUrl: '../icon.png',
-                    type: 'basic',
-                    isClickable: true,
-                    contextMessage: CatalogItemsLink.parseCatalogDetails(
-                      catalogAssetDetails[0][1].data
-                    )
-                  });
-                }
-              });
+      .get([
+        'catalogItemsAutoBuyerAssets',
+        'catalogItemsAutoBuyerEnabled',
+        'catalogItemsAutoBuyerNotification'
+      ] as (keyof Storage)[])
 
-            Browser.storage.local.set({
-              catalogAssetDetails: catalogAssetDetails.filter(
-                ([id]) => id != catalogAssetDetails[0][0]
-              )
+      .then(
+        // @ts-ignore
+        (
+          // prettier-ignore
+          { catalogItemsAutoBuyerAssets, catalogItemsAutoBuyerEnabled, catalogItemsAutoBuyerNotification }: Storage
+        ) => {
+          if (
+            catalogItemsAutoBuyerAssets &&
+            catalogItemsAutoBuyerEnabled &&
+            Date.now() >= new Date(catalogItemsAutoBuyerAssets[0][1].alertISODate).getTime()
+          ) {
+            robloxService.getXCsrfToken().then((xcsrftoken) => {
+              robloxService
+                .purchaseProduct(
+                  catalogItemsAutoBuyerAssets[0][0],
+                  new ProductPurchaseDTO(
+                    0,
+                    0,
+                    catalogItemsAutoBuyerAssets[0][1].data.creatorTargetId
+                  ),
+                  xcsrftoken
+                )
+                .then(({ purchased }) => {
+                  if (purchased && catalogItemsAutoBuyerNotification) {
+                    Browser.notifications.create({
+                      message: catalogItemsAutoBuyerAssets[0][1].data.description,
+                      title: catalogItemsAutoBuyerAssets[0][1].data.name,
+                      iconUrl: '../icon.png',
+                      type: 'basic',
+                      isClickable: true,
+                      contextMessage: CatalogItemsLink.parseCatalogDetails(
+                        catalogItemsAutoBuyerAssets[0][1].data
+                      ),
+                    });
+                  }
+                });
+
+              Browser.storage.local.set({
+                catalogItemsAutoBuyerAssets: catalogItemsAutoBuyerAssets.filter(
+                  ([id]) => id != catalogItemsAutoBuyerAssets[0][0]
+                )
+              });
             });
-          });
+          }
         }
-      });
+      );
   }
 }

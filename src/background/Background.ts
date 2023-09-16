@@ -53,7 +53,7 @@ export default class Background {
             data.productId,
             new CatalogItemsDetailsShedulerData(
               data,
-              new Date(Date.now() + this.ALERT_SCHEDULER_MINUTES * 60_000 * i).toISOString()
+              new Date(Date.now() + this.ALERT_SCHEDULER_MINUTES * 60_000 * (i + 1)).toISOString()
             )
           ]
         )
@@ -101,7 +101,7 @@ export default class Background {
                       isClickable: true,
                       contextMessage: CatalogItemsLink.parseCatalogDetails(
                         catalogItemsAutoBuyerAssets[0][1].data
-                      ),
+                      )
                     });
                   }
                 });

@@ -4,7 +4,7 @@ import Browser from 'webextension-polyfill';
 import Storage from '../../Storage';
 import CatalogItemsDetailsShedulerData from '../../roblox/CatalogItemsDetailsShedulerData';
 import './index.scss';
-import { Tab, Tabs } from 'react-bootstrap';
+import { Form, Tab, Tabs } from 'react-bootstrap';
 import CatalogItemsLink from '../../roblox/CatalogItemsLink';
 
 const Popup = () => {
@@ -15,6 +15,7 @@ const Popup = () => {
     [number, CatalogItemsDetailsShedulerData][]
   >([]);
   const [catalogItemsAutoBuyerAssetsTotal, setcatalogItemsAutoBuyerAssetsTotal] = useState(0);
+  const [catalogItemsAutoBuyerTotalPages, setcatalogItemsAutoBuyerTotalPages] = useState(0);
 
   function processPercentage() {
     return (
@@ -31,16 +32,18 @@ const Popup = () => {
         'catalogItemsAutoBuyerEnabled',
         'catalogItemsAutoBuyerAssets',
         'catalogItemsAutoBuyerNotification',
-        'catalogItemsAutoBuyerAssetsTotal'
+        'catalogItemsAutoBuyerAssetsTotal',
+        'catalogItemsAutoBuyerTotalPages'
       ] as (keyof Storage)[])
       .then(
         // prettier-ignore
         // @ts-ignore
-        ({ catalogItemsAutoBuyerEnabled, catalogItemsAutoBuyerAssets, catalogItemsAutoBuyerNotification, catalogItemsAutoBuyerAssetsTotal }: Storage) => {
+        ({ catalogItemsAutoBuyerEnabled, catalogItemsAutoBuyerAssets, catalogItemsAutoBuyerNotification, catalogItemsAutoBuyerAssetsTotal, catalogItemsAutoBuyerTotalPages }: Storage) => {
           setcatalogItemsAutoBuyerNotification(catalogItemsAutoBuyerNotification);
           setcatalogItemsAutoBuyerEnabled(catalogItemsAutoBuyerEnabled);
           setcatalogItemsAutoBuyerAssets(catalogItemsAutoBuyerAssets);
           setcatalogItemsAutoBuyerAssetsTotal(catalogItemsAutoBuyerAssetsTotal);
+          setcatalogItemsAutoBuyerTotalPages(catalogItemsAutoBuyerTotalPages)
         }
       )
       .finally(() => {
@@ -109,6 +112,30 @@ const Popup = () => {
           />
           <label className="form-check-label">Notifications</label>
         </div>
+
+        <Form.Label>
+          Total of pages
+          {catalogItemsAutoBuyerTotalPages > 0 && (
+            <>
+              : <b>{catalogItemsAutoBuyerTotalPages}</b>
+            </>
+          )}
+        </Form.Label>
+        <Form.Range
+          disabled={catalogItemsAutoBuyerTotalPages <= 0}
+          min={1}
+          value={catalogItemsAutoBuyerTotalPages}
+          max={10}
+          onChange={(event) => {
+            const value = Number.parseInt(event.target.value);
+
+            setcatalogItemsAutoBuyerTotalPages(value);
+
+            Browser.storage.local.set({
+              catalogItemsAutoBuyerTotalPages: value
+            });
+          }}
+        />
 
         {catalogItemsAutoBuyerAssets.length > 0 ? (
           <div className="d-flex gap-3 flex-column">

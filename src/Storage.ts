@@ -5,4 +5,5 @@ export default interface Storage {
   catalogItemsAutoBuyerEnabled: boolean;
   catalogItemsAutoBuyerNotification: boolean;
   catalogItemsAutoBuyerAssetsTotal: number;
+  catalogItemsAutoBuyerTotalPages: number;
 }

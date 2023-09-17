@@ -3,8 +3,8 @@ import ProductPurchaseDTO from '../roblox/ProductPurchaseDTO';
 import CatalogItemsDetailsShedulerData from '../roblox/CatalogItemsDetailsShedulerData';
 import Storage from '../Storage';
 import { robloxService } from '../roblox';
-import AlarmsTypes from '../AlarmsTypes';
 import CatalogItemsLink from '../roblox/CatalogItemsLink';
+import AlarmsTypes from '../AlarmsTypes';
 
 export default class RobloxSchedulerBackground {
   ALERT_SCHEDULER_MINUTES = 1;
@@ -23,19 +23,24 @@ export default class RobloxSchedulerBackground {
     });
 
     Browser.alarms.onAlarm.addListener(({ name }) => {
-      this.alarmCallback(AlarmsTypes[name]);
+      this.alarmsTypes(name);
     });
 
     Browser.storage.local.onChanged.addListener(({ catalogItemsAutoBuyerEnabled }) => {
-      this.enableScheduler(catalogItemsAutoBuyerEnabled && catalogItemsAutoBuyerEnabled.newValue);
+      if (catalogItemsAutoBuyerEnabled) {
+        this.catalogItemsAutoBuyerEnabled(catalogItemsAutoBuyerEnabled.newValue);
+      }
     });
   }
 
-  enableScheduler(catalogItemsAutoBuyerEnabled: boolean) {
-    if (catalogItemsAutoBuyerEnabled && !!Browser.alarms.get(AlarmsTypes.ACTIVE_BOT)) {
-      this.fetchAssetDetails();
-      Browser.alarms.create(AlarmsTypes.ACTIVE_BOT, {
-        delayInMinutes: this.ALERT_SCHEDULER_MINUTES,
+  async catalogItemsAutoBuyerEnabled(catalogItemsAutoBuyerEnabled: boolean) {
+    if (
+      catalogItemsAutoBuyerEnabled &&
+      !!Browser.alarms.get(AlarmsTypes.catalogItemsAutoBuyerEnabled)
+    ) {
+      await this.fetchAssetDetails();
+
+      Browser.alarms.create(AlarmsTypes.catalogItemsAutoBuyerEnabled, {
         periodInMinutes: this.ALERT_SCHEDULER_MINUTES
       });
     } else {
@@ -43,25 +48,23 @@ export default class RobloxSchedulerBackground {
     }
   }
 
-  async alarmCallback(alarmsTypes: AlarmsTypes) {
+  async alarmsTypes(alarmsTypes: string) {
     switch (alarmsTypes) {
-      case AlarmsTypes.ACTIVE_BOT: {
-        const length = await this.purchaseFirstItem();
+      case AlarmsTypes.catalogItemsAutoBuyerEnabled: {
+        // @ts-ignore
+        const storage: Storage = await Browser.storage.local.get(null);
+        const l = await this.purchaseFirstItem(storage);
 
-        if (length && length <= 0) {
+        if (l && l <= 0) {
           await Browser.storage.local.set({ catalogItemsAutoBuyerEnabled: false } as Storage);
 
-          const value = await Browser.alarms.clearAll();
-
-          if (value) {
+          if (await Browser.alarms.clearAll()) {
             await Browser.storage.local.set({
               catalogItemsAutoBuyerEnabled: true
             } as Storage);
           }
 
-          const { catalogItemsAutoBuyerNotification } = await Browser.storage.local.get(null);
-
-          if (catalogItemsAutoBuyerNotification) {
+          if (storage.catalogItemsAutoBuyerNotification) {
             await Browser.notifications.create({
               message: '',
               title: 'RoSanta auto-buyer is finished successfully',
@@ -97,39 +100,40 @@ export default class RobloxSchedulerBackground {
     } as Storage);
   }
 
-  async purchaseFirstItem() {
-    // @ts-ignore
-    const stoge: Storage = await Browser.storage.local.get(null);
-
-    if (stoge.catalogItemsAutoBuyerAssets && stoge.catalogItemsAutoBuyerEnabled) {
+  async purchaseFirstItem(storage: Storage) {
+    if (storage.catalogItemsAutoBuyerAssets.length > 0) {
       const xcsrftoken = await robloxService.getXCsrfToken();
 
       const { purchased } = await robloxService.purchaseProduct(
-        stoge.catalogItemsAutoBuyerAssets[0][0],
-        new ProductPurchaseDTO(0, 0, stoge.catalogItemsAutoBuyerAssets[0][1].data.creatorTargetId),
+        storage.catalogItemsAutoBuyerAssets[0][0],
+        new ProductPurchaseDTO(
+          0,
+          0,
+          storage.catalogItemsAutoBuyerAssets[0][1].data.creatorTargetId
+        ),
         xcsrftoken
       );
 
-      if (purchased && stoge.catalogItemsAutoBuyerNotification) {
+      if (purchased && storage.catalogItemsAutoBuyerNotification) {
         await Browser.notifications.create({
-          message: stoge.catalogItemsAutoBuyerAssets[0][1].data.description,
-          title: stoge.catalogItemsAutoBuyerAssets[0][1].data.name,
+          message: storage.catalogItemsAutoBuyerAssets[0][1].data.description,
+          title: storage.catalogItemsAutoBuyerAssets[0][1].data.name,
           iconUrl: '../icon.png',
           type: 'basic',
           isClickable: true,
           contextMessage: CatalogItemsLink.parseCatalogDetails(
-            stoge.catalogItemsAutoBuyerAssets[0][1].data
+            storage.catalogItemsAutoBuyerAssets[0][1].data
           )
         });
       }
 
       await Browser.storage.local.set({
-        catalogItemsAutoBuyerAssets: stoge.catalogItemsAutoBuyerAssets.filter(
-          ([id]) => id != stoge.catalogItemsAutoBuyerAssets[0][0]
+        catalogItemsAutoBuyerAssets: storage.catalogItemsAutoBuyerAssets.filter(
+          ([id]) => id != storage.catalogItemsAutoBuyerAssets[0][0]
         )
       });
 
-      return stoge.catalogItemsAutoBuyerAssets.length;
+      return storage.catalogItemsAutoBuyerAssets.length;
     }
   }
 }

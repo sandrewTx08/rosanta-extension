@@ -1,5 +1,5 @@
 enum AlarmsTypes {
-  ACTIVE_BOT = 'active_bot'
+  catalogItemsAutoBuyerEnabled = 'catalogItemsAutoBuyerEnabled'
 }
 
 export default AlarmsTypes;

@@ -157,20 +157,6 @@ export const CatalogItemsAutoBuyerTab: React.FC<{
                   </a>
                 </b>
               </small>
-
-              <br />
-
-              <small className="muted">
-                {
-                  new Date(
-                    new Date(a.alertISODate).getTime() - new Date().getTimezoneOffset() * 60000
-                  )
-                    .toISOString()
-                    .split('T')[1]
-                    .replace('Z', '')
-                    .split('.')[0]
-                }
-              </small>
             </li>
           ))}
         </ul>

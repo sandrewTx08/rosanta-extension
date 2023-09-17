@@ -90,15 +90,10 @@ export default class RobloxSchedulerBackground {
 
     return Browser.storage.local.set({
       catalogItemsAutoBuyerAssetsTotal: data.length,
-      catalogItemsAutoBuyerAssets: data.map<Storage['catalogItemsAutoBuyerAssets'][0]>(
-        (data, i) => [
-          data.productId,
-          new CatalogItemsDetailsShedulerData(
-            data,
-            new Date(Date.now() + this.ALERT_SCHEDULER_MINUTES * 60_000 * (i + 1)).toISOString()
-          )
-        ]
-      )
+      catalogItemsAutoBuyerAssets: data.map<Storage['catalogItemsAutoBuyerAssets'][0]>((data) => [
+        data.productId,
+        new CatalogItemsDetailsShedulerData(data)
+      ])
     } as Storage);
   }
 

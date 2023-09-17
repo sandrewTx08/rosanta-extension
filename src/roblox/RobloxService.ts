@@ -15,24 +15,36 @@ export default class RobloxService {
     return this.#robloxRepository.getXCsrfTokenByPresence();
   }
 
-  findOneFreeItemAssetDetails(cursor: string = '') {
+  findOneFreeItemAssetDetails(
+    nextPageCursor: string = '',
+    catalogItemsAutoBuyerLimit: CatalogItemsDetailsQueryParamDTO['Limit'] = 10
+  ) {
     return this.#robloxRepository.findManyAssetDetails(
-      new CatalogItemsDetailsQueryParamDTO(1, 1, 2, true, 120, 0, 0, 1, 3),
-      cursor
+      new CatalogItemsDetailsQueryParamDTO(1, 1, 2, true, catalogItemsAutoBuyerLimit, 0, 0, 1, 3),
+      nextPageCursor
     );
   }
 
   async findManyFreeItemsAssetDetails(
-    totalPages = RobloxSchedulerBackground.INITIAL_STORAGE.catalogItemsAutoBuyerTotalPages
+    catalogItemsAutoBuyerTotalPages = RobloxSchedulerBackground.INITIAL_STORAGE
+      .catalogItemsAutoBuyerTotalPages,
+    catalogItemsAutoBuyerLimit = RobloxSchedulerBackground.INITIAL_STORAGE
+      .catalogItemsAutoBuyerLimit
   ) {
     const d: CatalogItemsDetailsQueryResponse['data'] = [];
 
-    let c = await this.findOneFreeItemAssetDetails();
+    let c = await this.findOneFreeItemAssetDetails(
+      '',
+      catalogItemsAutoBuyerLimit as CatalogItemsDetailsQueryParamDTO['Limit']
+    );
 
-    if (totalPages > 1) {
-      for (let i = 0; i < totalPages; i++) {
+    if (catalogItemsAutoBuyerTotalPages > 1) {
+      for (let i = 0; i < catalogItemsAutoBuyerTotalPages; i++) {
         if (('nextPageCursor' as keyof typeof c) in c && c.nextPageCursor) {
-          c = await this.findOneFreeItemAssetDetails(c.nextPageCursor);
+          c = await this.findOneFreeItemAssetDetails(
+            c.nextPageCursor,
+            catalogItemsAutoBuyerLimit as CatalogItemsDetailsQueryParamDTO['Limit']
+          );
 
           for (const p of c.data) {
             d.push(p);
@@ -40,8 +52,10 @@ export default class RobloxService {
         }
       }
     } else {
-      for (const p of c.data) {
-        d.push(p);
+      if (('nextPageCursor' as keyof typeof c) in c && c.nextPageCursor) {
+        for (const p of c.data) {
+          d.push(p);
+        }
       }
     }
 

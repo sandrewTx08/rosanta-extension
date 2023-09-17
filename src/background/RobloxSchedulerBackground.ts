@@ -53,9 +53,9 @@ export default class RobloxSchedulerBackground {
       case AlarmsTypes.catalogItemsAutoBuyerEnabled: {
         // @ts-ignore
         const storage: Storage = await Browser.storage.local.get(null);
-        const l = await this.purchaseFirstItem(storage);
+        await this.purchaseFirstItem(storage);
 
-        if (l && l <= 0) {
+        if (storage.catalogItemsAutoBuyerAssets.length <= 1) {
           await Browser.storage.local.set({ catalogItemsAutoBuyerEnabled: false } as Storage);
 
           if (await Browser.alarms.clearAll()) {
@@ -132,8 +132,8 @@ export default class RobloxSchedulerBackground {
           ([id]) => id != storage.catalogItemsAutoBuyerAssets[0][0]
         )
       });
-
-      return storage.catalogItemsAutoBuyerAssets.length;
     }
+
+    return storage.catalogItemsAutoBuyerAssets.length;
   }
 }

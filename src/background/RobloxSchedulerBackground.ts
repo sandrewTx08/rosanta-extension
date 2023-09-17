@@ -10,6 +10,7 @@ export default class RobloxSchedulerBackground {
   ALERT_SCHEDULER_MINUTES = 1;
 
   static INITIAL_STORAGE: Storage = {
+    catalogItemsAutoBuyerLimit: 120,
     catalogItemsAutoBuyerEnabled: false,
     catalogItemsAutoBuyerAssets: [],
     catalogItemsAutoBuyerNotification: true,
@@ -83,7 +84,8 @@ export default class RobloxSchedulerBackground {
     // @ts-ignore
     const storage: Storage = await Browser.storage.local.get(null);
     const data = await robloxService.findManyFreeItemsAssetDetails(
-      storage.catalogItemsAutoBuyerTotalPages
+      storage.catalogItemsAutoBuyerTotalPages,
+      storage.catalogItemsAutoBuyerLimit
     );
 
     return Browser.storage.local.set({

@@ -1,13 +1,13 @@
 export default class CatalogItemsDetailsQueryParamDTO {
   constructor(
-    public Category: number,
+    public category: number,
     public salesTypeFilter: number,
-    public SortType: number,
-    public IncludeNotForSale: boolean,
-    public Limit: 10 | 30 | 60 | 120,
-    public pxMin: number,
-    public pxMax: number,
-    public SortAggregation: number,
-    public CurrencyType: number
+    public sortType: number,
+    public includeNotForSale: boolean,
+    public limit: 10 | 30 | 60 | 120,
+    public minPrice: number,
+    public maxPrice: number,
+    public sortAggregation: number,
+    public currencyType: number
   ) {}
 }

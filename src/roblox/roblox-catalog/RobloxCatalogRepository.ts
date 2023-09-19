@@ -1,24 +1,9 @@
-import CatalogItemsDetailsQueryParamDTO from './CatalogItemsDetailsQueryParamDTO';
-import CatalogItemsDetailsQueryResponse from './CatalogItemsDetailsQueryResponse';
-import ProductPurchaseDTO from './ProductPurchaseDTO';
-import PurchasesProductsResponse from './PurchasesProductsResponse';
+import CatalogItemsDetailsQueryParamDTO from '../CatalogItemsDetailsQueryParamDTO';
+import CatalogItemsDetailsQueryResponse from '../CatalogItemsDetailsQueryResponse';
+import ProductPurchaseDTO from '../ProductPurchaseDTO';
+import PurchasesProductsResponse from '../PurchasesProductsResponse';
 
-export default class RobloxRepository {
-  getXCsrfTokenByPresence(): Promise<string> {
-    return fetch('https://presence.roblox.com/v1/presence/register-app-presence', {
-      method: 'POST'
-    }).then(
-      (response) =>
-        response.headers.get('x-csrf-token') || response.headers.get('X-CSRF-TOKEN') || ''
-    );
-  }
-
-  getAuthenticatedUser() {
-    return fetch('https://users.roblox.com/v1/users/authenticated').then((response) =>
-      response.json()
-    );
-  }
-
+export default class RobloxCatalogRepository {
   findManyAssetDetails(
     catalogItemDetailsQueryParamDTO: CatalogItemsDetailsQueryParamDTO,
     cursor: string

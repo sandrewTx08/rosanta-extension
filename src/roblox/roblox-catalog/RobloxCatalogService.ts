@@ -1,26 +1,22 @@
-import RobloxSchedulerBackground from '../background/RobloxSchedulerBackground';
-import CatalogItemsDetailsQueryParamDTO from './CatalogItemsDetailsQueryParamDTO';
-import CatalogItemsDetailsQueryResponse from './CatalogItemsDetailsQueryResponse';
-import ProductPurchaseDTO from './ProductPurchaseDTO';
-import RobloxRepository from './RobloxRepository';
+import RobloxSchedulerBackground from '../../background/RobloxSchedulerBackground';
+import CatalogItemsDetailsQueryParamDTO from '../CatalogItemsDetailsQueryParamDTO';
+import CatalogItemsDetailsQueryResponse from '../CatalogItemsDetailsQueryResponse';
+import ProductPurchaseDTO from '../ProductPurchaseDTO';
+import RobloxCatalogRepository from './RobloxCatalogRepository';
 
-export default class RobloxService {
-  #robloxRepository: RobloxRepository;
+export default class RobloxCatalogService {
+  #robloxCatalogRepository: RobloxCatalogRepository;
 
-  constructor(robloxRepository: RobloxRepository) {
-    this.#robloxRepository = robloxRepository;
-  }
-
-  getXCsrfToken() {
-    return this.#robloxRepository.getXCsrfTokenByPresence();
+  constructor(robloxRepository: RobloxCatalogRepository) {
+    this.#robloxCatalogRepository = robloxRepository;
   }
 
   findOneFreeItemAssetDetails(
     nextPageCursor: string = '',
-    catalogItemsAutoBuyerLimit: CatalogItemsDetailsQueryParamDTO['Limit'] = 10
+    catalogItemsAutoBuyerLimit: CatalogItemsDetailsQueryParamDTO['limit'] = 10
   ) {
-    return this.#robloxRepository.findManyAssetDetails(
-      new CatalogItemsDetailsQueryParamDTO(1, 1, 2, true, catalogItemsAutoBuyerLimit, 0, 0, 1, 3),
+    return this.#robloxCatalogRepository.findManyAssetDetails(
+      new CatalogItemsDetailsQueryParamDTO(1, 1, 3, true, catalogItemsAutoBuyerLimit, 0, 0, 5, 3),
       nextPageCursor
     );
   }
@@ -35,7 +31,7 @@ export default class RobloxService {
 
     let c = await this.findOneFreeItemAssetDetails(
       '',
-      catalogItemsAutoBuyerLimit as CatalogItemsDetailsQueryParamDTO['Limit']
+      catalogItemsAutoBuyerLimit as CatalogItemsDetailsQueryParamDTO['limit']
     );
 
     if (catalogItemsAutoBuyerTotalPages > 1) {
@@ -43,7 +39,7 @@ export default class RobloxService {
         if (('nextPageCursor' as keyof typeof c) in c && c.nextPageCursor) {
           c = await this.findOneFreeItemAssetDetails(
             c.nextPageCursor,
-            catalogItemsAutoBuyerLimit as CatalogItemsDetailsQueryParamDTO['Limit']
+            catalogItemsAutoBuyerLimit as CatalogItemsDetailsQueryParamDTO['limit']
           );
 
           for (const p of c.data) {
@@ -62,11 +58,12 @@ export default class RobloxService {
     return Promise.all(
       d
         .filter(({ price }) => price == 0)
+        .filter(({ priceStatus }) => priceStatus == 'Free')
         .sort(({ productId: asc }, { productId: desc }) => desc - asc)
     );
   }
 
   purchaseProduct(productId: number, purchaseProductDTO: ProductPurchaseDTO, xcsrftoken: string) {
-    return this.#robloxRepository.purchaseProduct(productId, purchaseProductDTO, xcsrftoken);
+    return this.#robloxCatalogRepository.purchaseProduct(productId, purchaseProductDTO, xcsrftoken);
   }
 }

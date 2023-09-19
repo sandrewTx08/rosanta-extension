@@ -2,7 +2,7 @@ import Browser from 'webextension-polyfill';
 import ProductPurchaseDTO from '../roblox/ProductPurchaseDTO';
 import CatalogItemsDetailsShedulerData from '../roblox/CatalogItemsDetailsShedulerData';
 import Storage from '../Storage';
-import { robloxService } from '../roblox';
+import { robloxCatalogService, robloxTokenService, robloxUserService } from '../roblox';
 import CatalogItemsLink from '../roblox/CatalogItemsLink';
 import AlarmsTypes from '../AlarmsTypes';
 
@@ -83,25 +83,27 @@ export default class RobloxSchedulerBackground {
   async fetchAssetDetails() {
     // @ts-ignore
     const storage: Storage = await Browser.storage.local.get(null);
-    const data = await robloxService.findManyFreeItemsAssetDetails(
+    const catalogItemsAutoBuyerAssets = await robloxCatalogService.findManyFreeItemsAssetDetails(
       storage.catalogItemsAutoBuyerTotalPages,
       storage.catalogItemsAutoBuyerLimit
     );
 
+    const robloxUser = await robloxUserService.getAuthenticatedUser();
+
     return Browser.storage.local.set({
-      catalogItemsAutoBuyerAssetsTotal: data.length,
-      catalogItemsAutoBuyerAssets: data.map<Storage['catalogItemsAutoBuyerAssets'][0]>((data) => [
-        data.productId,
-        new CatalogItemsDetailsShedulerData(data)
-      ])
+      robloxUser,
+      catalogItemsAutoBuyerAssetsTotal: catalogItemsAutoBuyerAssets.length,
+      catalogItemsAutoBuyerAssets: catalogItemsAutoBuyerAssets.map<
+        Storage['catalogItemsAutoBuyerAssets'][0]
+      >((data) => [data.productId, new CatalogItemsDetailsShedulerData(data)])
     } as Storage);
   }
 
   async purchaseFirstItem(storage: Storage) {
     if (storage.catalogItemsAutoBuyerAssets.length > 0) {
-      const xcsrftoken = await robloxService.getXCsrfToken();
+      const xcsrftoken = await robloxTokenService.getXCsrfToken();
 
-      const { purchased } = await robloxService.purchaseProduct(
+      const { purchased } = await robloxCatalogService.purchaseProduct(
         storage.catalogItemsAutoBuyerAssets[0][0],
         new ProductPurchaseDTO(
           0,

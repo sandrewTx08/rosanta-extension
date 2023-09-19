@@ -6,6 +6,7 @@ import './index.scss';
 import { Tab, Tabs } from 'react-bootstrap';
 import RobloxSchedulerBackground from '../../background/RobloxSchedulerBackground';
 import CatalogItemsAutoBuyerTab from './Tabs/CatalogItemsAutoBuyerTab';
+import UserTab from './Tabs/UserTab';
 
 const Popup = () => {
   const [storage, setstorage] = useState(RobloxSchedulerBackground.INITIAL_STORAGE);
@@ -55,6 +56,9 @@ const Popup = () => {
           />
         </Tab>
         <Tab eventKey="tab2" title="UGC limited notifier" disabled></Tab>
+        <Tab eventKey="tab3" title="My User" disabled={!storage?.robloxUser}>
+          {storage.robloxUser && <UserTab robloxUser={storage.robloxUser} />}
+        </Tab>
       </Tabs>
     </main>
   );

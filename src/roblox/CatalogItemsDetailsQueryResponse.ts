@@ -43,7 +43,8 @@ export enum ItemType {
 }
 
 export enum PriceStatus {
-  Free = 'Free'
+  Free = 'Free',
+  'Off Sale' = 'Off Sale'
 }
 
 export enum SaleLocationType {

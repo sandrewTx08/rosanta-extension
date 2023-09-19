@@ -1,4 +1,5 @@
 import CatalogItemsDetailsShedulerData from './roblox/CatalogItemsDetailsShedulerData';
+import RobloxUser from './roblox/roblox-user/RobloxUser';
 
 export default interface Storage {
   catalogItemsAutoBuyerAssets: [number, CatalogItemsDetailsShedulerData][];
@@ -7,4 +8,5 @@ export default interface Storage {
   catalogItemsAutoBuyerAssetsTotal: number;
   catalogItemsAutoBuyerTotalPages: number;
   catalogItemsAutoBuyerLimit: number;
+  robloxUser?: RobloxUser;
 }

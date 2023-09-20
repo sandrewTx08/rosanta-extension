@@ -34,23 +34,21 @@ export default class RobloxCatalogService {
       catalogItemsAutoBuyerLimit as CatalogItemsDetailsQueryParamDTO['limit']
     );
 
-    if (c?.nextPageCursor) {
+    if (c?.nextPageCursor && c?.data) {
       for (const p of c.data) {
         d.push(p);
       }
     }
 
-    if (catalogItemsAutoBuyerTotalPages > 1) {
-      for (let i = 0; i < catalogItemsAutoBuyerTotalPages; i++) {
-        if (c?.nextPageCursor) {
-          c = await this.findOneFreeItemAssetDetails(
-            c.nextPageCursor,
-            catalogItemsAutoBuyerLimit as CatalogItemsDetailsQueryParamDTO['limit']
-          );
+    for (let i = 1; i < catalogItemsAutoBuyerTotalPages; i++) {
+      if (c?.nextPageCursor && c?.data) {
+        c = await this.findOneFreeItemAssetDetails(
+          c.nextPageCursor,
+          catalogItemsAutoBuyerLimit as CatalogItemsDetailsQueryParamDTO['limit']
+        );
 
-          for (const p of c.data) {
-            d.push(p);
-          }
+        for (const p of c.data) {
+          d.push(p);
         }
       }
     }

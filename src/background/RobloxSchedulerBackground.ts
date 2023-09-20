@@ -8,6 +8,7 @@ import AlarmsTypes from '../AlarmsTypes';
 
 export default class RobloxSchedulerBackground {
   ALERT_SCHEDULER_MINUTES = 1;
+  purchasesMultiplier = 2;
 
   static INITIAL_STORAGE: Storage = {
     catalogItemsAutoBuyerLimit: 120,
@@ -56,7 +57,7 @@ export default class RobloxSchedulerBackground {
         const storage: Storage = await Browser.storage.local.get(null);
         await this.purchaseFirstItem(storage);
 
-        if (storage.catalogItemsAutoBuyerAssets.length <= 1) {
+        if (storage.catalogItemsAutoBuyerAssets.length <= this.purchasesMultiplier) {
           await Browser.storage.local.set({ catalogItemsAutoBuyerEnabled: false } as Storage);
 
           if (await Browser.alarms.clearAll()) {
@@ -100,39 +101,40 @@ export default class RobloxSchedulerBackground {
   }
 
   async purchaseFirstItem(storage: Storage) {
-    if (storage.catalogItemsAutoBuyerAssets.length > 0) {
-      const xcsrftoken = await robloxTokenService.getXCsrfToken();
+    const filteredIds: number[] = [];
+    const xcsrftoken = await robloxTokenService.getXCsrfToken();
+
+    for (let i = 0; i < this.purchasesMultiplier; i++) {
+      filteredIds.push(storage.catalogItemsAutoBuyerAssets[i][0]);
 
       const { purchased } = await robloxCatalogService.purchaseProduct(
-        storage.catalogItemsAutoBuyerAssets[0][0],
+        storage.catalogItemsAutoBuyerAssets[i][0],
         new ProductPurchaseDTO(
           0,
           0,
-          storage.catalogItemsAutoBuyerAssets[0][1].data.creatorTargetId
+          storage.catalogItemsAutoBuyerAssets[i][1].data.creatorTargetId
         ),
         xcsrftoken
       );
 
       if (purchased && storage.catalogItemsAutoBuyerNotification) {
         await Browser.notifications.create({
-          message: storage.catalogItemsAutoBuyerAssets[0][1].data.description,
-          title: storage.catalogItemsAutoBuyerAssets[0][1].data.name,
+          message: storage.catalogItemsAutoBuyerAssets[i][1].data.description,
+          title: storage.catalogItemsAutoBuyerAssets[i][1].data.name,
           iconUrl: '../icon.png',
           type: 'basic',
           isClickable: true,
           contextMessage: CatalogItemsLink.parseCatalogDetails(
-            storage.catalogItemsAutoBuyerAssets[0][1].data
+            storage.catalogItemsAutoBuyerAssets[i][1].data
           )
         });
       }
-
-      await Browser.storage.local.set({
-        catalogItemsAutoBuyerAssets: storage.catalogItemsAutoBuyerAssets.filter(
-          ([id]) => id != storage.catalogItemsAutoBuyerAssets[0][0]
-        )
-      });
     }
 
-    return storage.catalogItemsAutoBuyerAssets.length;
+    await Browser.storage.local.set({
+      catalogItemsAutoBuyerAssets: storage.catalogItemsAutoBuyerAssets.filter(
+        ([id1]) => id1 != filteredIds.find((id2) => id2 == id1)
+      )
+    });
   }
 }

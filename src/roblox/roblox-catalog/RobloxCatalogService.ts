@@ -34,9 +34,15 @@ export default class RobloxCatalogService {
       catalogItemsAutoBuyerLimit as CatalogItemsDetailsQueryParamDTO['limit']
     );
 
+    if (c?.nextPageCursor) {
+      for (const p of c.data) {
+        d.push(p);
+      }
+    }
+
     if (catalogItemsAutoBuyerTotalPages > 1) {
       for (let i = 0; i < catalogItemsAutoBuyerTotalPages; i++) {
-        if (('nextPageCursor' as keyof typeof c) in c && c.nextPageCursor) {
+        if (c?.nextPageCursor) {
           c = await this.findOneFreeItemAssetDetails(
             c.nextPageCursor,
             catalogItemsAutoBuyerLimit as CatalogItemsDetailsQueryParamDTO['limit']
@@ -47,17 +53,10 @@ export default class RobloxCatalogService {
           }
         }
       }
-    } else {
-      if (('nextPageCursor' as keyof typeof c) in c && c.nextPageCursor) {
-        for (const p of c.data) {
-          d.push(p);
-        }
-      }
     }
 
     return Promise.all(
       d
-        .filter(({ price }) => price == 0)
         .filter(({ priceStatus }) => priceStatus == 'Free')
         .sort(({ productId: asc }, { productId: desc }) => desc - asc)
     );

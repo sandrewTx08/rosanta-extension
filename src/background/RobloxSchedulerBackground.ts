@@ -104,7 +104,7 @@ export default class RobloxSchedulerBackground {
     const filteredIds: number[] = [];
     const xcsrftoken = await robloxTokenService.getXCsrfToken();
 
-    for (let i = 0; i < this.purchasesMultiplier; i++) {
+    for (let i = 0; i < this.purchasesMultiplier - 1; i++) {
       filteredIds.push(storage.catalogItemsAutoBuyerAssets[i][0]);
 
       const { purchased } = await robloxCatalogService.purchaseProduct(

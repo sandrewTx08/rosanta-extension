@@ -55,7 +55,11 @@ export default class RobloxSchedulerBackground {
       case AlarmsTypes.catalogItemsAutoBuyerEnabled: {
         // @ts-ignore
         const storage: Storage = await Browser.storage.local.get(null);
-        await this.purchaseFirstItem(storage);
+
+        // TODO: fix index 0 error
+        try {
+          await this.purchaseFirstItem(storage);
+        } catch (error) {}
 
         if (storage.catalogItemsAutoBuyerAssets.length <= this.purchasesMultiplier) {
           await Browser.storage.local.set({ catalogItemsAutoBuyerEnabled: false } as Storage);
@@ -104,7 +108,7 @@ export default class RobloxSchedulerBackground {
     const filteredIds: number[] = [];
     const xcsrftoken = await robloxTokenService.getXCsrfToken();
 
-    for (let i = 0; i < this.purchasesMultiplier - 1; i++) {
+    for (let i = 0; i < this.purchasesMultiplier; i++) {
       filteredIds.push(storage.catalogItemsAutoBuyerAssets[i][0]);
 
       const { purchased } = await robloxCatalogService.purchaseProduct(

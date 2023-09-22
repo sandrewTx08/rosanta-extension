@@ -16,8 +16,8 @@ export default class LimitedUGCInGameNotifierAlarm extends AlarmToggle {
 
     if (storage.limitedUGCInGameNotifierAssets[0].name !== limitedUGCInGameNotifierAssets[0].name) {
       await Browser.notifications.create({
-        message: 'New limited UGC is now available in game',
-        title: `${limitedUGCInGameNotifierAssets[0].name} - ${limitedUGCInGameNotifierAssets[0].description}`,
+        message: limitedUGCInGameNotifierAssets[0].name,
+        title: 'New limited UGC is now available in game',
         iconUrl: '../icon.png',
         type: 'basic'
       });

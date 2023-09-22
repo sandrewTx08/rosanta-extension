@@ -39,13 +39,7 @@ export default class RobloxFreeAutoBuyerAlarm extends AlarmToggle {
     } catch (error) {}
 
     if (storage.catalogItemsAutoBuyerAssets.length <= this.purchasesMultiplier) {
-      await Browser.storage.local.set({ catalogItemsAutoBuyerEnabled: false } as Storage);
-
-      if (await Browser.alarms.clear(this.name)) {
-        await Browser.storage.local.set({
-          catalogItemsAutoBuyerEnabled: true
-        } as Storage);
-      }
+      this.onCreate();
     }
   }
 

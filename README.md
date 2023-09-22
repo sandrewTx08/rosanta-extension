@@ -15,8 +15,10 @@
 | Free item auto-buyer         | Buy the newest item from the catalog, tagged as "Free"                                   |
 | Limited UGC in-game notifier | Notify when a limited UGC item is added on catalog if obtain it from in-game experiences |
 
-## Support
+## Donations
 
-Show some love and follow us for new updates
-
-<a href="https://www.buymeacoffee.com/RoSanta"><img src="https://img.buymeacoffee.com/button-api/?text=Follow&emoji=🎁&slug=RoSanta&button_colour=5F7FFF&font_colour=ffffff&font_family=Poppins&outline_colour=000000&coffee_colour=FFDD00" /></a>
+<form action="https://www.paypal.com/donate" method="post" target="_top">
+<input type="hidden" name="hosted_button_id" value="SLTU45DK5LFSS" />
+<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+</form>

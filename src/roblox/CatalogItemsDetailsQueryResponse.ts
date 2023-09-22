@@ -16,12 +16,14 @@ export interface Datum {
   itemStatus: any[];
   itemRestrictions: ItemRestriction[];
   creatorHasVerifiedBadge: boolean;
+  unitsAvailableForConsumption: number;
   creatorType: CreatorType;
   creatorTargetId: number;
   creatorName: string;
   price: number;
   priceStatus?: PriceStatus;
   purchaseCount: number;
+  totalQuantity?: number;
   favoriteCount: number;
   offSaleDeadline: null;
   saleLocationType: SaleLocationType;
@@ -48,7 +50,8 @@ export enum PriceStatus {
 }
 
 export enum SaleLocationType {
-  NotApplicable = 'NotApplicable'
+  NotApplicable = 'NotApplicable',
+  ExperiencesDevApiOnly = 'ExperiencesDevApiOnly'
 }
 
 export interface ElasticsearchDebugInfo {

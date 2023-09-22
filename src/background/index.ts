@@ -1,3 +1,5 @@
-import RobloxSchedulerBackground from './RobloxSchedulerBackground';
+import LimitedUGCInGameNotifierAlarm from '../alarms/LimitedUGCInGameNotifierAlarm';
+import RobloxFreeAutoBuyerAlarm from '../alarms/RobloxFreeAutoBuyerAlarm';
 
-export const robloxSchedulerBackground = new RobloxSchedulerBackground();
+export const robloxFreeAutoBuyerAlarm = new RobloxFreeAutoBuyerAlarm();
+export const limitedUGCInGameNotifierAlarm = new LimitedUGCInGameNotifierAlarm();

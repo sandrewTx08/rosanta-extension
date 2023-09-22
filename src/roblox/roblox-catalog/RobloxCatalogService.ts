@@ -1,4 +1,5 @@
-import RobloxSchedulerBackground from '../../background/RobloxSchedulerBackground';
+import Storage from '../../Storage';
+import RobloxFreeAutoBuyerAlarm from '../../alarms/RobloxFreeAutoBuyerAlarm';
 import CatalogItemsDetailsQueryParamDTO from '../CatalogItemsDetailsQueryParamDTO';
 import CatalogItemsDetailsQueryResponse from '../CatalogItemsDetailsQueryResponse';
 import ProductPurchaseDTO from '../ProductPurchaseDTO';
@@ -11,56 +12,86 @@ export default class RobloxCatalogService {
     this.#robloxCatalogRepository = robloxRepository;
   }
 
-  findOneFreeItemAssetDetails(
-    nextPageCursor: string = '',
-    catalogItemsAutoBuyerLimit: CatalogItemsDetailsQueryParamDTO['limit'] = 10
+  purchaseProduct(productId: number, purchaseProductDTO: ProductPurchaseDTO, xcsrftoken: string) {
+    return this.#robloxCatalogRepository.purchaseProduct(productId, purchaseProductDTO, xcsrftoken);
+  }
+
+  findOneAssetDetails(
+    catalogItemsDetailsQueryParamDTO: CatalogItemsDetailsQueryParamDTO,
+    nextPageCursor: string = ''
   ) {
     return this.#robloxCatalogRepository.findManyAssetDetails(
-      new CatalogItemsDetailsQueryParamDTO(1, 1, 3, true, catalogItemsAutoBuyerLimit, 0, 0, 5, 3),
+      catalogItemsDetailsQueryParamDTO,
       nextPageCursor
     );
   }
 
-  async findManyFreeItemsAssetDetails(
-    catalogItemsAutoBuyerTotalPages = RobloxSchedulerBackground.INITIAL_STORAGE
-      .catalogItemsAutoBuyerTotalPages,
-    catalogItemsAutoBuyerLimit = RobloxSchedulerBackground.INITIAL_STORAGE
-      .catalogItemsAutoBuyerLimit
+  async findManyAssetsDetails(
+    catalogItemsDetailsQueryParamDTO: CatalogItemsDetailsQueryParamDTO,
+    catalogItemsAutoBuyerTotalPages: number
   ) {
-    const d: CatalogItemsDetailsQueryResponse['data'] = [];
+    let data: CatalogItemsDetailsQueryResponse['data'] = [];
 
-    let c = await this.findOneFreeItemAssetDetails(
-      '',
-      catalogItemsAutoBuyerLimit as CatalogItemsDetailsQueryParamDTO['limit']
-    );
+    let page = await this.findOneAssetDetails(catalogItemsDetailsQueryParamDTO);
 
-    if (c?.nextPageCursor && c?.data) {
-      for (const p of c.data) {
-        d.push(p);
-      }
-    }
+    data = data.concat(page.data);
 
     for (let i = 1; i < catalogItemsAutoBuyerTotalPages; i++) {
-      if (c?.nextPageCursor && c?.data) {
-        c = await this.findOneFreeItemAssetDetails(
-          c.nextPageCursor,
-          catalogItemsAutoBuyerLimit as CatalogItemsDetailsQueryParamDTO['limit']
+      if (page?.nextPageCursor && page?.data) {
+        page = await this.findOneAssetDetails(
+          catalogItemsDetailsQueryParamDTO,
+          page.nextPageCursor
         );
 
-        for (const p of c.data) {
-          d.push(p);
-        }
+        data = data.concat(page.data);
       }
     }
 
-    return Promise.all(
-      d
-        .filter(({ priceStatus }) => priceStatus == 'Free')
-        .sort(({ productId: asc }, { productId: desc }) => desc - asc)
-    );
+    return data;
   }
 
-  purchaseProduct(productId: number, purchaseProductDTO: ProductPurchaseDTO, xcsrftoken: string) {
-    return this.#robloxCatalogRepository.purchaseProduct(productId, purchaseProductDTO, xcsrftoken);
+  async findManyUGCLimited() {
+    const gameURL = /\/games\/(\d+)/;
+
+    return (
+      await this.findManyAssetsDetails(
+        new CatalogItemsDetailsQueryParamDTO(1, 1, 3, true, 120, 0, 0, 5, 3),
+        10
+      )
+    )
+      .filter(({ saleLocationType }) => saleLocationType == 'ExperiencesDevApiOnly')
+      .filter(({ unitsAvailableForConsumption }) => unitsAvailableForConsumption > 0)
+      .filter(({ description }) => description.match(gameURL))
+      .sort(({ productId: asc }, { productId: desc }) => desc - asc)
+      .map<Storage['limitedUGCInGameNotifierAssets'][0]>((data) => ({
+        ...data,
+        imageBatch: {},
+        gameURL: 'https://www.roblox.com/games/' + data.description.split(gameURL)[1]
+      }));
+  }
+
+  async findManyFreeItemsAssetDetails(
+    catalogItemsAutoBuyerTotalPages = RobloxFreeAutoBuyerAlarm.INITIAL_STORAGE
+      .catalogItemsAutoBuyerTotalPages,
+    catalogItemsAutoBuyerLimit = RobloxFreeAutoBuyerAlarm.INITIAL_STORAGE.catalogItemsAutoBuyerLimit
+  ) {
+    return (
+      await this.findManyAssetsDetails(
+        new CatalogItemsDetailsQueryParamDTO(
+          1,
+          1,
+          3,
+          true,
+          catalogItemsAutoBuyerLimit as CatalogItemsDetailsQueryParamDTO['limit'],
+          0,
+          0,
+          5,
+          3
+        ),
+        catalogItemsAutoBuyerTotalPages
+      )
+    )
+      .filter(({ priceStatus }) => priceStatus == 'Free')
+      .sort(({ productId: asc }, { productId: desc }) => desc - asc);
   }
 }

@@ -17,7 +17,9 @@ export default class CatalogItemsLink {
   static parseCatalogDetails(catalogDetails: CatalogItemsDetailsQueryResponse['data'][0]): string {
     return CatalogItemsLink.parse(
       catalogDetails.itemType,
-      catalogDetails.itemType == 'Bundle' ? catalogDetails.id : catalogDetails.productId
+      catalogDetails.itemType == 'Bundle'
+        ? catalogDetails.id
+        : catalogDetails?.productId || catalogDetails.id
     );
   }
 }

@@ -10,17 +10,12 @@
 
 ## Features
 
-| Status | Name                              | Description                                                                                   |
-| :----: | --------------------------------- | --------------------------------------------------------------------------------------------- |
-|   ✅   | Free item auto-buyer              | Buy the newest item from the catalog, tagged as "Free"                                        |
-|   🚧   | Free limited UGC in-game notifier | Notify when a free limited UGC item is added on catalog if obtain it from in-game experiences |
-|   ✅   | Chrome extension                  | Support on Chrome browser                                                                     |
-|   🚧   | Firefox extension                 | Support on Firefox browser                                                                    |
+| Name                         | Description                                                                              |
+| ---------------------------- | ---------------------------------------------------------------------------------------- |
+| Free item auto-buyer         | Buy the newest item from the catalog, tagged as "Free"                                   |
+| Limited UGC in-game notifier | Notify when a limited UGC item is added on catalog if obtain it from in-game experiences |
 
-- ✅ Done
-- 🚧 In progress
-
-## Suport
+## Support
 
 Show some love and follow us for new updates
 

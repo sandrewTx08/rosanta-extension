@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.scss';
 
 const Options = () => {
-  return <div className="display-1">Nothing here.</div>;
+  return <div className="display-1 p-4">Nothing here.</div>;
 };
 
 ReactDOM.render(

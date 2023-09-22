@@ -2,7 +2,7 @@ import React from 'react';
 import Storage from '../../../../Storage';
 import { Form } from 'react-bootstrap';
 import Browser from 'webextension-polyfill';
-import RobloxSchedulerBackground from '../../../../background/RobloxSchedulerBackground';
+import RobloxFreeAutoBuyerAlarm from '../../../../alarms/RobloxFreeAutoBuyerAlarm';
 import CatalogItemsLink from '../../../../roblox/CatalogItemsLink';
 import useProgress from './useProgress';
 import CatalogItemsDetailsQueryParamDTO from '../../../../roblox/CatalogItemsDetailsQueryParamDTO';
@@ -30,9 +30,22 @@ export const CatalogItemsAutoBuyerTab: React.FC<{
             });
 
             if (event.target.checked) {
-              Browser.storage.local.set({
-                catalogItemsAutoBuyerEnabled: event.target.checked
-              });
+              Browser.storage.local
+                .set({
+                  catalogItemsAutoBuyerEnabled: event.target.checked
+                })
+                .then(() => {
+                  setstorage((value) => {
+                    value.catalogItemsAutoBuyerEnabled = event.target.checked;
+                    return { ...value };
+                  });
+                })
+                .catch(() => {
+                  setstorage((value) => {
+                    value.catalogItemsAutoBuyerEnabled = !value.catalogItemsAutoBuyerEnabled;
+                    return { ...value };
+                  });
+                });
             } else {
               Browser.storage.local
                 .set({
@@ -84,7 +97,7 @@ export const CatalogItemsAutoBuyerTab: React.FC<{
         min={1}
         disabled={loading}
         value={storage.catalogItemsAutoBuyerTotalPages}
-        max={RobloxSchedulerBackground.INITIAL_STORAGE.catalogItemsAutoBuyerTotalPages}
+        max={RobloxFreeAutoBuyerAlarm.INITIAL_STORAGE.catalogItemsAutoBuyerTotalPages}
         onChange={(event) => {
           const t = Number.parseInt(event.target.value);
 
@@ -144,16 +157,16 @@ export const CatalogItemsAutoBuyerTab: React.FC<{
         </div>
 
         <ul className="list-group overflow-y-scroll border" style={{ maxHeight: 120 }}>
-          {storage.catalogItemsAutoBuyerAssets.map(([_, a], i) => (
-            <li key={a.data.id} className={'list-group-item' + (i == 0 ? ' active' : '')}>
+          {storage.catalogItemsAutoBuyerAssets.map((a, i) => (
+            <li key={a.id} className={'list-group-item' + (i == 0 ? ' active' : '')}>
               <small>
                 <b>
                   <a
                     className={'' + (i == 0 ? ' text-light' : ' text-black')}
-                    href={CatalogItemsLink.parseCatalogDetails(a.data)}
+                    href={CatalogItemsLink.parseCatalogDetails(a)}
                     target="_blank"
                   >
-                    {a.data.name}
+                    {a.name}
                   </a>
                 </b>
               </small>

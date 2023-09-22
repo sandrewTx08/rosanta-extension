@@ -4,12 +4,13 @@ import Browser from 'webextension-polyfill';
 import Storage from '../../Storage';
 import './index.scss';
 import { Tab, Tabs } from 'react-bootstrap';
-import RobloxSchedulerBackground from '../../background/RobloxSchedulerBackground';
+import RobloxFreeAutoBuyerAlarm from '../../alarms/RobloxFreeAutoBuyerAlarm';
 import CatalogItemsAutoBuyerTab from './Tabs/CatalogItemsAutoBuyerTab';
 import UserTab from './Tabs/UserTab';
+import LimitedUGCInGameNotifier from './Tabs/LimitedUGCInGameNotifier';
 
 const Popup = () => {
-  const [storage, setstorage] = useState(RobloxSchedulerBackground.INITIAL_STORAGE);
+  const [storage, setstorage] = useState(RobloxFreeAutoBuyerAlarm.INITIAL_STORAGE);
   const [loading, setloading] = useState(false);
 
   useEffect(() => {
@@ -27,19 +28,26 @@ const Popup = () => {
         setloading(false);
       });
 
-    Browser.storage.local.onChanged.addListener(
-      ({ catalogItemsAutoBuyerAssets, catalogItemsAutoBuyerAssetsTotal }) => {
-        if (catalogItemsAutoBuyerAssets) {
-          setstorage((value) => {
-            value.catalogItemsAutoBuyerAssets = catalogItemsAutoBuyerAssets.newValue;
-            value.catalogItemsAutoBuyerAssetsTotal =
-              catalogItemsAutoBuyerAssetsTotal?.newValue || value.catalogItemsAutoBuyerAssetsTotal;
-            return { ...value };
-          });
-          setloading(false);
-        }
+    Browser.storage.local.onChanged.addListener((storage) => {
+      if (storage.catalogItemsAutoBuyerAssets) {
+        setstorage((value) => {
+          value.catalogItemsAutoBuyerAssets = storage.catalogItemsAutoBuyerAssets.newValue;
+          value.catalogItemsAutoBuyerAssetsTotal =
+            storage.catalogItemsAutoBuyerAssetsTotal?.newValue ||
+            value.catalogItemsAutoBuyerAssetsTotal;
+          return { ...value };
+        });
+        setloading(false);
       }
-    );
+
+      if (storage.limitedUGCInGameNotifierAssets) {
+        setstorage((value) => {
+          value.limitedUGCInGameNotifierAssets = storage.limitedUGCInGameNotifierAssets.newValue;
+          return { ...value };
+        });
+        setloading(false);
+      }
+    });
   }, []);
 
   return (
@@ -55,7 +63,12 @@ const Popup = () => {
             storage={[storage, setstorage]}
           />
         </Tab>
-        <Tab eventKey="tab2" title="UGC limited notifier" disabled></Tab>
+        <Tab eventKey="tab2" title="Limited UGC in-game notifier">
+          <LimitedUGCInGameNotifier
+            loading={[loading, setloading]}
+            storage={[storage, setstorage]}
+          />
+        </Tab>
         <Tab eventKey="tab3" title="My User" disabled={!storage?.robloxUser}>
           {storage.robloxUser && <UserTab robloxUser={storage.robloxUser} />}
         </Tab>

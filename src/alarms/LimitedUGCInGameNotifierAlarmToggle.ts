@@ -4,7 +4,7 @@ import AlarmToggle from "./AlarmToggle";
 import AlarmTypes from "./AlarmToggleTypes";
 import BrowserStorage from "../BrowserStorage";
 
-export default class LimitedUGCInGameNotifierAlarm extends AlarmToggle {
+export default class LimitedUGCInGameNotifierAlarmToggle extends AlarmToggle {
 	constructor() {
 		super(AlarmTypes.limitedUGCInGameNotifierEnabled, 5);
 	}

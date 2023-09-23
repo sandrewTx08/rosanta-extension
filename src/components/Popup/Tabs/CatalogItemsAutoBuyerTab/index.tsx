@@ -11,7 +11,7 @@ const CatalogItemsAutoBuyerTab = ({
 	loading: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
 	storage: [
 		BrowserStorage,
-		React.Dispatch<React.SetStateAction<BrowserStorage>>
+		React.Dispatch<React.SetStateAction<BrowserStorage>>,
 	];
 }) => {
 	const progress =
@@ -151,7 +151,7 @@ const CatalogItemsAutoBuyerTab = ({
 											<small>{data}</small>
 										</label>
 									</div>
-								)
+								),
 							)}
 						</div>
 					</Accordion.Body>

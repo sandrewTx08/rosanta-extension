@@ -1,6 +1,6 @@
-import LimitedUGCInGameNotifierAlarm from "../alarms/LimitedUGCInGameNotifierAlarmToggle";
-import RobloxFreeAutoBuyerAlarm from "../alarms/RobloxFreeAutoBuyerAlarmToggle";
+import LimitedUGCInGameNotifierAlarmToggle from "../alarms/LimitedUGCInGameNotifierAlarmToggle";
+import RobloxFreeAutoBuyerAlarmToggle from "../alarms/RobloxFreeAutoBuyerAlarmToggle";
 
-export const robloxFreeAutoBuyerAlarm = new RobloxFreeAutoBuyerAlarm();
+export const robloxFreeAutoBuyerAlarm = new RobloxFreeAutoBuyerAlarmToggle();
 export const limitedUGCInGameNotifierAlarm =
-	new LimitedUGCInGameNotifierAlarm();
+	new LimitedUGCInGameNotifierAlarmToggle();

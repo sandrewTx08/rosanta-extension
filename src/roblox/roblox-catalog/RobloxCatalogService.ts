@@ -1,5 +1,4 @@
 import BrowserStorage from "../../BrowserStorage";
-import RobloxFreeAutoBuyerAlarm from "../../alarms/RobloxFreeAutoBuyerAlarmToggle";
 import CatalogItemsDetailsQueryParamDTO from "../CatalogItemsDetailsQueryParamDTO";
 import CatalogItemsDetailsQueryResponse from "../CatalogItemsDetailsQueryResponse";
 import ProductPurchaseDTO from "../ProductPurchaseDTO";
@@ -84,9 +83,9 @@ export default class RobloxCatalogService {
 	}
 
 	async findManyFreeItemsAssetDetails(
-		catalogItemsAutoBuyerTotalPages = RobloxFreeAutoBuyerAlarm.INITIAL_STORAGE
+		catalogItemsAutoBuyerTotalPages = BrowserStorage.INITIAL_STORAGE
 			.catalogItemsAutoBuyerTotalPages,
-		catalogItemsAutoBuyerLimit = RobloxFreeAutoBuyerAlarm.INITIAL_STORAGE
+		catalogItemsAutoBuyerLimit = BrowserStorage.INITIAL_STORAGE
 			.catalogItemsAutoBuyerLimit,
 	) {
 		return (

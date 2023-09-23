@@ -1,13 +1,13 @@
-import RobloxTokenRepository from './RobloxTokenRepository';
+import RobloxTokenRepository from "./RobloxTokenRepository";
 
 export default class RobloxTokenService {
-  #robloxTokenRepository: RobloxTokenRepository;
+	#robloxTokenRepository: RobloxTokenRepository;
 
-  constructor(robloxTokenRepository: RobloxTokenRepository) {
-    this.#robloxTokenRepository = robloxTokenRepository;
-  }
+	constructor(robloxTokenRepository: RobloxTokenRepository) {
+		this.#robloxTokenRepository = robloxTokenRepository;
+	}
 
-  getXCsrfToken() {
-    return this.#robloxTokenRepository.getXCsrfTokenByPresence();
-  }
+	getXCsrfToken() {
+		return this.#robloxTokenRepository.getXCsrfTokenByPresence();
+	}
 }

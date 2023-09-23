@@ -1,63 +1,63 @@
 export default interface CatalogItemsDetailsQueryResponse {
-  keyword: null;
-  elasticsearchDebugInfo: ElasticsearchDebugInfo;
-  previousPageCursor: null;
-  nextPageCursor: string;
-  data: Datum[];
+	keyword: null;
+	elasticsearchDebugInfo: ElasticsearchDebugInfo;
+	previousPageCursor: null;
+	nextPageCursor: string;
+	data: Datum[];
 }
 
 export interface Datum {
-  id: number;
-  itemType: ItemType;
-  bundleType?: number;
-  name: string;
-  description: string;
-  productId: number;
-  itemStatus: any[];
-  itemRestrictions: ItemRestriction[];
-  creatorHasVerifiedBadge: boolean;
-  unitsAvailableForConsumption: number;
-  creatorType: CreatorType;
-  creatorTargetId: number;
-  creatorName: string;
-  price: number;
-  priceStatus?: PriceStatus;
-  purchaseCount: number;
-  totalQuantity?: number;
-  favoriteCount: number;
-  offSaleDeadline: null;
-  saleLocationType: SaleLocationType;
-  assetType?: number;
+	id: number;
+	itemType: ItemType;
+	bundleType?: number;
+	name: string;
+	description: string;
+	productId: number;
+	itemStatus: any[];
+	itemRestrictions: ItemRestriction[];
+	creatorHasVerifiedBadge: boolean;
+	unitsAvailableForConsumption: number;
+	creatorType: CreatorType;
+	creatorTargetId: number;
+	creatorName: string;
+	price: number;
+	priceStatus?: PriceStatus;
+	purchaseCount: number;
+	totalQuantity?: number;
+	favoriteCount: number;
+	offSaleDeadline: null;
+	saleLocationType: SaleLocationType;
+	assetType?: number;
 }
 
 export enum CreatorType {
-  User = 'User'
+	User = "User",
 }
 
 export enum ItemRestriction {
-  Live = 'Live',
-  Rthro = 'Rthro'
+	Live = "Live",
+	Rthro = "Rthro",
 }
 
 export enum ItemType {
-  Asset = 'Asset',
-  Bundle = 'Bundle'
+	Asset = "Asset",
+	Bundle = "Bundle",
 }
 
 export enum PriceStatus {
-  Free = 'Free',
-  'Off Sale' = 'Off Sale'
+	Free = "Free",
+	"Off Sale" = "Off Sale",
 }
 
 export enum SaleLocationType {
-  NotApplicable = 'NotApplicable',
-  ExperiencesDevApiOnly = 'ExperiencesDevApiOnly'
+	NotApplicable = "NotApplicable",
+	ExperiencesDevApiOnly = "ExperiencesDevApiOnly",
 }
 
 export interface ElasticsearchDebugInfo {
-  elasticsearchQuery: null;
-  isFromCache: boolean;
-  indexName: string;
-  isTerminatedEarly: null;
-  isForceTerminationEnabledByRequest: null;
+	elasticsearchQuery: null;
+	isFromCache: boolean;
+	indexName: string;
+	isTerminatedEarly: null;
+	isForceTerminationEnabledByRequest: null;
 }

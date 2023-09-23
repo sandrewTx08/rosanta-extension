@@ -29,9 +29,9 @@ const Popup = () => {
 					setstorage(storage);
 
 					if (!storage.robloxUser) {
-						robloxUserService.getAuthenticatedUser().then((robloxUser) => {
+						return robloxUserService.getAuthenticatedUser().then((robloxUser) => {
 							if (robloxUser?.id) {
-								Browser.storage.local.set({ robloxUser } as BrowserStorage);
+								return Browser.storage.local.set({ robloxUser } as BrowserStorage);
 							}
 						});
 					}
@@ -71,7 +71,14 @@ const Popup = () => {
 				<img className="h-100 w-auto" src="icon.png" />
 			</div>
 
-			<Tabs defaultActiveKey={TabEventKeys.AUTOBUYER} justify>
+			<Tabs
+				defaultActiveKey={
+					!loading && !storage.robloxUser
+						? TabEventKeys.AUTOBUYER
+						: TabEventKeys.USER
+				}
+				justify
+			>
 				<Tab eventKey={TabEventKeys.AUTOBUYER} title="Free items auto-buyer">
 					<CatalogItemsAutoBuyerTab
 						loading={[loading, setloading]}

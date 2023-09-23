@@ -1,7 +1,7 @@
 import CatalogItemsDetailsQueryResponse from './roblox/CatalogItemsDetailsQueryResponse';
 import RobloxUser from './roblox/roblox-user/RobloxUser';
 
-export default interface Storage {
+export default interface BrowserStorage {
   catalogItemsAutoBuyerAssets: CatalogItemsDetailsQueryResponse['data'];
   catalogItemsAutoBuyerEnabled: boolean;
   catalogItemsAutoBuyerNotification: boolean;

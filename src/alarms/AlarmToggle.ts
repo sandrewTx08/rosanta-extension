@@ -1,11 +1,11 @@
 import Browser from 'webextension-polyfill';
-import Storage from '../Storage';
-import AlarmTypes from './AlarmTypes';
+import BrowserStorage from '../BrowserStorage';
+import AlarmTypes from './AlarmToggleTypes';
 
 export default class AlarmToggle
   implements Required<Pick<Browser.Alarms.Alarm, 'name' | 'periodInMinutes'>>
 {
-  static INITIAL_STORAGE: Storage = {
+  static INITIAL_STORAGE: BrowserStorage = {
     catalogItemsAutoBuyerLimit: 120,
     catalogItemsAutoBuyerEnabled: false,
     catalogItemsAutoBuyerAssets: [],

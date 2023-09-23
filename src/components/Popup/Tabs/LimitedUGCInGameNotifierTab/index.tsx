@@ -1,13 +1,13 @@
 import Browser from 'webextension-polyfill';
-import Storage from '../../../../Storage';
+import BrowserStorage from '../../../../BrowserStorage';
 import CatalogItemsLink from '../../../../roblox/CatalogItemsLink';
 
-const LimitedUGCInGame = ({
+const LimitedUGCInGameTab = ({
   loading: [loading, setloading],
   storage: [storage, setstorage]
 }: {
   loading: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
-  storage: [Storage, React.Dispatch<React.SetStateAction<Storage>>];
+  storage: [BrowserStorage, React.Dispatch<React.SetStateAction<BrowserStorage>>];
 }) => {
   return (
     <div className="d-flex flex-column">
@@ -30,7 +30,7 @@ const LimitedUGCInGame = ({
               Browser.storage.local
                 .set({
                   limitedUGCInGameNotifierEnabled: event.target.checked
-                } as Storage)
+                } as BrowserStorage)
                 .then(() => {
                   setstorage((value) => {
                     value.limitedUGCInGameNotifierEnabled = event.target.checked;
@@ -48,7 +48,7 @@ const LimitedUGCInGame = ({
                 .set({
                   limitedUGCInGameNotifierAssets: [] as any[],
                   limitedUGCInGameNotifierEnabled: false
-                } as Storage)
+                } as BrowserStorage)
                 .then(() => {
                   setstorage((value) => {
                     value.limitedUGCInGameNotifierAssets = [];
@@ -95,4 +95,4 @@ const LimitedUGCInGame = ({
   );
 };
 
-export default LimitedUGCInGame;
+export default LimitedUGCInGameTab;

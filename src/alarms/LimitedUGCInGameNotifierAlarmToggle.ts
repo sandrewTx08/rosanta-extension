@@ -1,8 +1,8 @@
 import Browser from 'webextension-polyfill';
 import { robloxCatalogService } from '../roblox';
 import AlarmToggle from './AlarmToggle';
-import AlarmTypes from './AlarmTypes';
-import Storage from '../Storage';
+import AlarmTypes from './AlarmToggleTypes';
+import BrowserStorage from '../BrowserStorage';
 
 export default class LimitedUGCInGameNotifierAlarm extends AlarmToggle {
   constructor() {
@@ -11,7 +11,7 @@ export default class LimitedUGCInGameNotifierAlarm extends AlarmToggle {
 
   override async onAlarm() {
     // @ts-ignore
-    const storage: Storage = await Browser.storage.local.get(null);
+    const storage: BrowserStorage = await Browser.storage.local.get(null);
     const limitedUGCInGameNotifierAssets = await robloxCatalogService.findManyUGCLimited();
 
     if (storage.limitedUGCInGameNotifierAssets[0].name !== limitedUGCInGameNotifierAssets[0].name) {
@@ -23,12 +23,12 @@ export default class LimitedUGCInGameNotifierAlarm extends AlarmToggle {
       });
     }
 
-    await Browser.storage.local.set({ limitedUGCInGameNotifierAssets } as Storage);
+    await Browser.storage.local.set({ limitedUGCInGameNotifierAssets } as BrowserStorage);
   }
 
   override async onCreate() {
     Browser.storage.local.set({
       limitedUGCInGameNotifierAssets: await robloxCatalogService.findManyUGCLimited()
-    } as Storage);
+    } as BrowserStorage);
   }
 }

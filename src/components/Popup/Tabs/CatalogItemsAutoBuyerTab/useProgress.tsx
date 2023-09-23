@@ -1,6 +1,6 @@
-import Storage from '../../../../Storage';
+import BrowserStorage from '../../../../BrowserStorage';
 
-const useProgress = (storage: Storage): number => {
+const useProgress = (storage: BrowserStorage): number => {
   return (
     ((storage.catalogItemsAutoBuyerAssetsTotal - storage.catalogItemsAutoBuyerAssets.length) *
       100) /

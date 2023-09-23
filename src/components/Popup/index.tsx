@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import Browser from 'webextension-polyfill';
 import '../../../index.scss';
-import Storage from '../../Storage';
+import BrowserStorage from '../../BrowserStorage';
 import { Tab, Tabs } from 'react-bootstrap';
-import RobloxFreeAutoBuyerAlarm from '../../alarms/RobloxFreeAutoBuyerAlarm';
+import RobloxFreeAutoBuyerAlarm from '../../alarms/RobloxFreeAutoBuyerAlarmToggle';
 import CatalogItemsAutoBuyerTab from './Tabs/CatalogItemsAutoBuyerTab';
 import UserTab from './Tabs/UserTab';
-import LimitedUGCInGameNotifier from './Tabs/LimitedUGCInGameNotifier';
+import LimitedUGCInGameNotifier from './Tabs/LimitedUGCInGameNotifierTab';
 
 const Popup = () => {
   const [storage, setstorage] = useState(RobloxFreeAutoBuyerAlarm.INITIAL_STORAGE);
@@ -19,7 +19,7 @@ const Popup = () => {
       .get(null)
       .then(
         // @ts-ignore
-        (storage: Storage) => {
+        (storage: BrowserStorage) => {
           setstorage(storage);
         }
       )

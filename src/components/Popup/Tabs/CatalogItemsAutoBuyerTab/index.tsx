@@ -1,7 +1,7 @@
-import Storage from '../../../../Storage';
+import BrowserStorage from '../../../../BrowserStorage';
 import { Form } from 'react-bootstrap';
 import Browser from 'webextension-polyfill';
-import RobloxFreeAutoBuyerAlarm from '../../../../alarms/RobloxFreeAutoBuyerAlarm';
+import RobloxFreeAutoBuyerAlarm from '../../../../alarms/RobloxFreeAutoBuyerAlarmToggle';
 import CatalogItemsLink from '../../../../roblox/CatalogItemsLink';
 import useProgress from './useProgress';
 import CatalogItemsDetailsQueryParamDTO from '../../../../roblox/CatalogItemsDetailsQueryParamDTO';
@@ -11,7 +11,7 @@ const CatalogItemsAutoBuyerTab = ({
   storage: [storage, setstorage]
 }: {
   loading: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
-  storage: [Storage, React.Dispatch<React.SetStateAction<Storage>>];
+  storage: [BrowserStorage, React.Dispatch<React.SetStateAction<BrowserStorage>>];
 }) => {
   const progress = useProgress(storage);
 
@@ -53,7 +53,7 @@ const CatalogItemsAutoBuyerTab = ({
                 .set({
                   catalogItemsAutoBuyerAssets: [] as any[],
                   catalogItemsAutoBuyerEnabled: false
-                } as Storage)
+                } as BrowserStorage)
                 .then(() => {
                   setstorage((value) => {
                     value.catalogItemsAutoBuyerAssets = [];
@@ -130,7 +130,7 @@ const CatalogItemsAutoBuyerTab = ({
                 });
 
                 Browser.storage.local
-                  .set({ catalogItemsAutoBuyerLimit: data } as Storage)
+                  .set({ catalogItemsAutoBuyerLimit: data } as BrowserStorage)
                   .finally(() => {
                     setloading(false);
                   });

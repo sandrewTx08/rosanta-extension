@@ -1,5 +1,5 @@
-import Storage from '../../Storage';
-import RobloxFreeAutoBuyerAlarm from '../../alarms/RobloxFreeAutoBuyerAlarm';
+import BrowserStorage from '../../BrowserStorage';
+import RobloxFreeAutoBuyerAlarm from '../../alarms/RobloxFreeAutoBuyerAlarmToggle';
 import CatalogItemsDetailsQueryParamDTO from '../CatalogItemsDetailsQueryParamDTO';
 import CatalogItemsDetailsQueryResponse from '../CatalogItemsDetailsQueryResponse';
 import ProductPurchaseDTO from '../ProductPurchaseDTO';
@@ -63,7 +63,7 @@ export default class RobloxCatalogService {
       .filter(({ unitsAvailableForConsumption }) => unitsAvailableForConsumption > 0)
       .filter(({ description }) => description.match(gameURL))
       .sort(({ productId: asc }, { productId: desc }) => desc - asc)
-      .map<Storage['limitedUGCInGameNotifierAssets'][0]>((data) => ({
+      .map<BrowserStorage['limitedUGCInGameNotifierAssets'][0]>((data) => ({
         ...data,
         imageBatch: {},
         gameURL: 'https://www.roblox.com/games/' + data.description.split(gameURL)[1]

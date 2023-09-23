@@ -1,9 +1,9 @@
 import Browser from 'webextension-polyfill';
 import ProductPurchaseDTO from '../roblox/ProductPurchaseDTO';
-import Storage from '../Storage';
+import BrowserStorage from '../BrowserStorage';
 import { robloxCatalogService, robloxTokenService, robloxUserService } from '../roblox';
 import CatalogItemsLink from '../roblox/CatalogItemsLink';
-import AlarmTypes from './AlarmTypes';
+import AlarmTypes from './AlarmToggleTypes';
 import AlarmToggle from './AlarmToggle';
 
 export default class RobloxFreeAutoBuyerAlarm extends AlarmToggle {
@@ -13,7 +13,7 @@ export default class RobloxFreeAutoBuyerAlarm extends AlarmToggle {
 
   override async onCreate() {
     // @ts-ignore
-    const storage: Storage = await Browser.storage.local.get(null);
+    const storage: BrowserStorage = await Browser.storage.local.get(null);
 
     const catalogItemsAutoBuyerAssets = await robloxCatalogService.findManyFreeItemsAssetDetails(
       storage.catalogItemsAutoBuyerTotalPages,
@@ -26,12 +26,12 @@ export default class RobloxFreeAutoBuyerAlarm extends AlarmToggle {
       robloxUser,
       catalogItemsAutoBuyerAssetsTotal: catalogItemsAutoBuyerAssets.length,
       catalogItemsAutoBuyerAssets
-    } as Storage);
+    } as BrowserStorage);
   }
 
   override async onAlarm() {
     // @ts-ignore
-    const storage: Storage = await Browser.storage.local.get(null);
+    const storage: BrowserStorage = await Browser.storage.local.get(null);
 
     // TODO: fix index 0 error
     try {
@@ -43,7 +43,7 @@ export default class RobloxFreeAutoBuyerAlarm extends AlarmToggle {
     }
   }
 
-  async purchaseItems(storage: Storage) {
+  async purchaseItems(storage: BrowserStorage) {
     const filteredIds: number[] = [];
     const xcsrftoken = await robloxTokenService.getXCsrfToken();
 

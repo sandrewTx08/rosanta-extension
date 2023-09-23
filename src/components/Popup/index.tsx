@@ -1,8 +1,7 @@
-import { StrictMode, useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
+import { useEffect, useState } from 'react';
 import Browser from 'webextension-polyfill';
+import '../../../index.scss';
 import Storage from '../../Storage';
-import './index.scss';
 import { Tab, Tabs } from 'react-bootstrap';
 import RobloxFreeAutoBuyerAlarm from '../../alarms/RobloxFreeAutoBuyerAlarm';
 import CatalogItemsAutoBuyerTab from './Tabs/CatalogItemsAutoBuyerTab';
@@ -77,9 +76,4 @@ const Popup = () => {
   );
 };
 
-ReactDOM.render(
-  <StrictMode>
-    <Popup />
-  </StrictMode>,
-  document.getElementById('app')
-);
+export default Popup;

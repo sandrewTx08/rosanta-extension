@@ -60,7 +60,7 @@ export default class RobloxFreeAutoBuyerAlarm extends AlarmToggle {
         await Browser.notifications.create({
           message: storage.catalogItemsAutoBuyerAssets[i].description,
           title: storage.catalogItemsAutoBuyerAssets[i].name,
-          iconUrl: '../icon.png',
+          iconUrl: 'icon.png',
           type: 'basic',
           contextMessage: CatalogItemsLink.parseCatalogDetails(
             storage.catalogItemsAutoBuyerAssets[i]

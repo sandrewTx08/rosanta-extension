@@ -2,10 +2,13 @@ import Browser from 'webextension-polyfill';
 import Storage from '../../../../Storage';
 import CatalogItemsLink from '../../../../roblox/CatalogItemsLink';
 
-const LimitedUGCInGame: React.FC<{
+const LimitedUGCInGame = ({
+  loading: [loading, setloading],
+  storage: [storage, setstorage]
+}: {
   loading: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   storage: [Storage, React.Dispatch<React.SetStateAction<Storage>>];
-}> = ({ loading: [loading, setloading], storage: [storage, setstorage] }) => {
+}) => {
   return (
     <div className="d-flex flex-column">
       <div className="form-check form-switch py-3 mx-3">
@@ -18,7 +21,8 @@ const LimitedUGCInGame: React.FC<{
           onChange={(event) => {
             setloading(true);
             setstorage((value) => {
-              value.limitedUGCInGameNotifierEnabled = event.target.checked;
+              value.limitedUGCInGameNotifierEnabled =
+                event.target.checked || value.limitedUGCInGameNotifierEnabled;
               return { ...value };
             });
 

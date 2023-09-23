@@ -23,7 +23,7 @@ export default class AlarmToggle
 
     Browser.alarms.onAlarm.addListener((alarm) => {
       if (alarm.name === this.name) {
-        this.onAlarm(alarm);
+        this.onAlarm();
       }
     });
 
@@ -41,7 +41,7 @@ export default class AlarmToggle
     });
   }
 
-  onAlarm(alarm: Browser.Alarms.Alarm) {}
+  onAlarm() {}
 
   onCreate() {}
 }

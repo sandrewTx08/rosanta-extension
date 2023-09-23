@@ -12,11 +12,8 @@
   },
 
   "background": {
-    "service_worker": "js/background.js"
-  },
-
-  "options_ui": {
-    "page": "options.html"
+    "type": "module",
+    "service_worker": "background.js"
   },
 
   "action": {

@@ -1,4 +1,3 @@
-import React from 'react';
 import Storage from '../../../../Storage';
 import { Form } from 'react-bootstrap';
 import Browser from 'webextension-polyfill';
@@ -7,10 +6,13 @@ import CatalogItemsLink from '../../../../roblox/CatalogItemsLink';
 import useProgress from './useProgress';
 import CatalogItemsDetailsQueryParamDTO from '../../../../roblox/CatalogItemsDetailsQueryParamDTO';
 
-export const CatalogItemsAutoBuyerTab: React.FC<{
+const CatalogItemsAutoBuyerTab = ({
+  loading: [loading, setloading],
+  storage: [storage, setstorage]
+}: {
   loading: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   storage: [Storage, React.Dispatch<React.SetStateAction<Storage>>];
-}> = ({ loading: [loading, setloading], storage: [storage, setstorage] }) => {
+}) => {
   const progress = useProgress(storage);
 
   return (

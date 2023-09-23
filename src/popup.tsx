@@ -1,4 +1,4 @@
-import { render } from 'preact';
-import Popup from './components/Popup';
+import { render } from "preact";
+import Popup from "./components/Popup";
 
-render(<Popup />, document.getElementById('app')!);
+render(<Popup />, document.getElementById("app")!);

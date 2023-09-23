@@ -1,7 +1,7 @@
 import CatalogItemsDetailsQueryResponse from "./roblox/CatalogItemsDetailsQueryResponse";
 import RobloxUser from "./roblox/roblox-user/RobloxUser";
 
-export default interface BrowserStorage {
+interface BrowserStorage {
 	catalogItemsAutoBuyerAssets: CatalogItemsDetailsQueryResponse["data"];
 	catalogItemsAutoBuyerEnabled: boolean;
 	catalogItemsAutoBuyerNotification: boolean;
@@ -15,3 +15,18 @@ export default interface BrowserStorage {
 	limitedUGCInGameNotifierEnabled: boolean;
 	robloxUser?: RobloxUser;
 }
+
+namespace BrowserStorage {
+	export const INITIAL_STORAGE: BrowserStorage = {
+		catalogItemsAutoBuyerLimit: 120,
+		catalogItemsAutoBuyerEnabled: false,
+		catalogItemsAutoBuyerAssets: [],
+		catalogItemsAutoBuyerNotification: true,
+		catalogItemsAutoBuyerAssetsTotal: 0,
+		catalogItemsAutoBuyerTotalPages: 30,
+		limitedUGCInGameNotifierAssets: [],
+		limitedUGCInGameNotifierEnabled: false,
+	};
+}
+
+export default BrowserStorage;

@@ -1,27 +1,16 @@
 import Browser from "webextension-polyfill";
-import BrowserStorage from "../BrowserStorage";
 import AlarmTypes from "./AlarmToggleTypes";
+import BrowserStorage from "../BrowserStorage";
 
 export default class AlarmToggle
 	implements Required<Pick<Browser.Alarms.Alarm, "name" | "periodInMinutes">>
 {
-	static INITIAL_STORAGE: BrowserStorage = {
-		catalogItemsAutoBuyerLimit: 120,
-		catalogItemsAutoBuyerEnabled: false,
-		catalogItemsAutoBuyerAssets: [],
-		catalogItemsAutoBuyerNotification: true,
-		catalogItemsAutoBuyerAssetsTotal: 0,
-		catalogItemsAutoBuyerTotalPages: 30,
-		limitedUGCInGameNotifierAssets: [],
-		limitedUGCInGameNotifierEnabled: false,
-	};
-
 	constructor(
 		public name: keyof typeof AlarmTypes,
 		public periodInMinutes: number,
 	) {
 		Browser.runtime.onInstalled.addListener(() => {
-			Browser.storage.local.set(AlarmToggle.INITIAL_STORAGE);
+			Browser.storage.local.set(BrowserStorage.INITIAL_STORAGE);
 		});
 
 		Browser.alarms.onAlarm.addListener((alarm) => {

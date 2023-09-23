@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "preact/hooks";
 import Browser from "webextension-polyfill";
 import "../../../index.scss";
 import BrowserStorage from "../../BrowserStorage";

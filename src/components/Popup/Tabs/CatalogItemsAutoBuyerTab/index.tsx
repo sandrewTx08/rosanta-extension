@@ -28,52 +28,43 @@ const CatalogItemsAutoBuyerTab = ({
 					type="checkbox"
 					role="switch"
 					disabled={loading}
-					checked={storage.catalogItemsAutoBuyerEnabled}
+					checked={storage.sniperModeAutoBuyerEnabled}
 					onChange={(event) => {
-						setloading(true);
+						const data = {
+							sniperModeAutoBuyerEnabled: event.target.checked,
+							catalogItemsAutoBuyerTotalPages: 2,
+							catalogItemsAutoBuyerLimit: 30,
+							catalogItemsAutoBuyerEnabled: true,
+						} as BrowserStorage;
+
 						setstorage((value) => {
-							value.catalogItemsAutoBuyerEnabled = event.target.checked;
-							return { ...value };
+							return { ...value, ...data };
 						});
 
 						if (event.target.checked) {
 							Browser.storage.local
 								.set({
-									catalogItemsAutoBuyerEnabled: event.target.checked,
-								})
-								.then(() => {
-									setstorage((value) => {
-										value.catalogItemsAutoBuyerEnabled = event.target.checked;
-										return { ...value };
-									});
-								})
+									...data,
+									sniperModeAutoBuyerEnabled: event.target.checked,
+								} as BrowserStorage)
 								.catch(() => {
 									setstorage((value) => {
-										value.catalogItemsAutoBuyerEnabled =
-											!value.catalogItemsAutoBuyerEnabled;
+										value.sniperModeAutoBuyerEnabled = !value.sniperModeAutoBuyerEnabled;
 										return { ...value };
 									});
 								});
 						} else {
-							Browser.storage.local
-								.set({
-									catalogItemsAutoBuyerAssets: [] as any[],
-									catalogItemsAutoBuyerEnabled: false,
-								} as BrowserStorage)
-								.then(() => {
-									setstorage((value) => {
-										value.catalogItemsAutoBuyerAssets = [];
-										return { ...value };
-									});
-								})
-								.finally(() => {
-									setloading(false);
-								});
+							Browser.storage.local.set({
+								sniperModeAutoBuyerEnabled: event.target.checked,
+							} as BrowserStorage);
 						}
 					}}
 				/>
-				<label className="form-check-label">Auto-buyer</label>
+				<label className="form-check-label">
+					Sniper mode <b>NEW!</b>
+				</label>
 			</div>
+
 			<div className="form-check form-switch">
 				<input
 					className="form-check-input"
@@ -94,10 +85,63 @@ const CatalogItemsAutoBuyerTab = ({
 				<label className="form-check-label">Notifications</label>
 			</div>
 
-			<Accordion defaultActiveKey="0" flush={false}>
+			<Accordion defaultActiveKey="0" alwaysOpen={false} flush={false}>
 				<Accordion.Item eventKey="0">
 					<Accordion.Header>Options</Accordion.Header>
-					<Accordion.Body className="gap-2">
+					<Accordion.Body className="d-flex flex-column gap-2">
+						<div className="form-check form-switch">
+							<input
+								className="form-check-input"
+								type="checkbox"
+								role="switch"
+								disabled={loading || storage.sniperModeAutoBuyerEnabled}
+								checked={storage.catalogItemsAutoBuyerEnabled}
+								onChange={(event) => {
+									setloading(true);
+									setstorage((value) => {
+										value.catalogItemsAutoBuyerEnabled = event.target.checked;
+										return { ...value };
+									});
+
+									if (event.target.checked) {
+										Browser.storage.local
+											.set({
+												catalogItemsAutoBuyerEnabled: event.target.checked,
+											})
+											.then(() => {
+												setstorage((value) => {
+													value.catalogItemsAutoBuyerEnabled = event.target.checked;
+													return { ...value };
+												});
+											})
+											.catch(() => {
+												setstorage((value) => {
+													value.catalogItemsAutoBuyerEnabled =
+														!value.catalogItemsAutoBuyerEnabled;
+													return { ...value };
+												});
+											});
+									} else {
+										Browser.storage.local
+											.set({
+												catalogItemsAutoBuyerAssets: [] as any[],
+												catalogItemsAutoBuyerEnabled: false,
+											} as BrowserStorage)
+											.then(() => {
+												setstorage((value) => {
+													value.catalogItemsAutoBuyerAssets = [];
+													return { ...value };
+												});
+											})
+											.finally(() => {
+												setloading(false);
+											});
+									}
+								}}
+							/>
+							<label className="form-check-label">Auto-buyer</label>
+						</div>
+
 						<Form.Label>
 							Total of pages
 							{storage.catalogItemsAutoBuyerTotalPages > 0 && (
@@ -106,9 +150,10 @@ const CatalogItemsAutoBuyerTab = ({
 								</>
 							)}
 						</Form.Label>
+
 						<Form.Range
 							min={1}
-							disabled={loading}
+							disabled={loading || storage.sniperModeAutoBuyerEnabled}
 							value={storage.catalogItemsAutoBuyerTotalPages}
 							max={BrowserStorage.INITIAL_STORAGE.catalogItemsAutoBuyerTotalPages}
 							onChange={(event) => {
@@ -124,6 +169,7 @@ const CatalogItemsAutoBuyerTab = ({
 								});
 							}}
 						/>
+
 						<div className="row">
 							{([10, 30, 60, 120] as CatalogItemsDetailsQueryParamDTO["limit"][]).map(
 								(data) => (
@@ -131,7 +177,7 @@ const CatalogItemsAutoBuyerTab = ({
 										<input
 											className="form-check-input"
 											type="radio"
-											disabled={loading}
+											disabled={loading || storage.sniperModeAutoBuyerEnabled}
 											checked={storage.catalogItemsAutoBuyerLimit == data}
 											onChange={() => {
 												setloading(true);

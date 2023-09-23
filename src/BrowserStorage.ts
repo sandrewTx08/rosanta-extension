@@ -12,6 +12,7 @@ interface BrowserStorage {
 		gameURL: string;
 		imageBatch: any;
 	})[];
+	sniperModeAutoBuyerEnabled: boolean;
 	limitedUGCInGameNotifierEnabled: boolean;
 	robloxUser?: RobloxUser;
 }
@@ -26,6 +27,7 @@ namespace BrowserStorage {
 		catalogItemsAutoBuyerTotalPages: 30,
 		limitedUGCInGameNotifierAssets: [],
 		limitedUGCInGameNotifierEnabled: false,
+		sniperModeAutoBuyerEnabled: false,
 	};
 }
 

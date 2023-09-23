@@ -79,13 +79,13 @@ const Popup = () => {
 				}
 				justify
 			>
-				<Tab eventKey={TabEventKeys.AUTOBUYER} title="Free items auto-buyer">
+				<Tab eventKey={TabEventKeys.AUTOBUYER} title="Auto buyer">
 					<CatalogItemsAutoBuyerTab
 						loading={[loading, setloading]}
 						storage={[storage, setstorage]}
 					/>
 				</Tab>
-				<Tab eventKey={TabEventKeys.UGC} title="Limited UGC in-game notifier">
+				<Tab eventKey={TabEventKeys.UGC} title="UGC notifier">
 					<LimitedUGCInGameNotifier
 						loading={[loading, setloading]}
 						storage={[storage, setstorage]}

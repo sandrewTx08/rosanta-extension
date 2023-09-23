@@ -96,20 +96,6 @@ const LimitedUGCInGameTab = ({
 						<input
 							className="form-check-input"
 							type="radio"
-							checked={orderingtype == OrderingType.MAX_AVAILABLE_UNITS}
-							onChange={(event) => {
-								if (event.target.checked) {
-									setorderingtype(OrderingType.MAX_AVAILABLE_UNITS);
-								}
-							}}
-						/>
-						<label className="form-check-label">Available units</label>
-					</div>
-
-					<div className="col-12 gap-2 d-flex">
-						<input
-							className="form-check-input"
-							type="radio"
 							checked={orderingtype == OrderingType.MOST_RECENT}
 							onChange={(event) => {
 								if (event.target.checked) {
@@ -118,6 +104,20 @@ const LimitedUGCInGameTab = ({
 							}}
 						/>
 						<label className="form-check-label">Most recent</label>
+					</div>
+
+					<div className="col-12 gap-2 d-flex">
+						<input
+							className="form-check-input"
+							type="radio"
+							checked={orderingtype == OrderingType.MAX_AVAILABLE_UNITS}
+							onChange={(event) => {
+								if (event.target.checked) {
+									setorderingtype(OrderingType.MAX_AVAILABLE_UNITS);
+								}
+							}}
+						/>
+						<label className="form-check-label">Available units</label>
 					</div>
 				</div>
 			</div>

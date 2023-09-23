@@ -195,15 +195,10 @@ const CatalogItemsAutoBuyerTab = ({
 				disabled={storage.catalogItemsAutoBuyerAssets.length <= 0}
 				onClick={() => {
 					setloading(true);
-					setstorage((value) => {
-						value.catalogItemsAutoBuyerEnabled = false;
-						return { ...value };
-					});
 
 					Browser.storage.local
 						.set({
 							catalogItemsAutoBuyerAssets: [],
-							catalogItemsAutoBuyerEnabled: false,
 						})
 						.then(() => {
 							setstorage((value) => {

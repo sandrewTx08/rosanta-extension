@@ -21,7 +21,7 @@ const CatalogItemsAutoBuyerTab = ({
 			storage.catalogItemsAutoBuyerAssetsTotal || 0;
 
 	return (
-		<div className="p-3 d-flex flex-column gap-2">
+		<div className="p-3 d-flex flex-column gap-3">
 			<div className="form-check form-switch">
 				<input
 					className="form-check-input"
@@ -94,9 +94,9 @@ const CatalogItemsAutoBuyerTab = ({
 				<label className="form-check-label">Notifications</label>
 			</div>
 
-			<Accordion defaultActiveKey="0" flush>
+			<Accordion defaultActiveKey="0" flush={false}>
 				<Accordion.Item eventKey="0">
-					<Accordion.Header>Filter options</Accordion.Header>
+					<Accordion.Header>Options</Accordion.Header>
 					<Accordion.Body className="gap-2">
 						<Form.Label>
 							Total of pages
@@ -154,80 +154,70 @@ const CatalogItemsAutoBuyerTab = ({
 								)
 							)}
 						</div>
-						<div>
-							Progress{" "}
-							<b>
-								{storage.catalogItemsAutoBuyerAssetsTotal -
-									storage.catalogItemsAutoBuyerAssets.length}
-							</b>{" "}
-							of <b>{storage.catalogItemsAutoBuyerAssetsTotal}</b>
-						</div>
 					</Accordion.Body>
 				</Accordion.Item>
 			</Accordion>
 
-			<div className="d-flex gap-3 flex-column">
-				<div className="progress">
-					<div
-						className="progress-bar"
-						role="progressbar"
-						style={{ width: `${progress}%` }}
-					>
-						{progress.toFixed(0)}%
-					</div>
+			<div className="progress">
+				<div
+					className="progress-bar"
+					role="progressbar"
+					style={{ width: `${progress}%` }}
+				>
+					{progress.toFixed(0)}%
 				</div>
-
-				<ul
-					className="list-group overflow-y-scroll border"
-					style={{ maxHeight: 120 }}
-				>
-					{storage.catalogItemsAutoBuyerAssets.map((a, i) => (
-						<li key={a.id} className={"list-group-item" + (i == 0 ? " active" : "")}>
-							<small>
-								<b>
-									<a
-										className={"" + (i == 0 ? " text-light" : " text-black")}
-										href={CatalogItemsLink.parseCatalogDetails(a)}
-										target="_blank"
-									>
-										{a.name}
-									</a>
-								</b>
-							</small>
-						</li>
-					))}
-				</ul>
-
-				<button
-					type="button"
-					className="btn btn-sm btn-warning rounded-pill"
-					disabled={storage.catalogItemsAutoBuyerAssets.length <= 0}
-					onClick={() => {
-						setloading(true);
-						setstorage((value) => {
-							value.catalogItemsAutoBuyerEnabled = false;
-							return { ...value };
-						});
-
-						Browser.storage.local
-							.set({
-								catalogItemsAutoBuyerAssets: [],
-								catalogItemsAutoBuyerEnabled: false,
-							})
-							.then(() => {
-								setstorage((value) => {
-									value.catalogItemsAutoBuyerAssets = [];
-									return { ...value };
-								});
-							})
-							.finally(() => {
-								setloading(false);
-							});
-					}}
-				>
-					Clear
-				</button>
 			</div>
+
+			<ul
+				className="list-group overflow-y-scroll border"
+				style={{ maxHeight: 120 }}
+			>
+				{storage.catalogItemsAutoBuyerAssets.map((a, i) => (
+					<li key={a.id} className={"list-group-item" + (i == 0 ? " active" : "")}>
+						<small>
+							<b>
+								<a
+									className={"" + (i == 0 ? " text-light" : " text-black")}
+									href={CatalogItemsLink.parseCatalogDetails(a)}
+									target="_blank"
+								>
+									{a.name}
+								</a>
+							</b>
+						</small>
+					</li>
+				))}
+			</ul>
+
+			<button
+				type="button"
+				className="btn btn-sm btn-warning rounded-pill"
+				disabled={storage.catalogItemsAutoBuyerAssets.length <= 0}
+				onClick={() => {
+					setloading(true);
+					setstorage((value) => {
+						value.catalogItemsAutoBuyerEnabled = false;
+						return { ...value };
+					});
+
+					Browser.storage.local
+						.set({
+							catalogItemsAutoBuyerAssets: [],
+							catalogItemsAutoBuyerEnabled: false,
+						})
+						.then(() => {
+							setstorage((value) => {
+								value.catalogItemsAutoBuyerAssets = [];
+								return { ...value };
+							});
+						})
+						.finally(() => {
+							setloading(false);
+						});
+				}}
+			>
+				Clear
+			</button>
 		</div>
 	);
 };

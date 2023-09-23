@@ -6,8 +6,15 @@ import { Tab, Tabs } from "react-bootstrap";
 import CatalogItemsAutoBuyerTab from "./Tabs/CatalogItemsAutoBuyerTab";
 import UserTab from "./Tabs/UserTab";
 import LimitedUGCInGameNotifier from "./Tabs/LimitedUGCInGameNotifierTab";
+import { robloxUserService } from "../../roblox";
 
 const Popup = () => {
+	enum TabEventKeys {
+		AUTOBUYER,
+		UGC,
+		USER,
+	}
+
 	const [storage, setstorage] = useState(BrowserStorage.INITIAL_STORAGE);
 	const [loading, setloading] = useState(false);
 
@@ -20,6 +27,14 @@ const Popup = () => {
 				// @ts-ignore
 				(storage: BrowserStorage) => {
 					setstorage(storage);
+
+					if (!storage.robloxUser) {
+						robloxUserService.getAuthenticatedUser().then((robloxUser) => {
+							if (robloxUser?.id) {
+								Browser.storage.local.set({ robloxUser } as BrowserStorage);
+							}
+						});
+					}
 				},
 			)
 			.finally(() => {
@@ -56,21 +71,21 @@ const Popup = () => {
 				<img className="h-100 w-auto" src="icon.png" />
 			</div>
 
-			<Tabs defaultActiveKey="tab1" justify>
-				<Tab eventKey="tab1" title="Free items auto-buyer">
+			<Tabs defaultActiveKey={TabEventKeys.AUTOBUYER} justify>
+				<Tab eventKey={TabEventKeys.AUTOBUYER} title="Free items auto-buyer">
 					<CatalogItemsAutoBuyerTab
 						loading={[loading, setloading]}
 						storage={[storage, setstorage]}
 					/>
 				</Tab>
-				<Tab eventKey="tab2" title="Limited UGC in-game notifier">
+				<Tab eventKey={TabEventKeys.UGC} title="Limited UGC in-game notifier">
 					<LimitedUGCInGameNotifier
 						loading={[loading, setloading]}
 						storage={[storage, setstorage]}
 					/>
 				</Tab>
-				<Tab eventKey="tab3" title="My User" disabled={!storage?.robloxUser}>
-					{storage.robloxUser && <UserTab robloxUser={storage.robloxUser} />}
+				<Tab eventKey={TabEventKeys.USER} title="My User">
+					<UserTab robloxUser={storage.robloxUser} />
 				</Tab>
 			</Tabs>
 		</main>

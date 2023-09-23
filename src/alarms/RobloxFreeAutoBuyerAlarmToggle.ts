@@ -1,11 +1,7 @@
 import Browser from "webextension-polyfill";
 import ProductPurchaseDTO from "../roblox/ProductPurchaseDTO";
 import BrowserStorage from "../BrowserStorage";
-import {
-	robloxCatalogService,
-	robloxTokenService,
-	robloxUserService,
-} from "../roblox";
+import { robloxCatalogService, robloxTokenService } from "../roblox";
 import CatalogItemsLink from "../roblox/CatalogItemsLink";
 import AlarmTypes from "./AlarmToggleTypes";
 import AlarmToggle from "./AlarmToggle";
@@ -25,10 +21,7 @@ export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
 				storage.catalogItemsAutoBuyerLimit,
 			);
 
-		const robloxUser = await robloxUserService.getAuthenticatedUser();
-
 		return Browser.storage.local.set({
-			robloxUser,
 			catalogItemsAutoBuyerAssetsTotal: catalogItemsAutoBuyerAssets.length,
 			catalogItemsAutoBuyerAssets,
 		} as BrowserStorage);

@@ -3,7 +3,6 @@ import { Form } from 'react-bootstrap';
 import Browser from 'webextension-polyfill';
 import RobloxFreeAutoBuyerAlarm from '../../../../alarms/RobloxFreeAutoBuyerAlarmToggle';
 import CatalogItemsLink from '../../../../roblox/CatalogItemsLink';
-import useProgress from './useProgress';
 import CatalogItemsDetailsQueryParamDTO from '../../../../roblox/CatalogItemsDetailsQueryParamDTO';
 
 const CatalogItemsAutoBuyerTab = ({
@@ -13,7 +12,10 @@ const CatalogItemsAutoBuyerTab = ({
   loading: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
   storage: [BrowserStorage, React.Dispatch<React.SetStateAction<BrowserStorage>>];
 }) => {
-  const progress = useProgress(storage);
+  const progress =
+    ((storage.catalogItemsAutoBuyerAssetsTotal - storage.catalogItemsAutoBuyerAssets.length) *
+      100) /
+      storage.catalogItemsAutoBuyerAssetsTotal || 0;
 
   return (
     <div className="p-3 d-flex flex-column gap-3">

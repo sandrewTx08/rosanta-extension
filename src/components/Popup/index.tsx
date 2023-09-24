@@ -71,9 +71,26 @@ const Popup = () => {
 				<img className="h-100 w-auto" src="icon.png" />
 			</div>
 
+			<div className="d-flex gap-2 py-2 px-4 justify-content-between">
+				<a
+					target="_black"
+					className="text-black d-block"
+					href="https://github.com/sandrewTx08/rosanta-extension"
+				>
+					Homepage
+				</a>
+				<a
+					target="_black"
+					className="text-black d-block"
+					href="https://www.paypal.com/donate/?hosted_button_id=SLTU45DK5LFSS"
+				>
+					Donations
+				</a>
+			</div>
+
 			<Tabs
 				defaultActiveKey={
-					!loading && !storage.robloxUser
+					!(loading && storage.robloxUser)
 						? TabEventKeys.AUTOBUYER
 						: TabEventKeys.USER
 				}

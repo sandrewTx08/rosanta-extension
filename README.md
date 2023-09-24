@@ -1,7 +1,7 @@
 # RoSanta
 
 <div align="center">
-  <img src="public/icon.png" />
+  <img width=300 src="public/image.png" />
 </div>
 
 ## About

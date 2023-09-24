@@ -32,7 +32,11 @@ const LimitedUGCInGameTab = ({
 						) => desc - asc,
 				  )),
 		]);
-	}, [storage.limitedUGCInGameNotifierAssets, orderingtype]);
+	}, [
+		storage.limitedUGCInGameNotifierAssets,
+		orderingtype,
+		storage.limitedUGCInGameNotifierEnabled,
+	]);
 
 	return (
 		<>
@@ -47,8 +51,7 @@ const LimitedUGCInGameTab = ({
 						onChange={(event) => {
 							setloading(true);
 							setstorage((value) => {
-								value.limitedUGCInGameNotifierEnabled =
-									event.target.checked || value.limitedUGCInGameNotifierEnabled;
+								value.limitedUGCInGameNotifierEnabled = event.target.checked;
 								return { ...value };
 							});
 

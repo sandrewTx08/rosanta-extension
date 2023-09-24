@@ -31,10 +31,7 @@ export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
 		// @ts-ignore
 		const storage: BrowserStorage = await Browser.storage.local.get(null);
 
-		// TODO: fix index 0 error
-		try {
-			await this.purchaseItems(storage);
-		} catch (error) {}
+		await this.purchaseItems(storage);
 
 		if (storage.catalogItemsAutoBuyerAssets.length <= this.purchasesMultiplier) {
 			this.onCreate();
@@ -46,29 +43,32 @@ export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
 		const xcsrftoken = await robloxTokenService.getXCsrfToken();
 
 		for (let i = 0; i < this.purchasesMultiplier; i++) {
-			filteredIds.push(storage.catalogItemsAutoBuyerAssets[i].productId);
+			// TODO: fix internal error
+			try {
+				filteredIds.push(storage.catalogItemsAutoBuyerAssets[i].productId);
 
-			const { purchased } = await robloxCatalogService.purchaseProduct(
-				storage.catalogItemsAutoBuyerAssets[i].productId,
-				new ProductPurchaseDTO(
-					0,
-					0,
-					storage.catalogItemsAutoBuyerAssets[i].creatorTargetId,
-				),
-				xcsrftoken,
-			);
-
-			if (purchased && storage.catalogItemsAutoBuyerNotification) {
-				await Browser.notifications.create({
-					message: storage.catalogItemsAutoBuyerAssets[i].description,
-					title: storage.catalogItemsAutoBuyerAssets[i].name,
-					iconUrl: "icon.png",
-					type: "basic",
-					contextMessage: CatalogItemsLink.parseCatalogDetails(
-						storage.catalogItemsAutoBuyerAssets[i],
+				const { purchased } = await robloxCatalogService.purchaseProduct(
+					storage.catalogItemsAutoBuyerAssets[i].productId,
+					new ProductPurchaseDTO(
+						0,
+						0,
+						storage.catalogItemsAutoBuyerAssets[i].creatorTargetId,
 					),
-				});
-			}
+					xcsrftoken,
+				);
+
+				if (purchased && storage.catalogItemsAutoBuyerNotification) {
+					await Browser.notifications.create({
+						message: storage.catalogItemsAutoBuyerAssets[i].description,
+						title: storage.catalogItemsAutoBuyerAssets[i].name,
+						iconUrl: "icon.png",
+						type: "basic",
+						contextMessage: CatalogItemsLink.parseCatalogDetails(
+							storage.catalogItemsAutoBuyerAssets[i],
+						),
+					});
+				}
+			} catch (error) {}
 		}
 
 		await Browser.storage.local.set({

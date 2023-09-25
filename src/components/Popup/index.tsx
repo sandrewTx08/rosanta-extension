@@ -28,13 +28,11 @@ const Popup = () => {
 				(storage: BrowserStorage) => {
 					setstorage(storage);
 
-					if (!storage.robloxUser) {
-						return robloxUserService.getAuthenticatedUser().then((robloxUser) => {
-							if (robloxUser?.id) {
-								return Browser.storage.local.set({ robloxUser } as BrowserStorage);
-							}
-						});
-					}
+					return robloxUserService.getAuthenticatedUser().then((robloxUser) => {
+						if (robloxUser?.id) {
+							return Browser.storage.local.set({ robloxUser } as BrowserStorage);
+						}
+					});
 				},
 			)
 			.finally(() => {

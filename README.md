@@ -1,12 +1,18 @@
 # RoSanta
 
 <div align="center">
-  <img width=300 src="public/image.png" />
+  <img width=250 src="public/image.png" />
 </div>
 
 ## About
 
 **RoSanta** is a free open source web browser _autobuyer_ extension that automatically buy free items from the Roblox website and provides catalog automations related.
+
+## Download
+
+<a href="https://chromewebstore.google.com/detail/rosanta-roblox-free-catal/jihbdahgiamkbmjdohfaglmojmilhdbd
+"><img width=200 src="https://storage.googleapis.com/web-dev-uploads/image/WlD8wC6g8khYWPJUsQceQkhXSlv1/iNEddTyWiMfLSwFD6qGq.png" />
+</a>
 
 ## Features
 

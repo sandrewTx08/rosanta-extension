@@ -130,13 +130,11 @@ const LimitedUGCInGameTab = ({
 				{assets.map((data) => (
 					<Col key={data.id}>
 						<Card className="h-100">
-							<Card.Img variant="top" src={data.assetThumbnail.imageUrl} />
+							<a href={CatalogItemsLink.parseCatalogDetails(data)} target="_blank">
+								<Card.Img variant="top" src={data.assetThumbnail.imageUrl} />
+							</a>
 							<Card.Body>
-								<Card.Title>
-									<a href={CatalogItemsLink.parseCatalogDetails(data)} target="_blank">
-										{data.name}
-									</a>
-								</Card.Title>
+								<Card.Title>{data.name}</Card.Title>
 								<Card.Text>
 									<small>
 										<a className="text-black" href={data.gameURL} target="_blank">
@@ -150,7 +148,7 @@ const LimitedUGCInGameTab = ({
 									Units available: <b>{data.unitsAvailableForConsumption}</b>
 									{" / "}
 									<b>{data.totalQuantity}</b>
-								</small>{" "}
+								</small>
 							</Card.Footer>
 						</Card>
 					</Col>

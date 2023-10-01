@@ -77,7 +77,13 @@ const Popup = () => {
 				className="d-flex gap-4 justify-content-center pb-4 pt-2"
 				style={{ height: 180 }}
 			>
-				<img className="h-100 w-auto" src="icon.png" />
+				<a
+					target="_black"
+					className="text-white text-decoration-none"
+					href="https://github.com/sandrewTx08/rosanta-extension"
+				>
+					<img className="h-100 w-auto" src="icon.png" />
+				</a>
 
 				{storage.avatarHeadshot && (
 					<div className="d-flex shadow-sm flex-column gap-2 text-center">

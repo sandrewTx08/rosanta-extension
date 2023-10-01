@@ -1,4 +1,6 @@
 import BrowserStorage from "../../BrowserStorage";
+import ImageBatchQueryParamDTO from "../roblox-image-batch/ImageBatchQueryParamDTO";
+import RobloxImageBatchService from "../roblox-image-batch/RobloxImageBatchService";
 import CatalogItemsDetailsQueryParamDTO from "./CatalogItemsDetailsQueryParamDTO";
 import CatalogItemsDetailsQueryResponse from "./CatalogItemsDetailsQueryResponse";
 import ProductPurchaseDTO from "./ProductPurchaseDTO";
@@ -6,9 +8,14 @@ import RobloxCatalogRepository from "./RobloxCatalogRepository";
 
 export default class RobloxCatalogService {
 	#robloxCatalogRepository: RobloxCatalogRepository;
+	#robloxImageBatchService: RobloxImageBatchService;
 
-	constructor(robloxRepository: RobloxCatalogRepository) {
+	constructor(
+		robloxRepository: RobloxCatalogRepository,
+		robloxImageBatchService: RobloxImageBatchService,
+	) {
 		this.#robloxCatalogRepository = robloxRepository;
+		this.#robloxImageBatchService = robloxImageBatchService;
 	}
 
 	purchaseProduct(
@@ -57,12 +64,14 @@ export default class RobloxCatalogService {
 		return data;
 	}
 
-	async findManyUGCLimited() {
+	async findManyUGCLimited(): Promise<
+		BrowserStorage["catalogItemsAutoBuyerAssets"]
+	> {
 		const gameURL = /\/games\/(\d+)/;
 
 		let catalogItemsDetails = await this.findManyAssetsDetails(
 			new CatalogItemsDetailsQueryParamDTO(1, 1, 3, true, 120, 0, 0, 5, 3),
-			4,
+			2,
 		);
 
 		catalogItemsDetails = catalogItemsDetails
@@ -73,20 +82,20 @@ export default class RobloxCatalogService {
 				({ unitsAvailableForConsumption }) => unitsAvailableForConsumption > 1,
 			)
 			.filter(({ description }) => description.match(gameURL))
-			.sort(({ productId: asc }, { productId: desc }) => desc - asc);
+			.sort(({ id: asc }, { id: desc }) => desc - asc);
 
-		const assetThumbnails =
-			await this.#robloxCatalogRepository.findManyAssetImages(
-				catalogItemsDetails.map(({ id }) => id),
-				`${700}x${700}`,
-				"Png",
+		const imagesBatches =
+			await this.#robloxImageBatchService.findManyImagesBatches(
+				catalogItemsDetails.map(
+					({ id, itemType }) => new ImageBatchQueryParamDTO(id, itemType),
+				),
 			);
 
 		return catalogItemsDetails.map<
 			BrowserStorage["limitedUGCInGameNotifierAssets"][0]
 		>((data, i) => ({
 			...data,
-			assetThumbnail: assetThumbnails.data[i],
+			assetThumbnail: imagesBatches.data[i],
 			gameURL:
 				"https://www.roblox.com/games/" + data.description.split(gameURL)[1],
 		}));
@@ -97,24 +106,36 @@ export default class RobloxCatalogService {
 			.catalogItemsAutoBuyerTotalPages,
 		catalogItemsAutoBuyerLimit = BrowserStorage.INITIAL_STORAGE
 			.catalogItemsAutoBuyerLimit,
-	) {
-		return (
-			await this.findManyAssetsDetails(
-				new CatalogItemsDetailsQueryParamDTO(
-					1,
-					1,
-					3,
-					true,
-					catalogItemsAutoBuyerLimit as CatalogItemsDetailsQueryParamDTO["limit"],
-					0,
-					0,
-					5,
-					3,
-				),
-				catalogItemsAutoBuyerTotalPages,
-			)
-		)
+	): Promise<BrowserStorage["catalogItemsAutoBuyerAssets"]> {
+		let catalogItemsDetails = await this.findManyAssetsDetails(
+			new CatalogItemsDetailsQueryParamDTO(
+				1,
+				1,
+				3,
+				true,
+				catalogItemsAutoBuyerLimit as CatalogItemsDetailsQueryParamDTO["limit"],
+				0,
+				0,
+				5,
+				3,
+			),
+			catalogItemsAutoBuyerTotalPages,
+		);
+
+		catalogItemsDetails = catalogItemsDetails
 			.filter(({ priceStatus }) => priceStatus == "Free")
-			.sort(({ productId: asc }, { productId: desc }) => desc - asc);
+			.sort(({ id: asc }, { id: desc }) => desc - asc);
+
+		const imagesBatches =
+			await this.#robloxImageBatchService.findManyImagesBatches(
+				catalogItemsDetails.map(
+					({ id, itemType }) => new ImageBatchQueryParamDTO(id, itemType),
+				),
+			);
+
+		return catalogItemsDetails.map((data, i) => ({
+			...data,
+			assetThumbnail: imagesBatches.data[i],
+		}));
 	}
 }

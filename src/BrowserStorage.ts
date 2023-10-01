@@ -4,7 +4,9 @@ import AvatarHeadshot from "./roblox/roblox-user/AvatarHeadshot";
 import RobloxUser from "./roblox/roblox-user/RobloxUser";
 
 interface BrowserStorage {
-	catalogItemsAutoBuyerAssets: CatalogItemsDetailsQueryResponse["data"];
+	catalogItemsAutoBuyerAssets: (CatalogItemsDetailsQueryResponse["data"][0] & {
+		assetThumbnail: AssetThumbnails["data"][0];
+	})[];
 	catalogItemsAutoBuyerEnabled: boolean;
 	catalogItemsAutoBuyerNotification: boolean;
 	catalogItemsAutoBuyerAssetsTotal: number;

@@ -6,7 +6,7 @@ import BrowserStorage from "../BrowserStorage";
 
 export default class LimitedUGCInGameNotifierAlarmToggle extends AlarmToggle {
 	constructor() {
-		super(AlarmToggleTypes.limitedUGCInGameNotifierEnabled, 5);
+		super(AlarmToggleTypes.limitedUGCInGameNotifierEnabled, 1);
 	}
 
 	override async onAlarm() {
@@ -20,8 +20,8 @@ export default class LimitedUGCInGameNotifierAlarmToggle extends AlarmToggle {
 			limitedUGCInGameNotifierAssets[0].name
 		) {
 			await Browser.notifications.create({
-				message: limitedUGCInGameNotifierAssets[0].name,
-				title: "New limited UGC is now available in game",
+				message: "New limited UGC is now available",
+				title: limitedUGCInGameNotifierAssets[0].name,
 				iconUrl: "icon.png",
 				type: "basic",
 			});

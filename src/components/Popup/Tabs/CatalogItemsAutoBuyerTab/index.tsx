@@ -14,11 +14,13 @@ const CatalogItemsAutoBuyerTab = ({
 		React.Dispatch<React.SetStateAction<BrowserStorage>>,
 	];
 }) => {
+	const disableOptions = loading || storage.sniperModeAutoBuyerEnabled;
+
 	const progress =
 		((storage.catalogItemsAutoBuyerAssetsTotal -
 			storage.catalogItemsAutoBuyerAssets.length) *
 			100) /
-			storage.catalogItemsAutoBuyerAssetsTotal || 0;
+		storage.catalogItemsAutoBuyerAssetsTotal;
 
 	return (
 		<div className="p-3 d-flex flex-column gap-3">
@@ -85,7 +87,7 @@ const CatalogItemsAutoBuyerTab = ({
 				<label className="form-check-label">Notifications</label>
 			</div>
 
-			<Accordion defaultActiveKey="0" alwaysOpen={false} flush={false}>
+			<Accordion alwaysOpen={false}>
 				<Accordion.Item eventKey="0">
 					<Accordion.Header>Options</Accordion.Header>
 					<Accordion.Body className="d-flex flex-column gap-2">
@@ -94,7 +96,7 @@ const CatalogItemsAutoBuyerTab = ({
 								className="form-check-input"
 								type="checkbox"
 								role="switch"
-								disabled={loading || storage.sniperModeAutoBuyerEnabled}
+								disabled={disableOptions}
 								checked={storage.catalogItemsAutoBuyerEnabled}
 								onChange={(event) => {
 									setloading(true);
@@ -153,19 +155,19 @@ const CatalogItemsAutoBuyerTab = ({
 
 						<Form.Range
 							min={1}
-							disabled={loading || storage.sniperModeAutoBuyerEnabled}
+							disabled={disableOptions}
 							value={storage.catalogItemsAutoBuyerTotalPages}
 							max={BrowserStorage.INITIAL_STORAGE.catalogItemsAutoBuyerTotalPages}
 							onChange={(event) => {
-								const t = Number.parseInt(event.target.value);
+								const range = Number.parseInt(event.target.value);
 
 								setstorage((value) => {
-									value.catalogItemsAutoBuyerTotalPages = t;
+									value.catalogItemsAutoBuyerTotalPages = range;
 									return { ...value };
 								});
 
 								Browser.storage.local.set({
-									catalogItemsAutoBuyerTotalPages: t,
+									catalogItemsAutoBuyerTotalPages: range,
 								});
 							}}
 						/>
@@ -177,7 +179,7 @@ const CatalogItemsAutoBuyerTab = ({
 										<input
 											className="form-check-input"
 											type="radio"
-											disabled={loading || storage.sniperModeAutoBuyerEnabled}
+											disabled={disableOptions}
 											checked={storage.catalogItemsAutoBuyerLimit == data}
 											onChange={() => {
 												setloading(true);

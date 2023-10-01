@@ -1,12 +1,12 @@
 import Browser from "webextension-polyfill";
 import { robloxCatalogService } from "../roblox";
 import AlarmToggle from "./AlarmToggle";
-import AlarmTypes from "./AlarmToggleTypes";
+import AlarmToggleTypes from "./AlarmToggleTypes";
 import BrowserStorage from "../BrowserStorage";
 
 export default class LimitedUGCInGameNotifierAlarmToggle extends AlarmToggle {
 	constructor() {
-		super(AlarmTypes.limitedUGCInGameNotifierEnabled, 5);
+		super(AlarmToggleTypes.limitedUGCInGameNotifierEnabled, 5);
 	}
 
 	override async onAlarm() {

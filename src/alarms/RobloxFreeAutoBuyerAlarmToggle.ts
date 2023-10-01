@@ -3,12 +3,12 @@ import ProductPurchaseDTO from "../roblox/ProductPurchaseDTO";
 import BrowserStorage from "../BrowserStorage";
 import { robloxCatalogService, robloxTokenService } from "../roblox";
 import CatalogItemsLink from "../roblox/CatalogItemsLink";
-import AlarmTypes from "./AlarmToggleTypes";
+import AlarmToggleTypes from "./AlarmToggleTypes";
 import AlarmToggle from "./AlarmToggle";
 
 export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
 	constructor(public purchasesMultiplier: number = 2) {
-		super(AlarmTypes.catalogItemsAutoBuyerEnabled, 1);
+		super(AlarmToggleTypes.catalogItemsAutoBuyerEnabled, 1);
 	}
 
 	override async onCreate() {

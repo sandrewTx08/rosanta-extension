@@ -24,4 +24,13 @@ export default class RobloxUserService {
 			)) === true
 		);
 	}
+
+	avatarHeadshot(userIds: number, size: number) {
+		return this.#robloxUserRepository.avatarHeadshot(
+			userIds,
+			`${size}x${size}`,
+			false,
+			"Png",
+		);
+	}
 }

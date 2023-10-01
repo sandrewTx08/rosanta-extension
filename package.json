@@ -10,16 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "preact": "^10.16.0",
     "bootstrap": "^5.3.1",
-    "webextension-polyfill": "^0.10.0",
-    "react-bootstrap": "^2.8.0"
+    "gotham-fonts": "^1.0.3",
+    "preact": "^10.16.0",
+    "react-bootstrap": "^2.8.0",
+    "webextension-polyfill": "^0.10.0"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.5.0",
-    "typescript": "^5.0.2",
-    "vite": "^4.4.5",
+    "@types/webextension-polyfill": "^0.10.2",
     "sass": "^1.67.0",
-    "@types/webextension-polyfill": "^0.10.2"
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5"
   }
 }

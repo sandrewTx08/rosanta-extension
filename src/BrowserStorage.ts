@@ -1,4 +1,5 @@
 import CatalogItemsDetailsQueryResponse from "./roblox/CatalogItemsDetailsQueryResponse";
+import AvatarHeadshot from "./roblox/roblox-user/AvatarHeadshot";
 import RobloxUser from "./roblox/roblox-user/RobloxUser";
 
 interface BrowserStorage {
@@ -15,6 +16,7 @@ interface BrowserStorage {
 	sniperModeAutoBuyerEnabled: boolean;
 	limitedUGCInGameNotifierEnabled: boolean;
 	robloxUser?: RobloxUser;
+	avatarHeadshot?: AvatarHeadshot;
 }
 
 namespace BrowserStorage {

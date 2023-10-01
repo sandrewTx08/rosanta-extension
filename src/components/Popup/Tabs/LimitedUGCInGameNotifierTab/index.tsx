@@ -1,7 +1,8 @@
 import Browser from "webextension-polyfill";
 import BrowserStorage from "../../../../BrowserStorage";
-import CatalogItemsLink from "../../../../roblox/CatalogItemsLink";
 import { useEffect, useState } from "preact/hooks";
+import CatalogItemsLink from "../../../../roblox/roblox-catalog/CatalogItemsLink";
+import { Row, Col, Card } from "react-bootstrap";
 
 const LimitedUGCInGameTab = ({
 	loading: [loading, setloading],
@@ -125,33 +126,36 @@ const LimitedUGCInGameTab = ({
 				</div>
 			</div>
 
-			<ul className="list-group list-group-flush text-break" style={{ border: 0 }}>
+			<Row xs={4} className="g-1 p-1">
 				{assets.map((data) => (
-					<li className="list-group-item" key={data.productId}>
-						<div>
-							<a href={CatalogItemsLink.parseCatalogDetails(data)} target="_blank">
-								{data.name}
-							</a>
-						</div>
-
-						<div>
-							<small>
-								Units available: <b>{data.unitsAvailableForConsumption}</b>
-								{" / "}
-								<b>{data.totalQuantity}</b>
-							</small>
-						</div>
-
-						<div>
-							<small>
-								<a className="text-black" href={data.gameURL} target="_blank">
-									{data.gameURL}
-								</a>
-							</small>
-						</div>
-					</li>
+					<Col key={data.id}>
+						<Card className="h-100">
+							<Card.Img variant="top" src={data.assetThumbnail.imageUrl} />
+							<Card.Body>
+								<Card.Title>
+									<a href={CatalogItemsLink.parseCatalogDetails(data)} target="_blank">
+										{data.name}
+									</a>
+								</Card.Title>
+								<Card.Text>
+									<small>
+										<a className="text-black" href={data.gameURL} target="_blank">
+											{data.gameURL}
+										</a>
+									</small>
+								</Card.Text>
+							</Card.Body>
+							<Card.Footer>
+								<small>
+									Units available: <b>{data.unitsAvailableForConsumption}</b>
+									{" / "}
+									<b>{data.totalQuantity}</b>
+								</small>{" "}
+							</Card.Footer>
+						</Card>
+					</Col>
 				))}
-			</ul>
+			</Row>
 		</>
 	);
 };

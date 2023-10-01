@@ -1,7 +1,8 @@
-import CatalogItemsDetailsQueryParamDTO from "../CatalogItemsDetailsQueryParamDTO";
-import CatalogItemsDetailsQueryResponse from "../CatalogItemsDetailsQueryResponse";
-import ProductPurchaseDTO from "../ProductPurchaseDTO";
-import PurchasesProductsResponse from "../PurchasesProductsResponse";
+import { AssetThumbnails } from "./AssetThumbnails";
+import CatalogItemsDetailsQueryParamDTO from "./CatalogItemsDetailsQueryParamDTO";
+import CatalogItemsDetailsQueryResponse from "./CatalogItemsDetailsQueryResponse";
+import ProductPurchaseDTO from "./ProductPurchaseDTO";
+import PurchasesProductsResponse from "./PurchasesProductsResponse";
 
 export default class RobloxCatalogRepository {
 	findManyAssetDetails(
@@ -13,6 +14,20 @@ export default class RobloxCatalogRepository {
 				...(catalogItemDetailsQueryParamDTO as {}),
 				cursor,
 			}).toString()}`,
+		).then((response) => response.json());
+	}
+
+	findManyAssetImages(
+		assetIds: number[],
+		size: `${number}x${number}`,
+		format: string,
+	): Promise<AssetThumbnails> {
+		return fetch(
+			`https://thumbnails.roblox.com/v1/assets?${new URLSearchParams({
+				assetIds: assetIds.join(","),
+				size,
+				format,
+			} as {}).toString()}`,
 		).then((response) => response.json());
 	}
 

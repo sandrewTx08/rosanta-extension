@@ -1,10 +1,10 @@
 import Browser from "webextension-polyfill";
-import ProductPurchaseDTO from "../roblox/ProductPurchaseDTO";
 import BrowserStorage from "../BrowserStorage";
 import { robloxCatalogService, robloxTokenService } from "../roblox";
-import CatalogItemsLink from "../roblox/CatalogItemsLink";
 import AlarmToggleTypes from "./AlarmToggleTypes";
 import AlarmToggle from "./AlarmToggle";
+import CatalogItemsLink from "../roblox/roblox-catalog/CatalogItemsLink";
+import ProductPurchaseDTO from "../roblox/roblox-catalog/ProductPurchaseDTO";
 
 export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
 	constructor(public purchasesMultiplier: number = 2) {

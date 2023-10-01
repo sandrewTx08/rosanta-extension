@@ -1,8 +1,8 @@
 import { Accordion, Form } from "react-bootstrap";
 import Browser from "webextension-polyfill";
-import CatalogItemsLink from "../../../../roblox/CatalogItemsLink";
-import CatalogItemsDetailsQueryParamDTO from "../../../../roblox/CatalogItemsDetailsQueryParamDTO";
+import CatalogItemsDetailsQueryParamDTO from "../../../../roblox/roblox-catalog/CatalogItemsDetailsQueryParamDTO";
 import BrowserStorage from "../../../../BrowserStorage";
+import CatalogItemsLink from "../../../../roblox/roblox-catalog/CatalogItemsLink";
 
 const CatalogItemsAutoBuyerTab = ({
 	loading: [loading, setloading],
@@ -20,7 +20,7 @@ const CatalogItemsAutoBuyerTab = ({
 		((storage.catalogItemsAutoBuyerAssetsTotal -
 			storage.catalogItemsAutoBuyerAssets.length) *
 			100) /
-		storage.catalogItemsAutoBuyerAssetsTotal;
+			storage.catalogItemsAutoBuyerAssetsTotal || 0;
 
 	return (
 		<div className="p-3 d-flex flex-column gap-3">
@@ -220,16 +220,19 @@ const CatalogItemsAutoBuyerTab = ({
 				className="list-group overflow-y-scroll border"
 				style={{ maxHeight: 120 }}
 			>
-				{storage.catalogItemsAutoBuyerAssets.map((a, i) => (
-					<li key={a.id} className={"list-group-item" + (i == 0 ? " active" : "")}>
+				{storage.catalogItemsAutoBuyerAssets.map((data, i) => (
+					<li
+						key={data.id}
+						className={"list-group-item" + (i == 0 ? " active" : "")}
+					>
 						<small>
 							<b>
 								<a
 									className={"" + (i == 0 ? " text-light" : " text-black")}
-									href={CatalogItemsLink.parseCatalogDetails(a)}
+									href={CatalogItemsLink.parseCatalogDetails(data)}
 									target="_blank"
 								>
-									{a.name}
+									{data.name}
 								</a>
 							</b>
 						</small>

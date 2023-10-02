@@ -71,7 +71,7 @@ export default class RobloxCatalogService {
 
 		let catalogItemsDetails = await this.findManyAssetsDetails(
 			new CatalogItemsDetailsQueryParamDTO(1, 1, 3, true, 120, 0, 0, 5, 3),
-			2,
+			10,
 		);
 
 		catalogItemsDetails = catalogItemsDetails
@@ -81,7 +81,8 @@ export default class RobloxCatalogService {
 			.filter(
 				({ unitsAvailableForConsumption }) => unitsAvailableForConsumption > 1,
 			)
-			.filter(({ description }) => description.match(gameURL));
+			.filter(({ description }) => description.match(gameURL))
+			.sort(({ id: asc }, { id: desc }) => desc - asc);
 
 		const imagesBatches =
 			await this.#robloxImageBatchService.findManyImagesBatches(
@@ -90,18 +91,16 @@ export default class RobloxCatalogService {
 				),
 			);
 
-		if ("data" in imagesBatches) {
-			catalogItemsDetails = catalogItemsDetails.map<
-				BrowserStorage["limitedUGCInGameNotifierAssets"][0]
-			>((data, i) => ({
-				...data,
-				assetThumbnail: imagesBatches.data[i],
-				gameURL:
-					"https://www.roblox.com/games/" + data.description.split(gameURL)[1],
-			}));
-		}
+		catalogItemsDetails = catalogItemsDetails.map<
+			BrowserStorage["limitedUGCInGameNotifierAssets"][0]
+		>((data, i) => ({
+			...data,
+			imageBatch: imagesBatches[i],
+			gameURL:
+				"https://www.roblox.com/games/" + data.description.split(gameURL)[1],
+		}));
 
-		return catalogItemsDetails.sort(({ id: asc }, { id: desc }) => desc - asc);
+		return catalogItemsDetails;
 	}
 
 	async findManyFreeItemsAssetDetails(
@@ -125,9 +124,9 @@ export default class RobloxCatalogService {
 			catalogItemsAutoBuyerTotalPages,
 		);
 
-		catalogItemsDetails = catalogItemsDetails.filter(
-			({ priceStatus }) => priceStatus == "Free",
-		);
+		catalogItemsDetails = catalogItemsDetails
+			.filter(({ priceStatus }) => priceStatus == "Free")
+			.sort(({ id: asc }, { id: desc }) => desc - asc);
 
 		const imagesBatches =
 			await this.#robloxImageBatchService.findManyImagesBatches(
@@ -136,13 +135,11 @@ export default class RobloxCatalogService {
 				),
 			);
 
-		if ("data" in imagesBatches) {
-			catalogItemsDetails = catalogItemsDetails.map((data, i) => ({
-				...data,
-				assetThumbnail: imagesBatches.data[i],
-			}));
-		}
+		catalogItemsDetails = catalogItemsDetails.map((data, i) => ({
+			...data,
+			imageBatch: imagesBatches[i],
+		}));
 
-		return catalogItemsDetails.sort(({ id: asc }, { id: desc }) => desc - asc);
+		return catalogItemsDetails;
 	}
 }

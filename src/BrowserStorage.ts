@@ -1,11 +1,11 @@
-import { AssetThumbnails } from "./roblox/roblox-catalog/AssetThumbnails";
 import CatalogItemsDetailsQueryResponse from "./roblox/roblox-catalog/CatalogItemsDetailsQueryResponse";
+import { ImageBatchResponse } from "./roblox/roblox-image-batch/ImageBatchResponse";
 import AvatarHeadshot from "./roblox/roblox-user/AvatarHeadshot";
 import RobloxUser from "./roblox/roblox-user/RobloxUser";
 
 interface BrowserStorage {
 	catalogItemsAutoBuyerAssets: (CatalogItemsDetailsQueryResponse["data"][0] & {
-		assetThumbnail?: AssetThumbnails["data"][0];
+		imageBatch?: ImageBatchResponse["data"][0];
 	})[];
 	catalogItemsAutoBuyerEnabled: boolean;
 	catalogItemsAutoBuyerNotification: boolean;
@@ -14,7 +14,7 @@ interface BrowserStorage {
 	catalogItemsAutoBuyerLimit: number;
 	limitedUGCInGameNotifierAssets: (CatalogItemsDetailsQueryResponse["data"][0] & {
 		gameURL: string;
-		assetThumbnail?: AssetThumbnails["data"][0];
+		imageBatch?: ImageBatchResponse["data"][0];
 	})[];
 	sniperModeAutoBuyerEnabled: boolean;
 	limitedUGCInGameNotifierEnabled: boolean;

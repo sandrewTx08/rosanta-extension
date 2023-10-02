@@ -131,10 +131,7 @@ const LimitedUGCInGameTab = ({
 					<Col key={data.id}>
 						<Card className="h-100">
 							<a href={CatalogItemsLink.parseCatalogDetails(data)} target="_blank">
-								<Card.Img
-									variant="top"
-									src={data.assetThumbnail?.imageUrl || "icon.png"}
-								/>
+								<Card.Img variant="top" src={data.imageBatch?.imageUrl || "icon.png"} />
 							</a>
 							<Card.Body>
 								<Card.Title>{data.name}</Card.Title>

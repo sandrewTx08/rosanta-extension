@@ -49,49 +49,48 @@ export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
 		const filteredIds: number[] = [];
 
 		for (let i = 0; i < this.purchasesMultiplier; i++) {
+			try {
+				filteredIds.push(storage.catalogItemsAutoBuyerAssets[i].productId);
+			} catch (error) {
+				break;
+			}
+
 			let isItemOwned: boolean;
 
 			try {
-				isItemOwned = !(await robloxUserService.isItemOwnedByUser(
+				isItemOwned = await robloxUserService.isItemOwnedByUser(
 					storage.robloxUser?.id as number,
 					storage.catalogItemsAutoBuyerAssets[i].itemType,
 					storage.catalogItemsAutoBuyerAssets[i].id,
-				));
+				);
 			} catch (error) {
 				isItemOwned = false;
 			}
 
-			if (isItemOwned) {
-				// TODO: fix internal error
-				try {
-					const { purchased } = await robloxCatalogService.purchaseProduct(
-						storage.catalogItemsAutoBuyerAssets[i].productId,
-						new ProductPurchaseDTO(
-							0,
-							0,
-							storage.catalogItemsAutoBuyerAssets[i].creatorTargetId,
-						),
-						xcsrftoken,
-					);
+			if (!isItemOwned) {
+				const { purchased } = await robloxCatalogService.purchaseProduct(
+					storage.catalogItemsAutoBuyerAssets[i].productId,
+					new ProductPurchaseDTO(
+						0,
+						0,
+						storage.catalogItemsAutoBuyerAssets[i].creatorTargetId,
+					),
+					xcsrftoken,
+				);
 
-					if (purchased) {
-						filteredIds.push(storage.catalogItemsAutoBuyerAssets[i].productId);
-
-						if (storage.catalogItemsAutoBuyerNotification) {
-							await Browser.notifications.create({
-								message: storage.catalogItemsAutoBuyerAssets[i].description,
-								title: storage.catalogItemsAutoBuyerAssets[i].name,
-								iconUrl: "icon.png",
-								type: "basic",
-								contextMessage: CatalogItemsLink.parseCatalogDetails(
-									storage.catalogItemsAutoBuyerAssets[i],
-								),
-							});
-						}
+				if (purchased) {
+					if (storage.catalogItemsAutoBuyerNotification) {
+						await Browser.notifications.create({
+							message: storage.catalogItemsAutoBuyerAssets[i].description,
+							title: storage.catalogItemsAutoBuyerAssets[i].name,
+							iconUrl: "icon.png",
+							type: "basic",
+							contextMessage: CatalogItemsLink.parseCatalogDetails(
+								storage.catalogItemsAutoBuyerAssets[i],
+							),
+						});
 					}
-				} catch (error) {}
-			} else {
-				filteredIds.push(storage.catalogItemsAutoBuyerAssets[i].productId);
+				}
 			}
 		}
 

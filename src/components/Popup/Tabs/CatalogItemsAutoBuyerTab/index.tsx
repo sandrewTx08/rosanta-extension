@@ -242,7 +242,10 @@ const CatalogItemsAutoBuyerTab = ({
 					<Col key={data.id}>
 						<Card className="h-100" border={i == 0 ? "primary" : undefined}>
 							<a href={CatalogItemsLink.parseCatalogDetails(data)} target="_blank">
-								<Card.Img variant="top" src={data.assetThumbnail.imageUrl} />
+								<Card.Img
+									variant="top"
+									src={data.assetThumbnail?.imageUrl || "icon.png"}
+								/>
 							</a>
 							<Card.Body>
 								<Card.Title>{data.name}</Card.Title>

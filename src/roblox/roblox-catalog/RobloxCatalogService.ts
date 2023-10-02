@@ -81,8 +81,7 @@ export default class RobloxCatalogService {
 			.filter(
 				({ unitsAvailableForConsumption }) => unitsAvailableForConsumption > 1,
 			)
-			.filter(({ description }) => description.match(gameURL))
-			.sort(({ id: asc }, { id: desc }) => desc - asc);
+			.filter(({ description }) => description.match(gameURL));
 
 		const imagesBatches =
 			await this.#robloxImageBatchService.findManyImagesBatches(
@@ -91,14 +90,18 @@ export default class RobloxCatalogService {
 				),
 			);
 
-		return catalogItemsDetails.map<
-			BrowserStorage["limitedUGCInGameNotifierAssets"][0]
-		>((data, i) => ({
-			...data,
-			assetThumbnail: imagesBatches.data[i],
-			gameURL:
-				"https://www.roblox.com/games/" + data.description.split(gameURL)[1],
-		}));
+		if ("data" in imagesBatches) {
+			catalogItemsDetails = catalogItemsDetails.map<
+				BrowserStorage["limitedUGCInGameNotifierAssets"][0]
+			>((data, i) => ({
+				...data,
+				assetThumbnail: imagesBatches.data[i],
+				gameURL:
+					"https://www.roblox.com/games/" + data.description.split(gameURL)[1],
+			}));
+		}
+
+		return catalogItemsDetails.sort(({ id: asc }, { id: desc }) => desc - asc);
 	}
 
 	async findManyFreeItemsAssetDetails(
@@ -122,9 +125,9 @@ export default class RobloxCatalogService {
 			catalogItemsAutoBuyerTotalPages,
 		);
 
-		catalogItemsDetails = catalogItemsDetails
-			.filter(({ priceStatus }) => priceStatus == "Free")
-			.sort(({ id: asc }, { id: desc }) => desc - asc);
+		catalogItemsDetails = catalogItemsDetails.filter(
+			({ priceStatus }) => priceStatus == "Free",
+		);
 
 		const imagesBatches =
 			await this.#robloxImageBatchService.findManyImagesBatches(
@@ -133,9 +136,13 @@ export default class RobloxCatalogService {
 				),
 			);
 
-		return catalogItemsDetails.map((data, i) => ({
-			...data,
-			assetThumbnail: imagesBatches.data[i],
-		}));
+		if ("data" in imagesBatches) {
+			catalogItemsDetails = catalogItemsDetails.map((data, i) => ({
+				...data,
+				assetThumbnail: imagesBatches.data[i],
+			}));
+		}
+
+		return catalogItemsDetails.sort(({ id: asc }, { id: desc }) => desc - asc);
 	}
 }

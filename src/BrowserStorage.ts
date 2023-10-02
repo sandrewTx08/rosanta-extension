@@ -5,7 +5,7 @@ import RobloxUser from "./roblox/roblox-user/RobloxUser";
 
 interface BrowserStorage {
 	catalogItemsAutoBuyerAssets: (CatalogItemsDetailsQueryResponse["data"][0] & {
-		assetThumbnail: AssetThumbnails["data"][0];
+		assetThumbnail?: AssetThumbnails["data"][0];
 	})[];
 	catalogItemsAutoBuyerEnabled: boolean;
 	catalogItemsAutoBuyerNotification: boolean;
@@ -14,7 +14,7 @@ interface BrowserStorage {
 	catalogItemsAutoBuyerLimit: number;
 	limitedUGCInGameNotifierAssets: (CatalogItemsDetailsQueryResponse["data"][0] & {
 		gameURL: string;
-		assetThumbnail: AssetThumbnails["data"][0];
+		assetThumbnail?: AssetThumbnails["data"][0];
 	})[];
 	sniperModeAutoBuyerEnabled: boolean;
 	limitedUGCInGameNotifierEnabled: boolean;

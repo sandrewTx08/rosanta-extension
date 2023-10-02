@@ -14,7 +14,7 @@ export default class RobloxUserRepository {
 		itemTargetId: number,
 	): Promise<boolean> {
 		return fetch(
-			`/v1/users/${userId}/items/${itemType}/${itemTargetId}/is-owned`,
+			`https://inventory.roblox.com/v1/users/${userId}/items/${itemType}/${itemTargetId}/is-owned`,
 		).then((response) => response.json());
 	}
 

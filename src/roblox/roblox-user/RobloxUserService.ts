@@ -1,3 +1,4 @@
+import CatalogItemsDetailsQueryResponse from "../roblox-catalog/CatalogItemsDetailsQueryResponse";
 import RobloxUserRepository from "./RobloxUserRespository";
 
 export default class RobloxUserService {
@@ -13,13 +14,27 @@ export default class RobloxUserService {
 
 	async isItemOwndByUser(
 		userId: number,
-		itemType: number,
+		itemType: CatalogItemsDetailsQueryResponse["data"][0]["itemType"],
 		itemTargetId: number,
 	) {
+		let it: number;
+
+		switch (itemType) {
+			case "Bundle": {
+				it = 3;
+				break;
+			}
+
+			default:
+			case "Asset": {
+				it = 0;
+			}
+		}
+
 		return (
 			(await this.#robloxUserRepository.isItemOwndByUser(
 				userId,
-				itemType,
+				it,
 				itemTargetId,
 			)) === true
 		);

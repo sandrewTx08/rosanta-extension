@@ -12,7 +12,7 @@ export default class RobloxUserService {
 		return this.#robloxUserRepository.getAuthenticatedUser();
 	}
 
-	async isItemOwndByUser(
+	async isItemOwnedByUser(
 		userId: number,
 		itemType: CatalogItemsDetailsQueryResponse["data"][0]["itemType"],
 		itemTargetId: number,
@@ -32,7 +32,7 @@ export default class RobloxUserService {
 		}
 
 		return (
-			(await this.#robloxUserRepository.isItemOwndByUser(
+			(await this.#robloxUserRepository.isItemOwnedByUser(
 				userId,
 				it,
 				itemTargetId,

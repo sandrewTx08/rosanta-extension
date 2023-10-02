@@ -49,13 +49,19 @@ export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
 		const filteredIds: number[] = [];
 
 		for (let i = 0; i < this.purchasesMultiplier; i++) {
-			if (
-				!(await robloxUserService.isItemOwndByUser(
+			let isItemOwned: boolean;
+
+			try {
+				isItemOwned = !(await robloxUserService.isItemOwnedByUser(
 					storage.robloxUser?.id as number,
 					storage.catalogItemsAutoBuyerAssets[i].itemType,
 					storage.catalogItemsAutoBuyerAssets[i].id,
-				))
-			) {
+				));
+			} catch (error) {
+				isItemOwned = false;
+			}
+
+			if (isItemOwned) {
 				// TODO: fix internal error
 				try {
 					const { purchased } = await robloxCatalogService.purchaseProduct(

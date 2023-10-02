@@ -8,7 +8,7 @@ export default class RobloxUserRepository {
 		);
 	}
 
-	isItemOwndByUser(
+	isItemOwnedByUser(
 		userId: number,
 		itemType: number,
 		itemTargetId: number,

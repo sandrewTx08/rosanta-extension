@@ -48,16 +48,22 @@ export default class RobloxCatalogService {
 
 		let page = await this.findOneAssetDetails(catalogItemsDetailsQueryParamDTO);
 
-		data = data.concat(page.data);
+		if (page?.data) {
+			data = data.concat(page.data);
 
-		for (let i = 1; i < catalogItemsAutoBuyerTotalPages; i++) {
-			if (page?.nextPageCursor && page?.data) {
-				page = await this.findOneAssetDetails(
-					catalogItemsDetailsQueryParamDTO,
-					page.nextPageCursor,
-				);
+			for (let i = 1; i < catalogItemsAutoBuyerTotalPages; i++) {
+				if (page?.nextPageCursor) {
+					page = await this.findOneAssetDetails(
+						catalogItemsDetailsQueryParamDTO,
+						page.nextPageCursor,
+					);
 
-				data = data.concat(page.data);
+					if (page?.data) {
+						data = data.concat(page.data);
+					}
+				} else {
+					break;
+				}
 			}
 		}
 

@@ -13,7 +13,7 @@ export default class RobloxImageBatchService {
 		imageBatchQueryParamDTOs: ImageBatchQueryParamDTO[],
 		skip: number = 10,
 	) {
-		let responses: Promise<ImageBatchResponse>[] = [];
+		const responses: Promise<ImageBatchResponse>[] = [];
 
 		for (let i = 0; i < imageBatchQueryParamDTOs.length; i += skip) {
 			responses.push(
@@ -25,7 +25,7 @@ export default class RobloxImageBatchService {
 
 		return (await Promise.all(responses))
 			.reduce<ImageBatchResponse["data"]>(
-				(p, c) => ("data" in c ? p.concat(c.data) : p),
+				(p, c) => (c?.data ? p.concat(c.data) : p),
 				[],
 			)
 			.sort(({ targetId: asc }, { targetId: desc }) => desc - asc);

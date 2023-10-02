@@ -52,7 +52,7 @@ export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
 			try {
 				filteredIds.push(storage.catalogItemsAutoBuyerAssets[i].productId);
 			} catch (error) {
-				break;
+				continue;
 			}
 
 			let isItemOwned: boolean;

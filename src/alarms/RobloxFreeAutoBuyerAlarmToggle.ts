@@ -46,13 +46,19 @@ export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
 	}
 
 	async purchaseItems(xcsrftoken: string, storage: BrowserStorage) {
+		let purchasesMultiplier = Number(this.purchasesMultiplier);
+		let purchasedCount = 0;
 		const filteredIds: number[] = [];
 
-		for (let i = 0; i < this.purchasesMultiplier; i++) {
+		for (let i = 0; i < purchasesMultiplier; i++) {
+			if (purchasedCount >= this.purchasesMultiplier) {
+				break;
+			}
+
 			try {
 				filteredIds.push(storage.catalogItemsAutoBuyerAssets[i].productId);
 			} catch (error) {
-				continue;
+				break;
 			}
 
 			let isItemOwned: boolean;
@@ -68,6 +74,8 @@ export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
 			}
 
 			if (!isItemOwned) {
+				purchasedCount++;
+
 				const { purchased } = await robloxCatalogService.purchaseProduct(
 					storage.catalogItemsAutoBuyerAssets[i].productId,
 					new ProductPurchaseDTO(
@@ -91,6 +99,10 @@ export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
 						});
 					}
 				}
+			} else if (
+				purchasesMultiplier < storage.catalogItemsAutoBuyerAssets.length
+			) {
+				purchasesMultiplier++;
 			}
 		}
 

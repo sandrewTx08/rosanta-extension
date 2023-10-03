@@ -9,5 +9,6 @@ export default class CatalogItemsDetailsQueryParamDTO {
 		public maxPrice: number,
 		public sortAggregation: number,
 		public currencyType: number,
+		public creatorName: string,
 	) {}
 }

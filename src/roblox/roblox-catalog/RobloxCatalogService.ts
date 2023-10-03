@@ -80,7 +80,7 @@ export default class RobloxCatalogService {
 		const gameURL = /\/games\/(\d+)/;
 
 		let catalogItemsDetails = await this.findManyAssetsDetails(
-			new CatalogItemsDetailsQueryParamDTO(1, 1, 3, true, 120, 0, 0, 5, 3),
+			new CatalogItemsDetailsQueryParamDTO(1, 1, 3, true, 120, 0, 0, 5, 3, ""),
 			10,
 		);
 
@@ -117,8 +117,26 @@ export default class RobloxCatalogService {
 		robloxUserId: number,
 	): Promise<BrowserStorage["catalogItemsAutoBuyerAssets"]> {
 		let catalogItemsDetails = await this.findManyAssetsDetails(
-			new CatalogItemsDetailsQueryParamDTO(1, 1, 3, true, 120, 0, 0, 5, 3),
+			new CatalogItemsDetailsQueryParamDTO(1, 1, 3, true, 120, 0, 0, 5, 3, ""),
 			12,
+		);
+
+		catalogItemsDetails = catalogItemsDetails.concat(
+			await this.findManyAssetsDetails(
+				new CatalogItemsDetailsQueryParamDTO(
+					1,
+					1,
+					3,
+					true,
+					120,
+					0,
+					0,
+					5,
+					3,
+					"Roblox",
+				),
+				12,
+			),
 		);
 
 		catalogItemsDetails = catalogItemsDetails.filter(

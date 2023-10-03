@@ -10,13 +10,14 @@ import RobloxUserService from "./roblox-user/RobloxUserService";
 export const robloxImageBatchService = new RobloxImageBatchService(
 	new RobloxImageBatchRepository(),
 );
+export const robloxUserService = new RobloxUserService(
+	new RobloxUserRepository(),
+);
 export const robloxCatalogService = new RobloxCatalogService(
 	new RobloxCatalogRepository(),
 	robloxImageBatchService,
+	robloxUserService,
 );
 export const robloxTokenService = new RobloxTokenService(
 	new RobloxTokenRepository(),
-);
-export const robloxUserService = new RobloxUserService(
-	new RobloxUserRepository(),
 );

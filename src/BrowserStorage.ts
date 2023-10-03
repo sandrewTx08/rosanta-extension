@@ -10,13 +10,10 @@ interface BrowserStorage {
 	catalogItemsAutoBuyerEnabled: boolean;
 	catalogItemsAutoBuyerNotification: boolean;
 	catalogItemsAutoBuyerAssetsTotal: number;
-	catalogItemsAutoBuyerTotalPages: number;
-	catalogItemsAutoBuyerLimit: number;
 	limitedUGCInGameNotifierAssets: (CatalogItemsDetailsQueryResponse["data"][0] & {
 		gameURL: string;
 		imageBatch?: ImageBatchResponse["data"][0];
 	})[];
-	sniperModeAutoBuyerEnabled: boolean;
 	limitedUGCInGameNotifierEnabled: boolean;
 	robloxUser?: RobloxUser;
 	avatarHeadshot?: AvatarHeadshot;
@@ -24,15 +21,12 @@ interface BrowserStorage {
 
 namespace BrowserStorage {
 	export const INITIAL_STORAGE: BrowserStorage = {
-		catalogItemsAutoBuyerLimit: 120,
 		catalogItemsAutoBuyerEnabled: false,
 		catalogItemsAutoBuyerAssets: [],
 		catalogItemsAutoBuyerNotification: true,
 		catalogItemsAutoBuyerAssetsTotal: 0,
-		catalogItemsAutoBuyerTotalPages: 30,
 		limitedUGCInGameNotifierAssets: [],
 		limitedUGCInGameNotifierEnabled: false,
-		sniperModeAutoBuyerEnabled: false,
 	};
 }
 

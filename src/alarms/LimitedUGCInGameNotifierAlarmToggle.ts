@@ -3,6 +3,7 @@ import { robloxCatalogService } from "../roblox";
 import AlarmToggle from "./AlarmToggle";
 import AlarmToggleTypes from "./AlarmToggleTypes";
 import BrowserStorage from "../BrowserStorage";
+import CatalogItemsLink from "../roblox/roblox-catalog/CatalogItemsLink";
 
 export default class LimitedUGCInGameNotifierAlarmToggle extends AlarmToggle {
 	constructor() {
@@ -22,8 +23,13 @@ export default class LimitedUGCInGameNotifierAlarmToggle extends AlarmToggle {
 			await Browser.notifications.create({
 				message: "New limited UGC is now available",
 				title: limitedUGCInGameNotifierAssets[0].name,
-				iconUrl: "icon.png",
+				iconUrl:
+					limitedUGCInGameNotifierAssets[0].imageBatch?.imageUrl || "icon.png",
 				type: "basic",
+				contextMessage: CatalogItemsLink.parseCatalogDetails(
+					limitedUGCInGameNotifierAssets[0],
+				),
+				appIconMaskUrl: "icon.png",
 			});
 		}
 

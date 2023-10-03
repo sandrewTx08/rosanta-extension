@@ -2,14 +2,12 @@ import Browser from "webextension-polyfill";
 import BrowserStorage from "../../../../BrowserStorage";
 import { useEffect, useState } from "preact/hooks";
 import CatalogItemsLink from "../../../../roblox/roblox-catalog/CatalogItemsLink";
-import { Row, Col, Card } from "react-bootstrap";
+import { Row, Col, Card, Form, ProgressBar } from "react-bootstrap";
 import CardPlaceHolder from "../../CardPlaceHolder";
 
 const LimitedUGCInGameTab = ({
-	loading: [loading, setloading],
 	storage: [storage, setstorage],
 }: {
-	loading: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
 	storage: [
 		BrowserStorage,
 		React.Dispatch<React.SetStateAction<BrowserStorage>>,
@@ -41,97 +39,82 @@ const LimitedUGCInGameTab = ({
 	]);
 
 	return (
-		<>
-			<div className="d-flex flex-column p-3 gap-3">
-				<div className="form-check form-switch">
-					<input
-						className="form-check-input"
-						type="checkbox"
-						role="switch"
-						disabled={loading}
-						checked={storage.limitedUGCInGameNotifierEnabled}
-						onChange={(event) => {
-							setloading(true);
-							setstorage((value) => {
-								value.limitedUGCInGameNotifierEnabled = event.target.checked;
-								return { ...value };
+		<div className="p-3 d-flex flex-column gap-3">
+			<Form.Switch
+				type="switch"
+				label="Notifier"
+				checked={storage.limitedUGCInGameNotifierEnabled}
+				onChange={(event) => {
+					setstorage((value) => {
+						value.limitedUGCInGameNotifierEnabled = event.target.checked;
+						return { ...value };
+					});
+
+					if (event.target.checked) {
+						Browser.storage.local
+							.set({
+								limitedUGCInGameNotifierEnabled: event.target.checked,
+							} as BrowserStorage)
+							.then(() => {
+								setstorage((value) => {
+									value.limitedUGCInGameNotifierEnabled = event.target.checked;
+									return { ...value };
+								});
+							})
+							.catch(() => {
+								setstorage((value) => {
+									value.limitedUGCInGameNotifierEnabled =
+										!value.limitedUGCInGameNotifierEnabled;
+									return { ...value };
+								});
 							});
+					} else {
+						Browser.storage.local
+							.set({
+								limitedUGCInGameNotifierAssets: [] as any[],
+								limitedUGCInGameNotifierEnabled: false,
+							} as BrowserStorage)
+							.then(() => {
+								setstorage((value) => {
+									value.limitedUGCInGameNotifierAssets = [];
+									return { ...value };
+								});
+							});
+					}
+				}}
+			/>
 
-							if (event.target.checked) {
-								Browser.storage.local
-									.set({
-										limitedUGCInGameNotifierEnabled: event.target.checked,
-									} as BrowserStorage)
-									.then(() => {
-										setstorage((value) => {
-											value.limitedUGCInGameNotifierEnabled = event.target.checked;
-											return { ...value };
-										});
-									})
-									.catch(() => {
-										setstorage((value) => {
-											value.limitedUGCInGameNotifierEnabled =
-												!value.limitedUGCInGameNotifierEnabled;
-											return { ...value };
-										});
-									});
-							} else {
-								Browser.storage.local
-									.set({
-										limitedUGCInGameNotifierAssets: [] as any[],
-										limitedUGCInGameNotifierEnabled: false,
-									} as BrowserStorage)
-									.then(() => {
-										setstorage((value) => {
-											value.limitedUGCInGameNotifierAssets = [];
-											return { ...value };
-										});
-									})
-									.finally(() => {
-										setloading(false);
-									});
-							}
-						}}
-					/>
-					<label className="form-check-label">Notifier</label>
-				</div>
+			<div className="d-flex gap-2">
+				<Form.Check
+					inline
+					type="radio"
+					label="Most recent"
+					checked={orderingtype == OrderingType.MOST_RECENT}
+					onChange={(event) => {
+						if (event.target.checked) {
+							setorderingtype(OrderingType.MOST_RECENT);
+						}
+					}}
+				/>
 
-				<div className="row">
-					<div className="col-12 gap-2 d-flex">
-						<input
-							className="form-check-input"
-							type="radio"
-							checked={orderingtype == OrderingType.MOST_RECENT}
-							onChange={(event) => {
-								if (event.target.checked) {
-									setorderingtype(OrderingType.MOST_RECENT);
-								}
-							}}
-						/>
-						<label className="form-check-label">Most recent</label>
-					</div>
-
-					<div className="col-12 gap-2 d-flex">
-						<input
-							className="form-check-input"
-							type="radio"
-							checked={orderingtype == OrderingType.MAX_AVAILABLE_UNITS}
-							onChange={(event) => {
-								if (event.target.checked) {
-									setorderingtype(OrderingType.MAX_AVAILABLE_UNITS);
-								}
-							}}
-						/>
-						<label className="form-check-label">Available units</label>
-					</div>
-				</div>
+				<Form.Check
+					inline
+					type="radio"
+					label="Available units"
+					checked={orderingtype == OrderingType.MAX_AVAILABLE_UNITS}
+					onChange={(event) => {
+						if (event.target.checked) {
+							setorderingtype(OrderingType.MAX_AVAILABLE_UNITS);
+						}
+					}}
+				/>
 			</div>
 
 			<Row xs={4} className="g-1 p-1">
 				{assets.length > 0
 					? assets.map((data) => (
-							<Col key={data.id}>
-								<Card className="h-100">
+							<Col key={data.id} className="small">
+								<Card className="h-100 small">
 									<a href={CatalogItemsLink.parseCatalogDetails(data)} target="_blank">
 										<Card.Img
 											variant="top"
@@ -141,19 +124,25 @@ const LimitedUGCInGameTab = ({
 									<Card.Body>
 										<Card.Title>{data.name}</Card.Title>
 										<Card.Text>
-											<small>
-												<a className="text-black" href={data.gameURL} target="_blank">
-													{data.gameURL}
-												</a>
-											</small>
+											<a className="text-black" href={data.gameURL} target="_blank">
+												{data.gameURL}
+											</a>
 										</Card.Text>
 									</Card.Body>
+									<Card.Footer className="d-flex justify-content-around">
+										<b>{data.unitsAvailableForConsumption}</b>
+										{" / "}
+										<b>{data.totalQuantity}</b>
+									</Card.Footer>
 									<Card.Footer>
-										<small>
-											Units available: <b>{data.unitsAvailableForConsumption}</b>
-											{" / "}
-											<b>{data.totalQuantity}</b>
-										</small>
+										<ProgressBar
+											max={100}
+											now={
+												100 -
+												(data.unitsAvailableForConsumption * 100) /
+													(data.totalQuantity || 0)
+											}
+										/>
 									</Card.Footer>
 								</Card>
 							</Col>
@@ -165,7 +154,7 @@ const LimitedUGCInGameTab = ({
 							</Col>
 					  ))}
 			</Row>
-		</>
+		</div>
 	);
 };
 

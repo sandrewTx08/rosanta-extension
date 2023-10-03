@@ -3,7 +3,7 @@ import { Card, Placeholder } from "react-bootstrap";
 
 const CardPlaceHolder: React.FC = () => {
 	return (
-		<Card>
+		<Card className="h-100">
 			<Card.Img variant="top" />
 			<Card.Body>
 				<Placeholder as={Card.Title} animation="glow">

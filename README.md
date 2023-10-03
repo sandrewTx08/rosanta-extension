@@ -16,11 +16,10 @@
 
 ## Features
 
-| Name                  | Description                                                                              |
-| --------------------- | ---------------------------------------------------------------------------------------- |
-| Autobuyer             | Buy the newest item from the catalog, tagged as "Free"                                   |
-| Sniper mode autobuyer | Set the most used configuration to buy recent **bundles** and **heads** from catalog     |
-| UGC in-game notifier  | Notify when a limited UGC item is added on catalog if obtain it from in-game experiences |
+| Name                 | Description                                                                              |
+| -------------------- | ---------------------------------------------------------------------------------------- |
+| Autobuyer            | Buy the newest free items from catalog such as **bundles**, **heads** from creators and    |
+| UGC in-game notifier | Notify when a limited UGC item is added on catalog if obtain it from in-game experiences |
 
 ## Donations
 

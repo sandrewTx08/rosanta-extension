@@ -1,6 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
 import Browser from "webextension-polyfill";
-import "../../../index.scss";
 import BrowserStorage from "../../BrowserStorage";
 import { Tab, Tabs } from "react-bootstrap";
 import CatalogItemsAutoBuyerTab from "./Tabs/CatalogItemsAutoBuyerTab";
@@ -9,7 +8,7 @@ import { robloxUserService } from "../../roblox";
 import PopupFooter from "./PopupFooter";
 import PopupHeader from "./PopupHeader";
 
-const Popup = () => {
+export const Popup = () => {
 	enum TabEventKeys {
 		AUTOBUYER,
 		UGC,
@@ -75,22 +74,18 @@ const Popup = () => {
 		<div className="d-flex flex-column gap-2" style={{ width: 540, height: 600 }}>
 			<PopupHeader storage={storage} />
 
-			<div className="h-100 d-flex flex-column justify-content-between">
-				<main>
-					<Tabs defaultActiveKey={TabEventKeys.AUTOBUYER} justify>
-						<Tab eventKey={TabEventKeys.AUTOBUYER} title="Autobuyer">
-							<CatalogItemsAutoBuyerTab storage={[storage, setstorage]} />
-						</Tab>
-						<Tab eventKey={TabEventKeys.UGC} title="UGC notifier">
-							<LimitedUGCInGameNotifier storage={[storage, setstorage]} />
-						</Tab>
-					</Tabs>
-				</main>
+			<main className="h-100 d-flex flex-column justify-content-between">
+				<Tabs defaultActiveKey={TabEventKeys.AUTOBUYER} justify>
+					<Tab eventKey={TabEventKeys.AUTOBUYER} title="Autobuyer">
+						<CatalogItemsAutoBuyerTab storage={[storage, setstorage]} />
+					</Tab>
+					<Tab eventKey={TabEventKeys.UGC} title="UGC notifier">
+						<LimitedUGCInGameNotifier storage={[storage, setstorage]} />
+					</Tab>
+				</Tabs>
+			</main>
 
-				<PopupFooter />
-			</div>
+			<PopupFooter />
 		</div>
 	);
 };
-
-export default Popup;

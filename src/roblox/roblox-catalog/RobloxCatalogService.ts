@@ -1,6 +1,7 @@
 import BrowserStorage from "../../BrowserStorage";
 import ImageBatchQueryParamDTO from "../roblox-image-batch/ImageBatchQueryParamDTO";
 import RobloxImageBatchService from "../roblox-image-batch/RobloxImageBatchService";
+import RobloxUserService from "../roblox-user/RobloxUserService";
 import CatalogItemsDetailsQueryParamDTO from "./CatalogItemsDetailsQueryParamDTO";
 import CatalogItemsDetailsQueryResponse from "./CatalogItemsDetailsQueryResponse";
 import ProductPurchaseDTO from "./ProductPurchaseDTO";
@@ -9,13 +10,16 @@ import RobloxCatalogRepository from "./RobloxCatalogRepository";
 export default class RobloxCatalogService {
 	#robloxCatalogRepository: RobloxCatalogRepository;
 	#robloxImageBatchService: RobloxImageBatchService;
+	#robloxUserService: RobloxUserService;
 
 	constructor(
 		robloxRepository: RobloxCatalogRepository,
 		robloxImageBatchService: RobloxImageBatchService,
+		robloxUserService: RobloxUserService,
 	) {
 		this.#robloxCatalogRepository = robloxRepository;
 		this.#robloxImageBatchService = robloxImageBatchService;
+		this.#robloxUserService = robloxUserService;
 	}
 
 	purchaseProduct(
@@ -110,28 +114,30 @@ export default class RobloxCatalogService {
 	}
 
 	async findManyFreeItemsAssetDetails(
-		catalogItemsAutoBuyerTotalPages = BrowserStorage.INITIAL_STORAGE
-			.catalogItemsAutoBuyerTotalPages,
-		catalogItemsAutoBuyerLimit = BrowserStorage.INITIAL_STORAGE
-			.catalogItemsAutoBuyerLimit,
+		robloxUserId: number,
 	): Promise<BrowserStorage["catalogItemsAutoBuyerAssets"]> {
 		let catalogItemsDetails = await this.findManyAssetsDetails(
-			new CatalogItemsDetailsQueryParamDTO(
-				1,
-				1,
-				3,
-				true,
-				catalogItemsAutoBuyerLimit as CatalogItemsDetailsQueryParamDTO["limit"],
-				0,
-				0,
-				5,
-				3,
+			new CatalogItemsDetailsQueryParamDTO(1, 1, 3, true, 120, 0, 0, 5, 3),
+			12,
+		);
+
+		catalogItemsDetails = catalogItemsDetails.filter(
+			({ priceStatus }) => priceStatus == "Free",
+		);
+
+		const isItemOwnedByUser = await Promise.all(
+			catalogItemsDetails.map(
+				async (data) =>
+					await this.#robloxUserService.isItemOwnedByUser(
+						robloxUserId,
+						data.itemType,
+						data.id,
+					),
 			),
-			catalogItemsAutoBuyerTotalPages,
 		);
 
 		catalogItemsDetails = catalogItemsDetails
-			.filter(({ priceStatus }) => priceStatus == "Free")
+			.filter((_, i) => !isItemOwnedByUser[i])
 			.sort(({ id: asc }, { id: desc }) => desc - asc);
 
 		const imagesBatches =

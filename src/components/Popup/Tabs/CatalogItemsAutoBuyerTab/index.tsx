@@ -3,6 +3,7 @@ import Browser from "webextension-polyfill";
 import CatalogItemsDetailsQueryParamDTO from "../../../../roblox/roblox-catalog/CatalogItemsDetailsQueryParamDTO";
 import BrowserStorage from "../../../../BrowserStorage";
 import CatalogItemsLink from "../../../../roblox/roblox-catalog/CatalogItemsLink";
+import CardPlaceHolder from "../../CardPlaceHolder";
 
 const CatalogItemsAutoBuyerTab = ({
 	loading: [loading, setloading],
@@ -234,23 +235,40 @@ const CatalogItemsAutoBuyerTab = ({
 					</Accordion.Item>
 				</Accordion>
 
-				<ProgressBar now={progress} label={progress.toFixed(0) + "%"} animated />
+				<ProgressBar
+					style={{ height: 26 }}
+					now={progress}
+					label={progress.toFixed(0) + "%"}
+					hidden={storage.catalogItemsAutoBuyerAssets.length <= 0}
+				/>
 			</div>
 
 			<Row xs={4} className="g-1 p-1">
-				{storage.catalogItemsAutoBuyerAssets.map((data, i) => (
-					<Col key={data.id}>
-						<Card className="h-100" border={i == 0 ? "primary" : undefined}>
-							<a href={CatalogItemsLink.parseCatalogDetails(data)} target="_blank">
-								<Card.Img variant="top" src={data.imageBatch?.imageUrl || "icon.png"} />
-							</a>
-							<Card.Body>
-								<Card.Title>{data.name}</Card.Title>
-								<Card.Text className="text-truncate">{data.description}</Card.Text>
-							</Card.Body>
-						</Card>
-					</Col>
-				))}
+				{storage.catalogItemsAutoBuyerAssets.length > 0
+					? storage.catalogItemsAutoBuyerAssets.map((data, i) => (
+							<Col key={data.id}>
+								<Card className="h-100" border={i == 0 ? "primary" : undefined}>
+									<a href={CatalogItemsLink.parseCatalogDetails(data)} target="_blank">
+										<Card.Img
+											variant="top"
+											src={data.imageBatch?.imageUrl || "icon.png"}
+										/>
+									</a>
+									<Card.Body>
+										<Card.Title>{data.name}</Card.Title>
+										<Card.Text className="text-truncate">{data.description}</Card.Text>
+									</Card.Body>
+								</Card>
+							</Col>
+					  ))
+					: storage.catalogItemsAutoBuyerEnabled &&
+					  Array.from({ length: 6 }).map(() => {
+							return (
+								<Col>
+									<CardPlaceHolder />
+								</Col>
+							);
+					  })}
 			</Row>
 		</>
 	);

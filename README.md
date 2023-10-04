@@ -6,7 +6,7 @@
 
 ## About
 
-**RoSanta** is a free open source web browser _autobuyer_ extension that automatically buy free items from the Roblox website and provides catalog automations related.
+**RoSanta** is an open source, _autobuyer_, browser extension, automatically buying free items from the Roblox website and provides catalog automations related.
 
 ## Download
 

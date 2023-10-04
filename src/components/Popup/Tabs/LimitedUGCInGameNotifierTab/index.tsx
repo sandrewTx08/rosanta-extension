@@ -22,32 +22,35 @@ const LimitedUGCInGameTab = ({
 	const [assets, setassets] = useState(storage.limitedUGCInGameNotifierAssets);
 
 	useEffect(() => {
-		setassets((value) => [
-			...(orderingtype == OrderingType.MOST_RECENT
-				? storage.limitedUGCInGameNotifierAssets
-				: value.sort(
-						(
-							{ unitsAvailableForConsumption: asc },
-							{ unitsAvailableForConsumption: desc },
-						) => desc - asc,
-				  )),
-		]);
-	}, [
-		storage.limitedUGCInGameNotifierAssets,
-		orderingtype,
-		storage.limitedUGCInGameNotifierEnabled,
-	]);
+		setassets((value) => {
+			switch (orderingtype) {
+				case OrderingType.MAX_AVAILABLE_UNITS:
+					return [
+						...value.sort(
+							(
+								{ unitsAvailableForConsumption: asc },
+								{ unitsAvailableForConsumption: desc },
+							) => desc - asc,
+						),
+					];
+
+				default:
+				case OrderingType.MOST_RECENT:
+					return [...storage.limitedUGCInGameNotifierAssets];
+			}
+		});
+	}, [orderingtype, storage.limitedUGCInGameNotifierAssets]);
 
 	return (
 		<div className="p-3 d-flex flex-column gap-3">
 			<Form.Switch
 				type="switch"
 				label="Notifier"
-				checked={storage.limitedUGCInGameNotifierEnabled}
+				defaultChecked={storage.limitedUGCInGameNotifierEnabled}
 				onChange={(event) => {
-					setstorage((value) => {
-						value.limitedUGCInGameNotifierEnabled = event.target.checked;
-						return { ...value };
+					setstorage({
+						...storage,
+						limitedUGCInGameNotifierEnabled: event.target.checked,
 					});
 
 					if (event.target.checked) {
@@ -55,31 +58,22 @@ const LimitedUGCInGameTab = ({
 							.set({
 								limitedUGCInGameNotifierEnabled: event.target.checked,
 							} as BrowserStorage)
-							.then(() => {
-								setstorage((value) => {
-									value.limitedUGCInGameNotifierEnabled = event.target.checked;
-									return { ...value };
-								});
-							})
 							.catch(() => {
-								setstorage((value) => {
-									value.limitedUGCInGameNotifierEnabled =
-										!value.limitedUGCInGameNotifierEnabled;
-									return { ...value };
+								setstorage({
+									...storage,
+									limitedUGCInGameNotifierEnabled:
+										!storage.limitedUGCInGameNotifierEnabled,
 								});
 							});
 					} else {
-						Browser.storage.local
-							.set({
-								limitedUGCInGameNotifierAssets: [] as any[],
-								limitedUGCInGameNotifierEnabled: false,
-							} as BrowserStorage)
-							.then(() => {
-								setstorage((value) => {
-									value.limitedUGCInGameNotifierAssets = [];
-									return { ...value };
-								});
-							});
+						setstorage({
+							...storage,
+							limitedUGCInGameNotifierEnabled: false,
+						});
+
+						Browser.storage.local.set({
+							limitedUGCInGameNotifierEnabled: false,
+						} as BrowserStorage);
 					}
 				}}
 			/>
@@ -90,6 +84,7 @@ const LimitedUGCInGameTab = ({
 					type="radio"
 					label="Most recent"
 					checked={orderingtype == OrderingType.MOST_RECENT}
+					defaultChecked={orderingtype == OrderingType.MOST_RECENT}
 					onChange={(event) => {
 						if (event.target.checked) {
 							setorderingtype(OrderingType.MOST_RECENT);
@@ -99,9 +94,11 @@ const LimitedUGCInGameTab = ({
 
 				<Form.Check
 					inline
+					disabled={storage.limitedUGCInGameNotifierAssets.length <= 0}
 					type="radio"
 					label="Available units"
 					checked={orderingtype == OrderingType.MAX_AVAILABLE_UNITS}
+					defaultChecked={orderingtype == OrderingType.MAX_AVAILABLE_UNITS}
 					onChange={(event) => {
 						if (event.target.checked) {
 							setorderingtype(OrderingType.MAX_AVAILABLE_UNITS);

@@ -19,9 +19,10 @@ export default class CatalogItemsLink {
 	): string {
 		return CatalogItemsLink.parse(
 			catalogDetails.itemType,
-			catalogDetails.itemType == "Bundle"
+			catalogDetails.itemType == "Bundle" ||
+				(catalogDetails?.productId && catalogDetails.id > catalogDetails.productId)
 				? catalogDetails.id
-				: catalogDetails?.productId || catalogDetails.id,
+				: catalogDetails.productId,
 		);
 	}
 }

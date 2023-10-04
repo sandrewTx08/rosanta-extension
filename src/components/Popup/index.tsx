@@ -18,77 +18,64 @@ const Popup = () => {
 	const [storage, setstorage] = useState(BrowserStorage.INITIAL_STORAGE);
 
 	useEffect(() => {
+		function eventHandler(
+			changes: Browser.Storage.StorageAreaOnChangedChangesType,
+		) {
+			setstorage((value) => {
+				for (const [key, change] of Object.entries(changes)) {
+					// @ts-ignore
+					value[key] = change.newValue || value[key];
+				}
+
+				return { ...value };
+			});
+		}
+
 		Browser.storage.local.get(null).then(
 			// @ts-ignore
 			(storage: BrowserStorage) => {
 				setstorage(storage);
 
-				return robloxUserService.getAuthenticatedUser().then((robloxUser) => {
+				robloxUserService.getAuthenticatedUser().then((robloxUser) => {
 					if (robloxUser?.id) {
 						robloxUserService
 							.avatarHeadshot(robloxUser.id, 720)
 							.then((avatarHeadshot) => {
+								setstorage({ ...storage, avatarHeadshot, robloxUser });
+
 								Browser.storage.local.set({
 									avatarHeadshot,
+									robloxUser,
 								} as BrowserStorage);
 							});
-
-						return Browser.storage.local.set({
-							robloxUser,
-						} as BrowserStorage);
 					}
 				});
 			},
 		);
 
-		Browser.storage.local.onChanged.addListener((storage) => {
-			if (storage.avatarHeadshot) {
-				setstorage((value) => {
-					value.avatarHeadshot = storage.avatarHeadshot.newValue;
-					value.robloxUser = storage.robloxUser.newValue;
-					return { ...value };
-				});
-			}
+		Browser.storage.local.onChanged.addListener(eventHandler);
 
-			if (storage.catalogItemsAutoBuyerAssets) {
-				setstorage((value) => {
-					value.catalogItemsAutoBuyerAssets =
-						storage.catalogItemsAutoBuyerAssets.newValue;
-					value.catalogItemsAutoBuyerAssetsTotal =
-						storage.catalogItemsAutoBuyerAssetsTotal?.newValue ||
-						value.catalogItemsAutoBuyerAssetsTotal;
-					return { ...value };
-				});
-			}
-
-			if (storage.limitedUGCInGameNotifierAssets) {
-				setstorage((value) => {
-					value.limitedUGCInGameNotifierAssets =
-						storage.limitedUGCInGameNotifierAssets.newValue;
-					return { ...value };
-				});
-			}
-		});
+		return () => {
+			Browser.storage.local.onChanged.removeListener(eventHandler);
+		};
 	}, []);
 
 	return (
 		<div className="d-flex flex-column gap-2" style={{ width: 540, height: 600 }}>
 			<PopupHeader storage={storage} />
 
-			<div className="h-100 d-flex flex-column justify-content-between">
-				<main>
-					<Tabs defaultActiveKey={TabEventKeys.AUTOBUYER} justify>
-						<Tab eventKey={TabEventKeys.AUTOBUYER} title="Autobuyer">
-							<CatalogItemsAutoBuyerTab storage={[storage, setstorage]} />
-						</Tab>
-						<Tab eventKey={TabEventKeys.UGC} title="UGC notifier">
-							<LimitedUGCInGameNotifier storage={[storage, setstorage]} />
-						</Tab>
-					</Tabs>
-				</main>
+			<main className="mb-auto d-flex flex-column gap-2 justify-content-between">
+				<Tabs defaultActiveKey={TabEventKeys.AUTOBUYER} justify>
+					<Tab eventKey={TabEventKeys.AUTOBUYER} title="Autobuyer">
+						<CatalogItemsAutoBuyerTab storage={[storage, setstorage]} />
+					</Tab>
+					<Tab eventKey={TabEventKeys.UGC} title="UGC notifier">
+						<LimitedUGCInGameNotifier storage={[storage, setstorage]} />
+					</Tab>
+				</Tabs>
+			</main>
 
-				<PopupFooter />
-			</div>
+			<PopupFooter />
 		</div>
 	);
 };

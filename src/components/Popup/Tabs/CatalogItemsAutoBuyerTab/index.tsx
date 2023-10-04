@@ -23,11 +23,11 @@ const CatalogItemsAutoBuyerTab = ({
 			<Form.Switch
 				type="switch"
 				label="Autobuyer"
-				checked={storage.catalogItemsAutoBuyerEnabled}
+				defaultChecked={storage.catalogItemsAutoBuyerEnabled}
 				onChange={(event) => {
-					setstorage((value) => {
-						value.catalogItemsAutoBuyerEnabled = event.target.checked;
-						return { ...value };
+					setstorage({
+						...storage,
+						catalogItemsAutoBuyerEnabled: event.target.checked,
 					});
 
 					if (event.target.checked) {
@@ -35,31 +35,23 @@ const CatalogItemsAutoBuyerTab = ({
 							.set({
 								catalogItemsAutoBuyerEnabled: event.target.checked,
 							})
-							.then(() => {
-								setstorage((value) => {
-									value.catalogItemsAutoBuyerEnabled = event.target.checked;
-									return { ...value };
-								});
-							})
 							.catch(() => {
-								setstorage((value) => {
-									value.catalogItemsAutoBuyerEnabled =
-										!value.catalogItemsAutoBuyerEnabled;
-									return { ...value };
+								setstorage({
+									...storage,
+									catalogItemsAutoBuyerEnabled: !storage.catalogItemsAutoBuyerEnabled,
 								});
 							});
 					} else {
-						Browser.storage.local
-							.set({
-								catalogItemsAutoBuyerAssets: [] as any[],
-								catalogItemsAutoBuyerEnabled: false,
-							} as BrowserStorage)
-							.then(() => {
-								setstorage((value) => {
-									value.catalogItemsAutoBuyerAssets = [];
-									return { ...value };
-								});
-							});
+						setstorage({
+							...storage,
+							catalogItemsAutoBuyerAssets: [],
+							catalogItemsAutoBuyerEnabled: false,
+						});
+
+						Browser.storage.local.set({
+							catalogItemsAutoBuyerAssets: [] as any[],
+							catalogItemsAutoBuyerEnabled: false,
+						} as BrowserStorage);
 					}
 				}}
 			/>
@@ -67,11 +59,11 @@ const CatalogItemsAutoBuyerTab = ({
 			<Form.Switch
 				type="switch"
 				label="Notifications"
-				checked={storage.catalogItemsAutoBuyerNotification}
+				defaultChecked={storage.catalogItemsAutoBuyerNotification}
 				onChange={(event) => {
-					setstorage((value) => {
-						value.catalogItemsAutoBuyerNotification = event.target.checked;
-						return { ...value };
+					setstorage({
+						...storage,
+						catalogItemsAutoBuyerNotification: event.target.checked,
 					});
 
 					Browser.storage.local.set({

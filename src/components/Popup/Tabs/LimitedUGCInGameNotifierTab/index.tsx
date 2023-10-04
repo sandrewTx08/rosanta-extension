@@ -135,9 +135,8 @@ const LimitedUGCInGameTab = ({
 										<ProgressBar
 											max={100}
 											now={
-												100 -
 												(data.unitsAvailableForConsumption * 100) /
-													(data.totalQuantity || 0)
+												(data.totalQuantity || 0)
 											}
 										/>
 									</Card.Footer>

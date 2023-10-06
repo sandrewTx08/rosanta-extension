@@ -1,8 +1,7 @@
-import { Card, Col, Form, ProgressBar, Row, Spinner } from "react-bootstrap";
+import { Col, Form, ProgressBar, Row, Spinner, Stack } from "react-bootstrap";
 import Browser from "webextension-polyfill";
 import BrowserStorage from "../../../../BrowserStorage";
-import CatalogItemsLink from "../../../../roblox/roblox-catalog/CatalogItemsLink";
-import CardPlaceHolder from "../../CardPlaceHolder";
+import CatalogItemsAccordions from "../../CatalogItemsAccordions";
 
 const CatalogItemsAutoBuyerTab = ({
 	storage: [storage, setstorage],
@@ -19,7 +18,7 @@ const CatalogItemsAutoBuyerTab = ({
 			storage.catalogItemsAutoBuyerAssetsTotal || 0;
 
 	return (
-		<div className="p-3 d-flex flex-column gap-3">
+		<Stack gap={3}>
 			<Form.Switch
 				type="switch"
 				label="Autobuyer"
@@ -96,35 +95,11 @@ const CatalogItemsAutoBuyerTab = ({
 					</Row>
 				)}
 
-			<Row xs={4} className="g-1 p-1">
-				{storage.catalogItemsAutoBuyerAssets.length > 0
-					? storage.catalogItemsAutoBuyerAssets.map((data, i) => (
-							<Col key={data.id} className="small">
-								<Card className="h-100 small" border={i == 0 ? "primary" : undefined}>
-									<a href={CatalogItemsLink.parseCatalogDetails(data)} target="_blank">
-										<Card.Img
-											variant="top"
-											src={data.imageBatch?.imageUrl || "icon.png"}
-										/>
-									</a>
-									<Card.Body>
-										<Card.Title>{data.name}</Card.Title>
-										<Card.Text className="text-truncate">{data.description}</Card.Text>
-									</Card.Body>
-								</Card>
-							</Col>
-					  ))
-					: storage.catalogItemsAutoBuyerEnabled && (
-							<>
-								{Array.from({ length: 6 }).map(() => (
-									<Col>
-										<CardPlaceHolder />
-									</Col>
-								))}
-							</>
-					  )}
-			</Row>
-		</div>
+			<CatalogItemsAccordions
+				active={storage.catalogItemsAutoBuyerEnabled}
+				data={storage.catalogItemsAutoBuyerAssets}
+			/>
+		</Stack>
 	);
 };
 

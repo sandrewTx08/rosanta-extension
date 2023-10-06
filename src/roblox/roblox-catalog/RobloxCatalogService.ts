@@ -86,12 +86,11 @@ export default class RobloxCatalogService {
 
 		catalogItemsDetails = catalogItemsDetails
 			.filter(
-				({ saleLocationType }) => saleLocationType == "ExperiencesDevApiOnly",
+				({ saleLocationType, unitsAvailableForConsumption, description }) =>
+					description.match(gameURL) &&
+					saleLocationType == "ExperiencesDevApiOnly" &&
+					unitsAvailableForConsumption > 1,
 			)
-			.filter(
-				({ unitsAvailableForConsumption }) => unitsAvailableForConsumption > 1,
-			)
-			.filter(({ description }) => description.match(gameURL))
 			.sort(({ id: asc }, { id: desc }) => desc - asc);
 
 		const imagesBatches =

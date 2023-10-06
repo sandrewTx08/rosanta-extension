@@ -2,7 +2,7 @@ import { useEffect, useState } from "preact/hooks";
 import Browser from "webextension-polyfill";
 import "../../../index.scss";
 import BrowserStorage from "../../BrowserStorage";
-import { Tab, Tabs } from "react-bootstrap";
+import { Stack, Tab, Tabs } from "react-bootstrap";
 import CatalogItemsAutoBuyerTab from "./Tabs/CatalogItemsAutoBuyerTab";
 import LimitedUGCInGameNotifier from "./Tabs/LimitedUGCInGameNotifierTab";
 import { robloxUserService } from "../../roblox";
@@ -41,7 +41,13 @@ const Popup = () => {
 						robloxUserService
 							.avatarHeadshot(robloxUser.id, 720)
 							.then((avatarHeadshot) => {
-								setstorage({ ...storage, avatarHeadshot, robloxUser });
+								setstorage({
+									...(storage.robloxUser && storage.robloxUser.id != robloxUser.id
+										? BrowserStorage.INITIAL_STORAGE
+										: storage),
+									avatarHeadshot,
+									robloxUser,
+								});
 
 								Browser.storage.local.set({
 									avatarHeadshot,
@@ -61,22 +67,20 @@ const Popup = () => {
 	}, []);
 
 	return (
-		<div className="d-flex flex-column gap-2" style={{ width: 540, height: 600 }}>
+		<Stack gap={2} style={{ width: 540, height: 600 }}>
 			<PopupHeader storage={storage} />
 
-			<main className="mb-auto d-flex flex-column gap-2 justify-content-between">
-				<Tabs defaultActiveKey={TabEventKeys.AUTOBUYER} justify>
-					<Tab eventKey={TabEventKeys.AUTOBUYER} title="Autobuyer">
-						<CatalogItemsAutoBuyerTab storage={[storage, setstorage]} />
-					</Tab>
-					<Tab eventKey={TabEventKeys.UGC} title="UGC notifier">
-						<LimitedUGCInGameNotifier storage={[storage, setstorage]} />
-					</Tab>
-				</Tabs>
-			</main>
+			<Tabs defaultActiveKey={TabEventKeys.AUTOBUYER} justify unmountOnExit>
+				<Tab className="p-3" eventKey={TabEventKeys.AUTOBUYER} title="Autobuyer">
+					<CatalogItemsAutoBuyerTab storage={[storage, setstorage]} />
+				</Tab>
+				<Tab className="p-3" eventKey={TabEventKeys.UGC} title="UGC notifier">
+					<LimitedUGCInGameNotifier storage={[storage, setstorage]} />
+				</Tab>
+			</Tabs>
 
 			<PopupFooter />
-		</div>
+		</Stack>
 	);
 };
 

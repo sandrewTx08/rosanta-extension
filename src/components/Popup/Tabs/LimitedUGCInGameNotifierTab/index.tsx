@@ -1,9 +1,9 @@
 import Browser from "webextension-polyfill";
 import BrowserStorage from "../../../../BrowserStorage";
-import { useEffect, useState } from "preact/hooks";
-import CatalogItemsLink from "../../../../roblox/roblox-catalog/CatalogItemsLink";
-import { Row, Col, Card, Form, ProgressBar } from "react-bootstrap";
-import CardPlaceHolder from "../../CardPlaceHolder";
+import { useState } from "preact/hooks";
+import { Col, Form, ProgressBar, Row, Stack } from "react-bootstrap";
+import CatalogItemsAccordions from "../../CatalogItemsAccordions";
+import { Controller } from "react-bootstrap-icons";
 
 const LimitedUGCInGameTab = ({
 	storage: [storage, setstorage],
@@ -14,35 +14,22 @@ const LimitedUGCInGameTab = ({
 	];
 }) => {
 	enum OrderingType {
-		MAX_AVAILABLE_UNITS,
 		MOST_RECENT,
+		BEST_MATCH,
 	}
 
+	const availablequantitytotalmax = Math.max(
+		...storage.limitedUGCInGameNotifierAssets.map(
+			({ unitsAvailableForConsumption }) => unitsAvailableForConsumption,
+		),
+		0,
+	);
+
 	const [orderingtype, setorderingtype] = useState(OrderingType.MOST_RECENT);
-	const [assets, setassets] = useState(storage.limitedUGCInGameNotifierAssets);
-
-	useEffect(() => {
-		setassets((value) => {
-			switch (orderingtype) {
-				case OrderingType.MAX_AVAILABLE_UNITS:
-					return [
-						...value.sort(
-							(
-								{ unitsAvailableForConsumption: asc },
-								{ unitsAvailableForConsumption: desc },
-							) => desc - asc,
-						),
-					];
-
-				default:
-				case OrderingType.MOST_RECENT:
-					return [...storage.limitedUGCInGameNotifierAssets];
-			}
-		});
-	}, [orderingtype, storage.limitedUGCInGameNotifierAssets]);
+	const [minquantity, setminquantity] = useState(200);
 
 	return (
-		<div className="p-3 d-flex flex-column gap-3">
+		<Stack gap={3}>
 			<Form.Switch
 				type="switch"
 				label="Notifier"
@@ -96,61 +83,102 @@ const LimitedUGCInGameTab = ({
 					inline
 					disabled={storage.limitedUGCInGameNotifierAssets.length <= 0}
 					type="radio"
-					label="Available units"
-					checked={orderingtype == OrderingType.MAX_AVAILABLE_UNITS}
-					defaultChecked={orderingtype == OrderingType.MAX_AVAILABLE_UNITS}
+					label="Best matches"
+					checked={orderingtype == OrderingType.BEST_MATCH}
+					defaultChecked={orderingtype == OrderingType.BEST_MATCH}
 					onChange={(event) => {
 						if (event.target.checked) {
-							setorderingtype(OrderingType.MAX_AVAILABLE_UNITS);
+							setorderingtype(OrderingType.BEST_MATCH);
 						}
 					}}
 				/>
 			</div>
 
-			<Row xs={4} className="g-1 p-1">
-				{assets.length > 0
-					? assets.map((data) => (
-							<Col key={data.id} className="small">
-								<Card className="h-100 small">
-									<a href={CatalogItemsLink.parseCatalogDetails(data)} target="_blank">
-										<Card.Img
-											variant="top"
-											src={data.imageBatch?.imageUrl || "icon.png"}
-										/>
-									</a>
-									<Card.Body>
-										<Card.Title>{data.name}</Card.Title>
-										<Card.Text>
-											<a className="text-black" href={data.gameURL} target="_blank">
-												{data.gameURL}
-											</a>
-										</Card.Text>
-									</Card.Body>
-									<Card.Footer className="d-flex justify-content-around">
-										<b>{data.unitsAvailableForConsumption}</b>
-										{" / "}
-										<b>{data.totalQuantity}</b>
-									</Card.Footer>
-									<Card.Footer>
-										<ProgressBar
-											max={100}
-											now={
-												(data.unitsAvailableForConsumption * 100) /
-												(data.totalQuantity || 0)
-											}
-										/>
-									</Card.Footer>
-								</Card>
-							</Col>
-					  ))
-					: storage.limitedUGCInGameNotifierEnabled &&
-					  Array.from({ length: 6 }).map(() => (
-							<Col>
-								<CardPlaceHolder />
-							</Col>
-					  ))}
+			<Form.Label>Total quantity</Form.Label>
+
+			<Row>
+				<Col xs={2} className="text-center">
+					{minquantity}
+				</Col>
+				<Col xs={8}>
+					<Form.Range
+						defaultValue={minquantity}
+						onChange={(event) => {
+							setminquantity(Number.parseInt(event.target.value));
+						}}
+						max={availablequantitytotalmax}
+					/>
+				</Col>
+				<Col xs={2} className="text-center">
+					{availablequantitytotalmax}
+				</Col>
 			</Row>
-		</div>
+
+			<CatalogItemsAccordions
+				data={((
+					data: BrowserStorage["limitedUGCInGameNotifierAssets"],
+				): BrowserStorage["limitedUGCInGameNotifierAssets"] => {
+					data = data.filter(
+						({ unitsAvailableForConsumption }) =>
+							unitsAvailableForConsumption >= minquantity,
+					);
+
+					switch (orderingtype) {
+						case OrderingType.BEST_MATCH:
+							return data
+								.filter(
+									({ unitsAvailableForConsumption, totalQuantity = 0 }) =>
+										unitsAvailableForConsumption - totalQuantity != 0,
+								)
+								.sort(
+									(
+										{ unitsAvailableForConsumption: asc1, totalQuantity: asc2 = 0 },
+										{ unitsAvailableForConsumption: desc1, totalQuantity: desc2 = 0 },
+									) => desc1 + desc2 - (asc1 + asc2),
+								);
+
+						default:
+						case OrderingType.MOST_RECENT:
+							return data;
+					}
+				})(storage.limitedUGCInGameNotifierAssets)}
+				active={storage.limitedUGCInGameNotifierEnabled}
+				headerLeft={(data) => (
+					<a href={data.gameURL} target="_blank">
+						<Controller className="text-center" />
+					</a>
+				)}
+				body={(data) => (
+					<>
+						<Col xs={3}>Game</Col>
+						<Col xs={9}>
+							<a
+								className="text-black text-trucante text-break"
+								href={data.gameURL}
+								target="_blank"
+							>
+								{data.gameURL}
+							</a>
+						</Col>
+						<Col xs={3}>Available</Col>
+						<Col xs={9}>
+							<ProgressBar max={data.totalQuantity}>
+								<ProgressBar
+									variant="danger"
+									now={(data.totalQuantity || 0) - data.unitsAvailableForConsumption}
+									label={(data.totalQuantity || 0) - data.unitsAvailableForConsumption}
+								/>
+								<ProgressBar
+									variant="success"
+									now={data.unitsAvailableForConsumption}
+									label={data.unitsAvailableForConsumption}
+								/>
+							</ProgressBar>
+						</Col>
+					</>
+				)}
+			/>
+		</Stack>
 	);
 };
 

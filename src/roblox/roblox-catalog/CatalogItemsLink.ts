@@ -22,7 +22,7 @@ export default class CatalogItemsLink {
 			catalogDetails.itemType == "Bundle" ||
 				(catalogDetails?.productId && catalogDetails.id > catalogDetails.productId)
 				? catalogDetails.id
-				: catalogDetails.productId,
+				: catalogDetails?.productId || catalogDetails.id,
 		);
 	}
 }

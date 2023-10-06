@@ -2,7 +2,7 @@ import { Col, Row } from "react-bootstrap";
 
 const PopupFooter = () => {
 	return (
-		<footer className="bg-light border-top d-flex gap-3 py-2 px-4 justify-content-center">
+		<footer className="mt-auto bg-light border-top d-flex gap-3 py-2 px-4 justify-content-center">
 			<Row>
 				<Col>
 					<a

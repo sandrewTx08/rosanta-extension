@@ -10,6 +10,7 @@ import {
 import CatalogItemsLink from "../../roblox/roblox-catalog/CatalogItemsLink";
 import BrowserStorage from "../../BrowserStorage";
 import { useState } from "preact/hooks";
+import { Search } from "react-bootstrap-icons";
 
 const CatalogItemsAccordions = <
 	T extends BrowserStorage["catalogItemsAutoBuyerAssets"],
@@ -17,12 +18,12 @@ const CatalogItemsAccordions = <
 	data,
 	active = false,
 	body,
-	headerLeft,
+	headerRight,
 }: React.PropsWithChildren<{
 	data: T;
 	active?: boolean;
 	body?(data: T[0]): React.ReactNode;
-	headerLeft?(data: T[0]): React.ReactNode;
+	headerRight?(data: T[0]): React.ReactNode;
 }>) => {
 	const [search, setsearch] = useState("");
 
@@ -33,9 +34,11 @@ const CatalogItemsAccordions = <
 				<Stack gap={2}>
 					<Accordion>
 						<Accordion.Item eventKey="0">
-							<InputGroup>
+							<InputGroup className="rounded p-3">
+								<InputGroup.Text>
+									<Search />
+								</InputGroup.Text>
 								<Form.Control
-									className="rounded m-3"
 									disabled={data.length <= 0}
 									placeholder="Search item names"
 									onChange={(event) => {
@@ -73,9 +76,9 @@ const CatalogItemsAccordions = <
 
 													<Col className="d-flex align-items-center">{data.name}</Col>
 
-													{headerLeft && (
-														<Col xs={2} className="d-flex align-items-center">
-															{headerLeft(data)}
+													{headerRight && (
+														<Col xs={3} className="d-flex align-items-center gap-1">
+															{headerRight(data)}
 														</Col>
 													)}
 												</Row>
@@ -88,6 +91,7 @@ const CatalogItemsAccordions = <
 															target="_blank"
 														>
 															<img
+																title={data.name}
 																height={350}
 																className="w-auto"
 																src={data.imageBatch?.imageUrl || "icon.png"}

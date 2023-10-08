@@ -18,7 +18,7 @@ const LimitedUGCInGameTab = ({
 		BEST_MATCH,
 	}
 
-	const availablequantitytotalmax = Math.max(
+	const quantitymax = Math.max(
 		...storage.limitedUGCInGameNotifierAssets.map(
 			({ unitsAvailableForConsumption }) => unitsAvailableForConsumption,
 		),
@@ -26,7 +26,7 @@ const LimitedUGCInGameTab = ({
 	);
 
 	const [orderingtype, setorderingtype] = useState(OrderingType.MOST_RECENT);
-	const [minquantity, setminquantity] = useState(0);
+	const [quantitymin, setquantitymin] = useState(0);
 
 	return (
 		<Stack gap={2}>
@@ -96,7 +96,7 @@ const LimitedUGCInGameTab = ({
 				/>
 			</Stack>
 
-			<h3 className="text-dark">Quantitiy</h3>
+			<h3 className="text-dark">Quantity</h3>
 			<Stack className="border p-3 rounded">
 				<Row>
 					<Col xs={3} className="text-center">
@@ -104,26 +104,26 @@ const LimitedUGCInGameTab = ({
 							className="w-100 border text-center rounded"
 							type="number"
 							step={1}
-							value={minquantity}
+							value={quantitymin}
 							min={0}
 							onChange={(event) => {
 								setTimeout(() => {
-									setminquantity(Number.parseInt(event.target.value));
+									setquantitymin(Number.parseInt(event.target.value));
 								}, 1000);
 							}}
 						/>
 					</Col>
 					<Col xs={7}>
 						<Form.Range
-							defaultValue={minquantity}
+							defaultValue={quantitymin}
 							onChange={(event) => {
-								setminquantity(Number.parseInt(event.target.value));
+								setquantitymin(Number.parseInt(event.target.value));
 							}}
-							max={availablequantitytotalmax}
+							max={quantitymax}
 						/>
 					</Col>
 					<Col xs={2} className="text-center">
-						{availablequantitytotalmax}
+						{quantitymax}
 					</Col>
 				</Row>
 			</Stack>
@@ -134,7 +134,7 @@ const LimitedUGCInGameTab = ({
 				): BrowserStorage["limitedUGCInGameNotifierAssets"] => {
 					data = data.filter(
 						({ unitsAvailableForConsumption }) =>
-							unitsAvailableForConsumption >= minquantity,
+							unitsAvailableForConsumption >= quantitymin,
 					);
 
 					switch (orderingtype) {
@@ -157,14 +157,27 @@ const LimitedUGCInGameTab = ({
 					}
 				})(storage.limitedUGCInGameNotifierAssets)}
 				active={storage.limitedUGCInGameNotifierEnabled}
-				headerLeft={(data) => (
-					<a
-						className="accordion-header-right p-1 rounded-circle"
-						href={data.gameURL}
-						target="_blank"
-					>
-						<Controller size={20} />
-					</a>
+				headerRight={(data) => (
+					<>
+						<a href={data.gameURL} target="_blank">
+							<Controller className="p-1 rounded-circle icon-fill" size={25} />
+						</a>
+
+						<ProgressBar className="w-100 small" max={data.totalQuantity}>
+							<ProgressBar
+								variant="danger"
+								now={(data.totalQuantity || 0) - data.unitsAvailableForConsumption}
+								title={(
+									(data.totalQuantity || 0) - data.unitsAvailableForConsumption
+								).toString()}
+							/>
+							<ProgressBar
+								variant="success"
+								now={data.unitsAvailableForConsumption}
+								title={data.unitsAvailableForConsumption.toString()}
+							/>
+						</ProgressBar>
+					</>
 				)}
 				body={(data) => (
 					<>

@@ -26,48 +26,51 @@ const LimitedUGCInGameTab = ({
 	);
 
 	const [orderingtype, setorderingtype] = useState(OrderingType.MOST_RECENT);
-	const [minquantity, setminquantity] = useState(200);
+	const [minquantity, setminquantity] = useState(0);
 
 	return (
-		<Stack gap={3}>
-			<Form.Switch
-				type="switch"
-				label="Notifier"
-				defaultChecked={storage.limitedUGCInGameNotifierEnabled}
-				onChange={(event) => {
-					setstorage({
-						...storage,
-						limitedUGCInGameNotifierEnabled: event.target.checked,
-					});
-
-					if (event.target.checked) {
-						Browser.storage.local
-							.set({
-								limitedUGCInGameNotifierEnabled: event.target.checked,
-							} as BrowserStorage)
-							.catch(() => {
-								setstorage({
-									...storage,
-									limitedUGCInGameNotifierEnabled:
-										!storage.limitedUGCInGameNotifierEnabled,
-								});
-							});
-					} else {
+		<Stack gap={2}>
+			<h3 className="text-dark">Features</h3>
+			<Stack className="border p-3 rounded">
+				<Form.Switch
+					type="switch"
+					label="Notifier"
+					defaultChecked={storage.limitedUGCInGameNotifierEnabled}
+					onChange={(event) => {
 						setstorage({
 							...storage,
-							limitedUGCInGameNotifierEnabled: false,
+							limitedUGCInGameNotifierEnabled: event.target.checked,
 						});
 
-						Browser.storage.local.set({
-							limitedUGCInGameNotifierEnabled: false,
-						} as BrowserStorage);
-					}
-				}}
-			/>
+						if (event.target.checked) {
+							Browser.storage.local
+								.set({
+									limitedUGCInGameNotifierEnabled: event.target.checked,
+								} as BrowserStorage)
+								.catch(() => {
+									setstorage({
+										...storage,
+										limitedUGCInGameNotifierEnabled:
+											!storage.limitedUGCInGameNotifierEnabled,
+									});
+								});
+						} else {
+							setstorage({
+								...storage,
+								limitedUGCInGameNotifierEnabled: false,
+							});
 
-			<div className="d-flex gap-2">
+							Browser.storage.local.set({
+								limitedUGCInGameNotifierEnabled: false,
+							} as BrowserStorage);
+						}
+					}}
+				/>
+			</Stack>
+
+			<h3 className="text-dark">Filtering</h3>
+			<Stack className="border p-3 rounded">
 				<Form.Check
-					inline
 					type="radio"
 					label="Most recent"
 					checked={orderingtype == OrderingType.MOST_RECENT}
@@ -80,7 +83,6 @@ const LimitedUGCInGameTab = ({
 				/>
 
 				<Form.Check
-					inline
 					disabled={storage.limitedUGCInGameNotifierAssets.length <= 0}
 					type="radio"
 					label="Best matches"
@@ -92,27 +94,39 @@ const LimitedUGCInGameTab = ({
 						}
 					}}
 				/>
-			</div>
+			</Stack>
 
-			<Form.Label>Total quantity</Form.Label>
-
-			<Row>
-				<Col xs={2} className="text-center">
-					{minquantity}
-				</Col>
-				<Col xs={8}>
-					<Form.Range
-						defaultValue={minquantity}
-						onChange={(event) => {
-							setminquantity(Number.parseInt(event.target.value));
-						}}
-						max={availablequantitytotalmax}
-					/>
-				</Col>
-				<Col xs={2} className="text-center">
-					{availablequantitytotalmax}
-				</Col>
-			</Row>
+			<h3 className="text-dark">Quantitiy</h3>
+			<Stack className="border p-3 rounded">
+				<Row>
+					<Col xs={3} className="text-center">
+						<input
+							className="w-100 border text-center rounded"
+							type="number"
+							step={1}
+							value={minquantity}
+							min={0}
+							onChange={(event) => {
+								setTimeout(() => {
+									setminquantity(Number.parseInt(event.target.value));
+								}, 1000);
+							}}
+						/>
+					</Col>
+					<Col xs={7}>
+						<Form.Range
+							defaultValue={minquantity}
+							onChange={(event) => {
+								setminquantity(Number.parseInt(event.target.value));
+							}}
+							max={availablequantitytotalmax}
+						/>
+					</Col>
+					<Col xs={2} className="text-center">
+						{availablequantitytotalmax}
+					</Col>
+				</Row>
+			</Stack>
 
 			<CatalogItemsAccordions
 				data={((
@@ -144,8 +158,12 @@ const LimitedUGCInGameTab = ({
 				})(storage.limitedUGCInGameNotifierAssets)}
 				active={storage.limitedUGCInGameNotifierEnabled}
 				headerLeft={(data) => (
-					<a href={data.gameURL} target="_blank">
-						<Controller className="text-center" />
+					<a
+						className="accordion-header-right p-1 rounded-circle"
+						href={data.gameURL}
+						target="_blank"
+					>
+						<Controller size={20} />
 					</a>
 				)}
 				body={(data) => (
@@ -153,7 +171,7 @@ const LimitedUGCInGameTab = ({
 						<Col xs={3}>Game</Col>
 						<Col xs={9}>
 							<a
-								className="text-black text-trucante text-break"
+								className="link-dark text-trucante text-break"
 								href={data.gameURL}
 								target="_blank"
 							>

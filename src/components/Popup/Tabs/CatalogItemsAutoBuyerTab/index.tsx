@@ -18,58 +18,61 @@ const CatalogItemsAutoBuyerTab = ({
 			storage.catalogItemsAutoBuyerAssetsTotal || 0;
 
 	return (
-		<Stack gap={3}>
-			<Form.Switch
-				type="switch"
-				label="Autobuyer"
-				defaultChecked={storage.catalogItemsAutoBuyerEnabled}
-				onChange={(event) => {
-					setstorage({
-						...storage,
-						catalogItemsAutoBuyerEnabled: event.target.checked,
-					});
-
-					if (event.target.checked) {
-						Browser.storage.local
-							.set({
-								catalogItemsAutoBuyerEnabled: event.target.checked,
-							})
-							.catch(() => {
-								setstorage({
-									...storage,
-									catalogItemsAutoBuyerEnabled: !storage.catalogItemsAutoBuyerEnabled,
-								});
-							});
-					} else {
+		<Stack gap={2}>
+			<h3 className="text-dark">Features</h3>
+			<Stack className="border p-3 rounded">
+				<Form.Switch
+					type="switch"
+					label="Autobuyer"
+					defaultChecked={storage.catalogItemsAutoBuyerEnabled}
+					onChange={(event) => {
 						setstorage({
 							...storage,
-							catalogItemsAutoBuyerAssets: [],
-							catalogItemsAutoBuyerEnabled: false,
+							catalogItemsAutoBuyerEnabled: event.target.checked,
+						});
+
+						if (event.target.checked) {
+							Browser.storage.local
+								.set({
+									catalogItemsAutoBuyerEnabled: event.target.checked,
+								})
+								.catch(() => {
+									setstorage({
+										...storage,
+										catalogItemsAutoBuyerEnabled: !storage.catalogItemsAutoBuyerEnabled,
+									});
+								});
+						} else {
+							setstorage({
+								...storage,
+								catalogItemsAutoBuyerAssets: [],
+								catalogItemsAutoBuyerEnabled: false,
+							});
+
+							Browser.storage.local.set({
+								catalogItemsAutoBuyerAssets: [] as any[],
+								catalogItemsAutoBuyerEnabled: false,
+							} as BrowserStorage);
+						}
+					}}
+				/>
+
+				<Form.Switch
+					type="switch"
+					label="Notifications"
+					defaultChecked={storage.catalogItemsAutoBuyerNotification}
+					onChange={(event) => {
+						setstorage({
+							...storage,
+							catalogItemsAutoBuyerNotification: event.target.checked,
 						});
 
 						Browser.storage.local.set({
-							catalogItemsAutoBuyerAssets: [] as any[],
-							catalogItemsAutoBuyerEnabled: false,
-						} as BrowserStorage);
-					}
-				}}
-			/>
-
-			<Form.Switch
-				type="switch"
-				label="Notifications"
-				defaultChecked={storage.catalogItemsAutoBuyerNotification}
-				onChange={(event) => {
-					setstorage({
-						...storage,
-						catalogItemsAutoBuyerNotification: event.target.checked,
-					});
-
-					Browser.storage.local.set({
-						catalogItemsAutoBuyerNotification: event.target.checked,
-					});
-				}}
-			/>
+							catalogItemsAutoBuyerNotification: event.target.checked,
+						});
+					}}
+				/>
+			</Stack>
 
 			<ProgressBar
 				style={{ height: 26 }}

@@ -32,6 +32,7 @@ export interface Datum {
 
 export enum CreatorType {
 	User = "User",
+	Group = "Group",
 }
 
 export enum ItemRestriction {

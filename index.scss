@@ -1,8 +1,26 @@
 $primary: #ba0101;
+$success: #2ea875;
+$info: #0009b3;
+$warning: #ff6c1e;
+$danger: #ea0005;
+$dark: #240002;
+
 $font-size-base: 0.9rem;
 $font-family-base: "Gotham Rounded";
-$accordion-button-padding-y: 4px;
+
+$accordion-button-padding-y: 0;
+$accordion-button-padding-x: 16px;
 $accordion-body-padding-y: 0;
+$accordion-body-padding-x: 0;
+
+.accordion-header-right:hover {
+	color: white;
+	background-color: $primary;
+}
+
+.accordion-header-right {
+	color: $dark;
+}
 
 @import "bootstrap/scss/bootstrap";
 @import "bootstrap-icons/font/bootstrap-icons.css";

@@ -7,6 +7,7 @@ interface BrowserStorage {
 	catalogItemsAutoBuyerAssets: (CatalogItemsDetailsQueryResponse["data"][0] & {
 		imageBatch?: ImageBatchResponse["data"][0];
 	})[];
+	catalogItemsAutoBuyerAssetsFiltered: { [x: number]: boolean };
 	catalogItemsAutoBuyerEnabled: boolean;
 	catalogItemsAutoBuyerNotification: boolean;
 	catalogItemsAutoBuyerAssetsTotal: number;
@@ -26,6 +27,7 @@ namespace BrowserStorage {
 		catalogItemsAutoBuyerNotification: true,
 		catalogItemsAutoBuyerAssetsTotal: 0,
 		limitedUGCInGameNotifierAssets: [],
+		catalogItemsAutoBuyerAssetsFiltered: {},
 		limitedUGCInGameNotifierEnabled: false,
 	};
 }

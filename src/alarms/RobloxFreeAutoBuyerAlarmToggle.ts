@@ -16,14 +16,21 @@ export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
 		const storage: BrowserStorage = await Browser.storage.local.get(null);
 
 		if (storage.robloxUser?.id) {
-			const catalogItemsAutoBuyerAssets =
+			const [catalogItemsAutoBuyerAssets, filteredIds] =
 				await robloxCatalogService.findManyFreeItemsAssetDetails(
 					storage.robloxUser.id,
+					storage.catalogItemsAutoBuyerAssetsFiltered,
 				);
+
+			for (const id of filteredIds) {
+				storage.catalogItemsAutoBuyerAssetsFiltered[id] = true;
+			}
 
 			return Browser.storage.local.set({
 				catalogItemsAutoBuyerAssetsTotal: catalogItemsAutoBuyerAssets.length,
 				catalogItemsAutoBuyerAssets,
+				catalogItemsAutoBuyerAssetsFiltered:
+					storage.catalogItemsAutoBuyerAssetsFiltered,
 			} as BrowserStorage);
 		}
 	}
@@ -79,10 +86,19 @@ export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
 			}
 		}
 
+		const catalogItemsAutoBuyerAssets =
+			storage.catalogItemsAutoBuyerAssets.filter(
+				({ productId }) => productId != filteredIds.find((id) => id == productId),
+			);
+
+		for (const { id } of catalogItemsAutoBuyerAssets) {
+			storage.catalogItemsAutoBuyerAssetsFiltered[id] = true;
+		}
+
 		await Browser.storage.local.set({
-			catalogItemsAutoBuyerAssets: storage.catalogItemsAutoBuyerAssets.filter(
-				(id1) => id1.productId != filteredIds.find((id2) => id2 == id1.productId),
-			),
-		});
+			catalogItemsAutoBuyerAssets,
+			catalogItemsAutoBuyerAssetsFiltered:
+				storage.catalogItemsAutoBuyerAssetsFiltered,
+		} as BrowserStorage);
 	}
 }

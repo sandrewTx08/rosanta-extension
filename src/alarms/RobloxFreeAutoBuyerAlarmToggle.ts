@@ -40,8 +40,10 @@ export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
 		const storage: BrowserStorage = await Browser.storage.local.get(null);
 
 		if (storage.robloxUser?.id) {
-			const xcsrftoken = await robloxTokenService.getXCsrfToken();
-			await this.purchaseItems(xcsrftoken, storage);
+			if (storage.catalogItemsAutoBuyerAssets.length > 0) {
+				const xcsrftoken = await robloxTokenService.getXCsrfToken();
+				await this.purchaseItems(xcsrftoken, storage);
+			}
 
 			if (storage.catalogItemsAutoBuyerAssets.length <= this.purchasesMultiplier) {
 				this.onCreate();

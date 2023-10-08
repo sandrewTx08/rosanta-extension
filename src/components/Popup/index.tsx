@@ -9,7 +9,7 @@ import { robloxUserService } from "../../roblox";
 import PopupFooter from "./PopupFooter";
 import PopupHeader from "./PopupHeader";
 
-const Popup = () => {
+const Popup: React.FC = () => {
 	enum TabEventKeys {
 		AUTOBUYER,
 		UGC,
@@ -41,15 +41,19 @@ const Popup = () => {
 						robloxUserService
 							.avatarHeadshot(robloxUser.id, 720)
 							.then((avatarHeadshot) => {
-								setstorage({
-									...(storage.robloxUser && storage.robloxUser.id != robloxUser.id
+								storage =
+									storage.robloxUser && storage.robloxUser.id != robloxUser.id
 										? BrowserStorage.INITIAL_STORAGE
-										: storage),
+										: storage;
+
+								setstorage({
+									...storage,
 									avatarHeadshot,
 									robloxUser,
 								});
 
 								Browser.storage.local.set({
+									...storage,
 									avatarHeadshot,
 									robloxUser,
 								} as BrowserStorage);
@@ -68,13 +72,17 @@ const Popup = () => {
 
 	return (
 		<Stack gap={2} style={{ width: 540, height: 600 }}>
-			<PopupHeader storage={storage} />
+			<PopupHeader storage={[storage, setstorage]} />
 
 			<Tabs defaultActiveKey={TabEventKeys.AUTOBUYER} justify unmountOnExit>
-				<Tab className="p-3" eventKey={TabEventKeys.AUTOBUYER} title="Autobuyer">
+				<Tab
+					className="p-3 pt-1"
+					eventKey={TabEventKeys.AUTOBUYER}
+					title="Autobuyer"
+				>
 					<CatalogItemsAutoBuyerTab storage={[storage, setstorage]} />
 				</Tab>
-				<Tab className="p-3" eventKey={TabEventKeys.UGC} title="UGC notifier">
+				<Tab className="p-3 pt-1" eventKey={TabEventKeys.UGC} title="UGC notifier">
 					<LimitedUGCInGameNotifier storage={[storage, setstorage]} />
 				</Tab>
 			</Tabs>

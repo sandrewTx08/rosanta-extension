@@ -1,6 +1,6 @@
 import { Col, Row } from "react-bootstrap";
 
-const PopupFooter = () => {
+const PopupFooter: React.FC = () => {
 	return (
 		<footer className="mt-auto bg-light border-top d-flex gap-3 py-2 px-4 justify-content-center">
 			<Row>

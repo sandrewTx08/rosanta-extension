@@ -3,14 +3,12 @@ import Browser from "webextension-polyfill";
 import BrowserStorage from "../../../../BrowserStorage";
 import CatalogItemsAccordions from "../../CatalogItemsAccordions";
 
-const CatalogItemsAutoBuyerTab = ({
-	storage: [storage, setstorage],
-}: {
+const CatalogItemsAutoBuyerTab: React.FC<{
 	storage: [
 		BrowserStorage,
 		React.Dispatch<React.SetStateAction<BrowserStorage>>,
 	];
-}) => {
+}> = ({ storage: [storage, setstorage] }) => {
 	const progress =
 		((storage.catalogItemsAutoBuyerAssetsTotal -
 			storage.catalogItemsAutoBuyerAssets.length) *

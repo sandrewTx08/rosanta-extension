@@ -5,14 +5,12 @@ import { Col, Form, ProgressBar, Row, Stack } from "react-bootstrap";
 import CatalogItemsAccordions from "../../CatalogItemsAccordions";
 import { Controller } from "react-bootstrap-icons";
 
-const LimitedUGCInGameTab = ({
-	storage: [storage, setstorage],
-}: {
+const LimitedUGCInGameTab: React.FC<{
 	storage: [
 		BrowserStorage,
 		React.Dispatch<React.SetStateAction<BrowserStorage>>,
 	];
-}) => {
+}> = ({ storage: [storage, setstorage] }) => {
 	enum OrderingType {
 		MOST_RECENT,
 		BEST_MATCH,

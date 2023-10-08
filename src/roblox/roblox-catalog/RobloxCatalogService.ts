@@ -47,28 +47,50 @@ export default class RobloxCatalogService {
 	async findManyAssetsDetails(
 		catalogItemsDetailsQueryParamDTO: CatalogItemsDetailsQueryParamDTO,
 		catalogItemsAutoBuyerTotalPages: number,
+		nextPageCursor: string = "",
 	) {
 		let data: CatalogItemsDetailsQueryResponse["data"] = [];
 
-		let page = await this.findOneAssetDetails(catalogItemsDetailsQueryParamDTO);
+		let page = await this.findOneAssetDetails(
+			catalogItemsDetailsQueryParamDTO,
+			nextPageCursor,
+		);
 
 		if (page?.data) {
 			data = data.concat(page.data);
 
 			for (let i = 1; i < catalogItemsAutoBuyerTotalPages; i++) {
 				if (page?.nextPageCursor) {
-					page = await this.findOneAssetDetails(
+					const page2 = await this.findOneAssetDetails(
 						catalogItemsDetailsQueryParamDTO,
 						page.nextPageCursor,
 					);
 
-					if (page?.data) {
-						data = data.concat(page.data);
+					if (page2?.data) {
+						page = page2;
+						data = data.concat(page2.data);
+					} else {
+						data = data.concat(
+							await this.findManyAssetsDetails(
+								catalogItemsDetailsQueryParamDTO,
+								catalogItemsAutoBuyerTotalPages,
+								page.nextPageCursor,
+							),
+						);
+						break;
 					}
 				} else {
 					break;
 				}
 			}
+		} else {
+			data = data.concat(
+				await this.findManyAssetsDetails(
+					catalogItemsDetailsQueryParamDTO,
+					catalogItemsAutoBuyerTotalPages,
+					nextPageCursor,
+				),
+			);
 		}
 
 		return data;
@@ -115,13 +137,14 @@ export default class RobloxCatalogService {
 	async findManyFreeItemsAssetDetails(
 		robloxUserId: number,
 	): Promise<BrowserStorage["catalogItemsAutoBuyerAssets"]> {
-		let catalogItemsDetails = await this.findManyAssetsDetails(
-			new CatalogItemsDetailsQueryParamDTO(1, 1, 3, true, 120, 0, 0, 5, 3, ""),
-			12,
-		);
+		let catalogItemsDetails: BrowserStorage["catalogItemsAutoBuyerAssets"] = [];
 
-		catalogItemsDetails = catalogItemsDetails.concat(
-			await this.findManyAssetsDetails(
+		const [p1, p2] = await Promise.all([
+			this.findManyAssetsDetails(
+				new CatalogItemsDetailsQueryParamDTO(1, 1, 3, true, 120, 0, 0, 5, 3, ""),
+				12,
+			),
+			this.findManyAssetsDetails(
 				new CatalogItemsDetailsQueryParamDTO(
 					1,
 					1,
@@ -136,11 +159,11 @@ export default class RobloxCatalogService {
 				),
 				12,
 			),
-		);
+		]);
 
-		catalogItemsDetails = catalogItemsDetails.filter(
-			({ priceStatus }) => priceStatus == "Free",
-		);
+		catalogItemsDetails = catalogItemsDetails
+			.concat(p1, p2)
+			.filter(({ priceStatus }) => priceStatus == "Free");
 
 		const isItemOwnedByUser = await Promise.all(
 			catalogItemsDetails.map(

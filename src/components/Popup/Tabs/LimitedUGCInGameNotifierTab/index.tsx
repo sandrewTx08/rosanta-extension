@@ -55,10 +55,12 @@ const LimitedUGCInGameTab: React.FC<{
 						} else {
 							setstorage({
 								...storage,
+								limitedUGCInGameNotifierAssets: [],
 								limitedUGCInGameNotifierEnabled: false,
 							});
 
 							Browser.storage.local.set({
+								limitedUGCInGameNotifierAssets: [] as any[],
 								limitedUGCInGameNotifierEnabled: false,
 							} as BrowserStorage);
 						}
@@ -99,6 +101,7 @@ const LimitedUGCInGameTab: React.FC<{
 				<Row>
 					<Col xs={3} className="text-center">
 						<input
+							disabled={quantitymax <= 0}
 							className="w-100 border text-center rounded"
 							type="number"
 							step={1}
@@ -113,6 +116,7 @@ const LimitedUGCInGameTab: React.FC<{
 					</Col>
 					<Col xs={7}>
 						<Form.Range
+							disabled={quantitymax <= 0}
 							defaultValue={quantitymin}
 							onChange={(event) => {
 								setquantitymin(Number.parseInt(event.target.value));

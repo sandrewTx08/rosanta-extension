@@ -56,7 +56,7 @@ export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
 
 		for (let i = 0; i < this.purchasesMultiplier; i++) {
 			try {
-				filteredIds.push(storage.catalogItemsAutoBuyerAssets[i].productId);
+				filteredIds.push(storage.catalogItemsAutoBuyerAssets[i].id);
 			} catch (error) {
 				break;
 			}
@@ -78,7 +78,7 @@ export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
 
 				await Browser.notifications.create({
 					title: storage.catalogItemsAutoBuyerAssets[i].name,
-					message: "Purchased item successfully",
+					message: "Item successfully purchased",
 					iconUrl:
 						storage.catalogItemsAutoBuyerAssets[i].imageBatch?.imageUrl || "icon.png",
 					type: "basic",
@@ -88,17 +88,14 @@ export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
 			}
 		}
 
-		const catalogItemsAutoBuyerAssets =
-			storage.catalogItemsAutoBuyerAssets.filter(
-				({ productId }) => productId != filteredIds.find((id) => id == productId),
-			);
-
-		for (const { id } of catalogItemsAutoBuyerAssets) {
+		for (const id of filteredIds) {
 			storage.catalogItemsAutoBuyerAssetsFiltered[id] = true;
 		}
 
 		await Browser.storage.local.set({
-			catalogItemsAutoBuyerAssets,
+			catalogItemsAutoBuyerAssets: storage.catalogItemsAutoBuyerAssets.filter(
+				({ id }) => id != filteredIds.find((id2) => id2 == id),
+			),
 			catalogItemsAutoBuyerAssetsFiltered:
 				storage.catalogItemsAutoBuyerAssetsFiltered,
 		} as BrowserStorage);

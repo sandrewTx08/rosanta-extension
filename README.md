@@ -18,7 +18,6 @@
 
 | Name                 | Description                                                                                              |
 | -------------------- | -------------------------------------------------------------------------------------------------------- |
-|                      |                                                                                                          |
 | Autobuyer            | Buy the newest free items from catalog such as **bundles**, **heads** from community and Roblox creators |
 | UGC in-game notifier | Notify when a limited UGC item is added on catalog if obtain it from in-game experiences                 |
 

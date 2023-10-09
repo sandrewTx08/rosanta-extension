@@ -4,15 +4,12 @@ import { ArrowRepeat } from "react-bootstrap-icons";
 import Browser from "webextension-polyfill";
 
 const PopupHeader: React.FC<{
-	storage: [
-		BrowserStorage,
-		React.Dispatch<React.SetStateAction<BrowserStorage>>,
-	];
-}> = ({ storage: [storage, setstorage] }) => {
+	storage: BrowserStorage;
+}> = ({ storage }) => {
 	return (
 		<header className="pb-1 pt-2 px-4" style={{ height: 180 }}>
 			<Row>
-				<Col>
+				<Col xs={6}>
 					<Row className="text-center">
 						<Col xs={12}>
 							<a
@@ -29,9 +26,8 @@ const PopupHeader: React.FC<{
 							<ArrowRepeat
 								className="m-2"
 								onClick={() => {
-									setstorage(BrowserStorage.INITIAL_STORAGE);
-
 									Browser.storage.local.set(BrowserStorage.INITIAL_STORAGE);
+									window.location.reload();
 								}}
 							/>
 							Reload extension

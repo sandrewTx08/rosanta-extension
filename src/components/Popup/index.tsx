@@ -72,7 +72,7 @@ const Popup: React.FC = () => {
 
 	return (
 		<Stack gap={2} style={{ width: 540, height: 600 }}>
-			<PopupHeader storage={[storage, setstorage]} />
+			<PopupHeader storage={storage} />
 
 			<Tabs defaultActiveKey={TabEventKeys.AUTOBUYER} justify unmountOnExit>
 				<Tab

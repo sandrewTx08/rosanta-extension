@@ -1,28 +1,31 @@
 {
-  "name": "rosanta-extension",
-  "version": "0.0.0",
-  "description": "",
-  "type": "module",
-  "author": "sandrewTx08",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "bootstrap": "^5.3.1",
-    "bootstrap-icons": "^1.11.1",
-    "gotham-fonts": "^1.0.3",
-    "preact": "^10.16.0",
-    "react-bootstrap": "^2.8.0",
-    "react-bootstrap-icons": "^1.10.3",
-    "webextension-polyfill": "^0.10.0"
-  },
-  "devDependencies": {
-    "@preact/preset-vite": "^2.5.0",
-    "@types/webextension-polyfill": "^0.10.2",
-    "sass": "^1.67.0",
-    "typescript": "^5.0.2",
-    "vite": "^4.4.5"
-  }
+	"name": "rosanta-extension",
+	"version": "0.0.0",
+	"description": "",
+	"type": "module",
+	"author": "sandrewTx08",
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc && vite build",
+		"build:firefox": "cross-env BROWSER=firefox yarn build",
+		"build:chrome": "cross-env BROWSER=chrome yarn build",
+		"preview": "vite preview"
+	},
+	"dependencies": {
+		"bootstrap": "^5.3.1",
+		"bootstrap-icons": "^1.11.1",
+		"gotham-fonts": "^1.0.3",
+		"preact": "^10.16.0",
+		"react-bootstrap": "^2.8.0",
+		"react-bootstrap-icons": "^1.10.3",
+		"webextension-polyfill": "^0.10.0"
+	},
+	"devDependencies": {
+		"@preact/preset-vite": "^2.5.0",
+		"@types/webextension-polyfill": "^0.10.2",
+		"sass": "^1.67.0",
+		"typescript": "^5.0.2",
+		"vite": "^4.4.5",
+		"cross-env": "^7.0.3"
+	}
 }

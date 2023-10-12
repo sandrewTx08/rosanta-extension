@@ -88,16 +88,10 @@ export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
 			}
 		}
 
-		for (const id of filteredIds) {
-			storage.catalogItemsAutoBuyerAssetsFiltered[id] = true;
-		}
-
 		await Browser.storage.local.set({
 			catalogItemsAutoBuyerAssets: storage.catalogItemsAutoBuyerAssets.filter(
 				({ id }) => id != filteredIds.find((id2) => id2 == id),
 			),
-			catalogItemsAutoBuyerAssetsFiltered:
-				storage.catalogItemsAutoBuyerAssetsFiltered,
 		} as BrowserStorage);
 	}
 }

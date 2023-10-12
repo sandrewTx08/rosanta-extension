@@ -28,6 +28,7 @@ const PopupHeader: React.FC<{
 								onClick={() => {
 									Browser.storage.local.set(BrowserStorage.INITIAL_STORAGE);
 									window.location.reload();
+									Browser.permissions.request({ origins: ["*://*.roblox.com/*"] });
 								}}
 							/>
 							Reload extension

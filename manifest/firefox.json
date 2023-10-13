@@ -15,6 +15,11 @@
 		"default_popup": "popup.html"
 	},
 
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "{882ef1c9-c71f-4fa6-b7c5-378ed24cca59}"
+		}
+	},
 	"background": {
 		"type": "module",
 		"scripts": ["background.js"]

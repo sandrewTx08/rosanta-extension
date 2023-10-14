@@ -11,7 +11,7 @@
 ## Download
 
 <p flot="left">
-<a href="https://chromewebstore.google.com/detail/rosanta-roblox-free-catal/jihbdahgiamkbmjdohfaglmojmilhdbd"><img width=243 src="https://storage.googleapis.com/web-dev-uploads/image/WlD8wC6g8khYWPJUsQceQkhXSlv1/iNEddTyWiMfLSwFD6qGq.png" alt="Chrome Web Store" />
+<a href="https://chromewebstore.google.com/detail/rosanta-roblox-free-catal/jihbdahgiamkbmjdohfaglmojmilhdbd"><img width=245 src="https://storage.googleapis.com/web-dev-uploads/image/WlD8wC6g8khYWPJUsQceQkhXSlv1/iNEddTyWiMfLSwFD6qGq.png" alt="Chrome Web Store" />
 </a>
 <a href="https://addons.mozilla.org/en-US/firefox/addon/rosanta-roblox-autobuyer/"><img width=200 src="https://blog.mozilla.org/addons/files/2020/04/get-the-addon-fx-apr-2020.svg" alt="Firefox Browser Add-on" /></a>
 </p>

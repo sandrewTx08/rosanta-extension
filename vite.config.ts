@@ -1,7 +1,9 @@
 import { defineConfig } from "vite";
 import preact from "@preact/preset-vite";
 import { resolve } from "path";
-import { readFileSync } from "fs";
+import manifest from "./manifest/manifest.json";
+import manifestChrome from "./manifest/chrome.json";
+import manifestFirefox from "./manifest/firefox.json";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -13,14 +15,12 @@ export default defineConfig({
 				this.emitFile({
 					type: "asset",
 					fileName: "manifest.json",
-					source: readFileSync(
-						resolve(
-							__dirname,
-							"manifest",
-							`${String(process.env.BROWSER).toLocaleLowerCase()}.json`,
-						),
-						"utf8",
-					),
+					source: JSON.stringify({
+						...manifest,
+						...(String(process.env.BROWSER).toLocaleLowerCase() == "firefox"
+							? manifestFirefox
+							: manifestChrome),
+					}),
 				});
 			},
 		},

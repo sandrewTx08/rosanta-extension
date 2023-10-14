@@ -1,20 +1,12 @@
 {
 	"manifest_version": 3,
-	"name": "RoSanta - Roblox free catalog autobuyer",
-	"description": "Extension automatically buy the newest and favorites free items from Roblox catalog in one click.",
-	"version": "1.1.1",
-	"author": "sandrewtx08@pm.me",
-	"homepage_url": "https://github.com/sandrewTx08/rosanta-extension",
-	"host_permissions": ["*://*.roblox.com/*"],
-	"permissions": ["storage", "notifications", "alarms"],
-	"icons": {
-		"128": "icon.png"
-	},
 	"action": {
+		"default_title": "RoSanta - Roblox autobuyer",
 		"default_icon": "icon.png",
 		"default_popup": "popup.html"
 	},
-
+	"permissions": ["storage", "notifications", "alarms"],
+	"host_permissions": ["*://*.roblox.com/*"],
 	"background": {
 		"type": "module",
 		"service_worker": "background.js"

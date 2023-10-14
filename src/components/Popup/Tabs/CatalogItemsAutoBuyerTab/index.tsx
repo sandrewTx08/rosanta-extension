@@ -1,4 +1,12 @@
-import { Col, Form, ProgressBar, Row, Spinner, Stack } from "react-bootstrap";
+import {
+	Alert,
+	Col,
+	Form,
+	ProgressBar,
+	Row,
+	Spinner,
+	Stack,
+} from "react-bootstrap";
 import Browser from "webextension-polyfill";
 import BrowserStorage from "../../../../BrowserStorage";
 import CatalogItemsAccordions from "../../CatalogItemsAccordions";
@@ -79,12 +87,20 @@ const CatalogItemsAutoBuyerTab: React.FC<{
 				hidden={storage.catalogItemsAutoBuyerAssets.length <= 0}
 			/>
 
-			{storage.catalogItemsAutoBuyerAssets.length <= 0 &&
-				storage.catalogItemsAutoBuyerEnabled && (
-					<Row className="fs-3 d-flex gap-4 align-items-center p-1">
-						<Col xs={1}>
+			<Alert
+				variant="light"
+				dismissible
+				hidden={
+					storage.catalogItemsAutoBuyerAssets.length > 0 &&
+					!storage.catalogItemsAutoBuyerEnabled
+				}
+			>
+				<Alert.Heading>
+					<Row className="fs-3 p-1">
+						<Col className="m-auto text-center" xs={2}>
 							<Spinner />
 						</Col>
+
 						<Col xs={10}>
 							{[
 								"Community is creating new awesome items",
@@ -94,7 +110,8 @@ const CatalogItemsAutoBuyerTab: React.FC<{
 							.
 						</Col>
 					</Row>
-				)}
+				</Alert.Heading>
+			</Alert>
 
 			<CatalogItemsAccordions
 				active={storage.catalogItemsAutoBuyerEnabled}

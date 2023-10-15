@@ -5,7 +5,7 @@ import BrowserStorage from "../../BrowserStorage";
 import { Modal, Stack, Tab, Tabs } from "react-bootstrap";
 import CatalogItemsAutoBuyerTab from "./Tabs/CatalogItemsAutoBuyerTab";
 import LimitedUGCInGameNotifier from "./Tabs/LimitedUGCInGameNotifierTab";
-import { robloxUserService } from "../../roblox";
+import { robloxUserController } from "../../roblox";
 import PopupFooter from "./PopupFooter";
 import PopupHeader from "./PopupHeader";
 
@@ -31,32 +31,7 @@ const Popup: React.FC = () => {
 			});
 		}
 
-		Browser.storage.local.get(null).then(
-			// @ts-ignore
-			(_storage: BrowserStorage) => {
-				setstorage(_storage);
-
-				robloxUserService.getAuthenticatedUser().then((robloxUser) => {
-					if (robloxUser?.id) {
-						robloxUserService
-							.avatarHeadshot(robloxUser.id, 720)
-							.then((avatarHeadshot) => {
-								_storage =
-									storage.robloxUser?.id && _storage.robloxUser?.id != robloxUser.id
-										? BrowserStorage.INITIAL_STORAGE
-										: _storage;
-								_storage.avatarHeadshot = avatarHeadshot;
-								_storage.robloxUser = robloxUser;
-
-								Browser.storage.local.set(_storage);
-							});
-					} else {
-						setstorage({ ...storage, robloxUser: null });
-						Browser.storage.local.set({ robloxUser: null } as BrowserStorage);
-					}
-				});
-			},
-		);
+		robloxUserController.setUserAuthenticationStorage().then(setstorage);
 
 		Browser.storage.local.onChanged.addListener(eventHandler);
 
@@ -66,7 +41,7 @@ const Popup: React.FC = () => {
 	}, []);
 
 	return (
-		<Stack className="m-auto" gap={2} style={{ width: 540, minHeight: 600 }}>
+		<Stack gap={2} className="m-auto" style={{ width: 540, minHeight: 600 }}>
 			<PopupHeader storage={storage} />
 
 			<Modal

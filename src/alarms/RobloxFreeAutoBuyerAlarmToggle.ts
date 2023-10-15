@@ -1,6 +1,10 @@
 import Browser from "webextension-polyfill";
 import BrowserStorage from "../BrowserStorage";
-import { robloxCatalogService, robloxTokenService } from "../roblox";
+import {
+	robloxCatalogService,
+	robloxTokenService,
+	robloxUserController,
+} from "../roblox";
 import AlarmToggleTypes from "./AlarmToggleTypes";
 import AlarmToggle from "./AlarmToggle";
 import CatalogItemsLink from "../roblox/roblox-catalog/CatalogItemsLink";
@@ -14,7 +18,8 @@ export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
 
 	override async onCreate() {
 		// @ts-ignore
-		const storage: BrowserStorage = await Browser.storage.local.get(null);
+		const storage: BrowserStorage =
+			await robloxUserController.setUserAuthenticationStorage();
 
 		if (storage.robloxUser?.id) {
 			const [catalogItemsAutoBuyerAssets, filteredIds] =
@@ -38,7 +43,7 @@ export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
 				catalogItemsAutoBuyerEnabled: true,
 			} as BrowserStorage);
 
-			Browser.windows.create({
+			await Browser.windows.create({
 				url: "popup.html",
 				type: "panel",
 				width: 580,

@@ -66,7 +66,7 @@ const Popup: React.FC = () => {
 	}, []);
 
 	return (
-		<Stack gap={2} style={{ maxWidth: 540, minHeight: 600 }}>
+		<Stack className="m-auto" gap={2} style={{ width: 540, minHeight: 600 }}>
 			<PopupHeader storage={storage} />
 
 			<Modal

@@ -13,7 +13,7 @@ Browser.notifications.onClicked.addListener(async (notificationId) => {
 		await Browser.windows.create({
 			url: "popup.html",
 			type: "panel",
-			width: 540,
+			width: 580,
 			height: 600,
 		});
 	}

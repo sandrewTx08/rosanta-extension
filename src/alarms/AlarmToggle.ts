@@ -27,20 +27,6 @@ export default class AlarmToggle implements Browser.Alarms.CreateAlarmInfoType {
 			}
 		});
 
-		Browser.notifications.onClicked.addListener(async (notification) => {
-			if (
-				(await Browser.notifications.getAll())[notification] &&
-				(await Browser.notifications.clear(notification))
-			) {
-				Browser.windows.create({
-					url: "popup.html",
-					type: "panel",
-					width: 540,
-					height: 600,
-				});
-			}
-		});
-
 		Browser.runtime.onInstalled.addListener(() => {
 			Browser.storage.local.set(BrowserStorage.INITIAL_STORAGE);
 		});

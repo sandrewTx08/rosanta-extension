@@ -7,9 +7,9 @@ const PopupHeader: React.FC<{
 	storage: BrowserStorage;
 }> = ({ storage }) => {
 	return (
-		<header className="pb-1 pt-2 px-4" style={{ height: 180 }}>
+		<header className="pb-1 pt-2 px-4" style={{ minHeight: 180 }}>
 			<Row>
-				<Col xs={6}>
+				<Col className="mx-auto" xs={6}>
 					<Row className="text-center">
 						<Col xs={12}>
 							<a
@@ -36,8 +36,8 @@ const PopupHeader: React.FC<{
 					</Row>
 				</Col>
 
-				{storage.avatarHeadshot && (
-					<Col className="mt-auto" xs={6}>
+				<Col hidden={!storage.robloxUser?.id} className="mt-auto" xs={6}>
+					{storage.avatarHeadshot && (
 						<Row className="text-center gy-2">
 							<Col xs={12}>
 								<a
@@ -59,8 +59,8 @@ const PopupHeader: React.FC<{
 								<b>{storage.robloxUser?.displayName}</b>
 							</Col>
 						</Row>
-					</Col>
-				)}
+					)}
+				</Col>
 			</Row>
 		</header>
 	);

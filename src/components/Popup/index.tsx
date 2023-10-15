@@ -2,7 +2,7 @@ import { useEffect, useState } from "preact/hooks";
 import Browser from "webextension-polyfill";
 import "../../../index.scss";
 import BrowserStorage from "../../BrowserStorage";
-import { Stack, Tab, Tabs } from "react-bootstrap";
+import { Modal, Stack, Tab, Tabs } from "react-bootstrap";
 import CatalogItemsAutoBuyerTab from "./Tabs/CatalogItemsAutoBuyerTab";
 import LimitedUGCInGameNotifier from "./Tabs/LimitedUGCInGameNotifierTab";
 import { robloxUserService } from "../../roblox";
@@ -50,6 +50,9 @@ const Popup: React.FC = () => {
 
 								Browser.storage.local.set(_storage);
 							});
+					} else {
+						setstorage({ ...storage, robloxUser: null });
+						Browser.storage.local.set({ robloxUser: null } as BrowserStorage);
 					}
 				});
 			},
@@ -63,8 +66,27 @@ const Popup: React.FC = () => {
 	}, []);
 
 	return (
-		<Stack gap={2} style={{ width: 540, height: 600 }}>
+		<Stack gap={2} style={{ maxWidth: 540, minHeight: 600 }}>
 			<PopupHeader storage={storage} />
+
+			<Modal
+				size="lg"
+				aria-labelledby="contained-modal-title-vcenter"
+				centered
+				show={storage.robloxUser === null}
+			>
+				<Modal.Header>
+					<Modal.Title id="contained-modal-title-vcenter">
+						User not authenticated, please{" "}
+						<a href="https://www.roblox.com/login">log in</a>
+					</Modal.Title>
+				</Modal.Header>
+
+				<Modal.Body>
+					Some functionality may not work properly or are disabled if not logged in,
+					please <a href="https://www.roblox.com/login">log in</a>.
+				</Modal.Body>
+			</Modal>
 
 			<Tabs defaultActiveKey={TabEventKeys.AUTOBUYER} justify unmountOnExit>
 				<Tab

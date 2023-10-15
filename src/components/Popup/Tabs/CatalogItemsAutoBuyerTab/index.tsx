@@ -87,7 +87,7 @@ const CatalogItemsAutoBuyerTab: React.FC<{
 				<Row>
 					<Col xs={2}>
 						<input
-							className="w-100 text-center"
+							className="w-100 text-center rounded border"
 							type="number"
 							step={1}
 							value={storage.purchasesMultiplier}

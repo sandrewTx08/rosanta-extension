@@ -16,7 +16,7 @@ interface BrowserStorage {
 		imageBatch?: ImageBatchResponse["data"][0];
 	})[];
 	limitedUGCInGameNotifierEnabled: boolean;
-	robloxUser?: RobloxUser;
+	robloxUser?: RobloxUser | null;
 	avatarHeadshot?: AvatarHeadshot;
 	purchasesMultiplier: number;
 }

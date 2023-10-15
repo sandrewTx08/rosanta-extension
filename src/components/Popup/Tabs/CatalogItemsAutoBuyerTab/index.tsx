@@ -91,18 +91,19 @@ const CatalogItemsAutoBuyerTab: React.FC<{
 				variant="light"
 				dismissible
 				hidden={
-					storage.catalogItemsAutoBuyerAssets.length > 0 &&
+					storage.catalogItemsAutoBuyerAssets.length <= 0 &&
 					!storage.catalogItemsAutoBuyerEnabled
 				}
 			>
 				<Alert.Heading>
-					<Row className="fs-3 p-1">
-						<Col className="m-auto text-center" xs={2}>
+					<Row className="fs-3 p-1 d-flex align-items-center">
+						<Col className="text-center" xs={2}>
 							<Spinner />
 						</Col>
 
-						<Col xs={10}>
+						<Col xs={9}>
 							{[
+								"Autobuyer is enabled by default",
 								"Community is creating new awesome items",
 								"RoSanta is searching for new items, wait",
 								"You'll be notified when new items are available",

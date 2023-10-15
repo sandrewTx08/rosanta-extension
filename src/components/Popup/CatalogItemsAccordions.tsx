@@ -60,7 +60,7 @@ const CatalogItemsAccordions = <
 										>
 											<Accordion.Header>
 												<Row className="gx-4 w-100">
-													<Col xs={2}>
+													<Col className="text-center" xs={2}>
 														<a
 															href={CatalogItemsLink.parseCatalogDetails(data)}
 															target="_blank"

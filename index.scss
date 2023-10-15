@@ -5,6 +5,8 @@ $warning: #ff6c1e;
 $danger: #ea0005;
 $dark: #240002;
 
+$spacer: 14px;
+
 $font-size-base: 0.9rem;
 $font-family-base: "Gotham Rounded";
 
@@ -16,6 +18,8 @@ $accordion-button-padding-y: 0;
 $accordion-button-padding-x: 16px;
 $accordion-body-padding-y: 0;
 $accordion-body-padding-x: 0;
+
+$alert-margin-bottom: 0;
 
 .icon-fill:hover {
 	color: white;

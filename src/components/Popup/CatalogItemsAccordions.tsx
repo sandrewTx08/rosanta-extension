@@ -58,30 +58,28 @@ const CatalogItemsAccordions = <
 											key={data.id + data.productId}
 											eventKey={data.id.toString()}
 										>
-											<Accordion.Header>
-												<Row className="gx-4 w-100">
-													<Col className="text-center" xs={2}>
-														<a
-															href={CatalogItemsLink.parseCatalogDetails(data)}
-															target="_blank"
-														>
-															<img
-																height={40}
-																className="w-auto"
-																src={data.imageBatch?.imageUrl || "icon.png"}
-																alt=""
-															/>
-														</a>
+											<Accordion.Header className="rows">
+												<Col className="text-center" xs={1}>
+													<a
+														href={CatalogItemsLink.parseCatalogDetails(data)}
+														target="_blank"
+													>
+														<img
+															height={40}
+															className="w-auto"
+															src={data.imageBatch?.imageUrl || "icon.png"}
+															alt=""
+														/>
+													</a>
+												</Col>
+
+												<Col className="text-break mx-4">{data.name}</Col>
+
+												{headerRight && (
+													<Col xs={3} className="d-flex align-items-center gap-2 mx-2">
+														{headerRight(data)}
 													</Col>
-
-													<Col className="d-flex align-items-center">{data.name}</Col>
-
-													{headerRight && (
-														<Col xs={3} className="d-flex align-items-center gap-1">
-															{headerRight(data)}
-														</Col>
-													)}
-												</Row>
+												)}
 											</Accordion.Header>
 											<Accordion.Body className="d-flex gap-2">
 												<Row className="m-0">

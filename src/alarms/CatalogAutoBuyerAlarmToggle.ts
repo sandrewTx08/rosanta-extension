@@ -10,7 +10,7 @@ import AlarmToggle from "./AlarmToggle";
 import CatalogItemsLink from "../roblox/roblox-catalog/CatalogItemsLink";
 import ProductPurchaseDTO from "../roblox/roblox-catalog/ProductPurchaseDTO";
 
-export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
+export default class CatalogAutoBuyerAlarmToggle extends AlarmToggle {
 	constructor() {
 		super(AlarmToggleTypes.catalogItemsAutoBuyerEnabled, 1);
 		this.onCreate();

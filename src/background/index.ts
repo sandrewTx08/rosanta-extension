@@ -1,8 +1,11 @@
 import Browser from "webextension-polyfill";
 import LimitedUGCInGameNotifierAlarmToggle from "../alarms/LimitedUGCInGameNotifierAlarmToggle";
-import RobloxFreeAutoBuyerAlarmToggle from "../alarms/RobloxFreeAutoBuyerAlarmToggle";
+import CatalogAutoBuyerAlarmToggle from "../alarms/CatalogAutoBuyerAlarmToggle";
+import CatalogAutoBuyerAlarmNotifications from "../alarms/CatalogAutoBuyerAlarmNotifications";
 
-export const robloxFreeAutoBuyerAlarm = new RobloxFreeAutoBuyerAlarmToggle();
+export const catalogAutoBuyerAlarmToggle = new CatalogAutoBuyerAlarmToggle();
+export const catalogAutoBuyerAlarmNotifications =
+	new CatalogAutoBuyerAlarmNotifications();
 export const limitedUGCInGameNotifierAlarm =
 	new LimitedUGCInGameNotifierAlarmToggle();
 

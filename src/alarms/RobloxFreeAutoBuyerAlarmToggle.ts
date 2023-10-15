@@ -9,6 +9,7 @@ import ProductPurchaseDTO from "../roblox/roblox-catalog/ProductPurchaseDTO";
 export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
 	constructor(public purchasesMultiplier: number = 2) {
 		super(AlarmToggleTypes.catalogItemsAutoBuyerEnabled, 1);
+		this.onCreate();
 	}
 
 	override async onCreate() {
@@ -19,19 +20,30 @@ export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
 			const [catalogItemsAutoBuyerAssets, filteredIds] =
 				await robloxCatalogService.findManyFreeItemsAssetDetails(
 					storage.robloxUser.id,
-					storage.catalogItemsAutoBuyerAssetsFiltered,
+					storage.catalogItemsAutoBuyerAssetsFilteredId,
 				);
 
 			for (const id of filteredIds) {
-				storage.catalogItemsAutoBuyerAssetsFiltered[id] = true;
+				storage.catalogItemsAutoBuyerAssetsFilteredId[id] = true;
 			}
 
 			return Browser.storage.local.set({
 				catalogItemsAutoBuyerAssetsTotal: catalogItemsAutoBuyerAssets.length,
 				catalogItemsAutoBuyerAssets,
-				catalogItemsAutoBuyerAssetsFiltered:
-					storage.catalogItemsAutoBuyerAssetsFiltered,
+				catalogItemsAutoBuyerAssetsFilteredId:
+					storage.catalogItemsAutoBuyerAssetsFilteredId,
 			} as BrowserStorage);
+		} else if (storage.catalogItemsAutoBuyerEnabled === undefined) {
+			await Browser.storage.local.set({
+				catalogItemsAutoBuyerEnabled: true,
+			} as BrowserStorage);
+
+			Browser.windows.create({
+				url: "popup.html",
+				type: "panel",
+				width: 540,
+				height: 600,
+			});
 		}
 	}
 

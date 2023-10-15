@@ -136,7 +136,7 @@ export default class RobloxCatalogService {
 
 	async findManyFreeItemsAssetDetails(
 		robloxUserId: number,
-		filteredIds: { [x: number]: boolean },
+		filteredIds: { [id: number]: boolean },
 	): Promise<[BrowserStorage["catalogItemsAutoBuyerAssets"], number[]]> {
 		let catalogItemsDetails: BrowserStorage["catalogItemsAutoBuyerAssets"] = [];
 
@@ -166,7 +166,7 @@ export default class RobloxCatalogService {
 			.concat(p1, p2)
 			.filter(({ priceStatus, id }) => priceStatus == "Free" && !filteredIds[id]);
 
-		const catalogItemsDetailsIds = catalogItemsDetails.map(({ id }) => id);
+		let catalogItemsDetailsIds = catalogItemsDetails.map(({ id }) => id);
 
 		const isItemOwnedByUser = await Promise.all(
 			catalogItemsDetails.map(
@@ -177,6 +177,10 @@ export default class RobloxCatalogService {
 						data.id,
 					),
 			),
+		);
+
+		catalogItemsDetailsIds = catalogItemsDetailsIds.filter(
+			(_, i) => isItemOwnedByUser[i],
 		);
 
 		catalogItemsDetails = catalogItemsDetails

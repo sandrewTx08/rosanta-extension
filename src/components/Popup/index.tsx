@@ -33,24 +33,22 @@ const Popup: React.FC = () => {
 
 		Browser.storage.local.get(null).then(
 			// @ts-ignore
-			(storage: BrowserStorage) => {
-				setstorage(storage);
+			(_storage: BrowserStorage) => {
+				setstorage(_storage);
 
 				robloxUserService.getAuthenticatedUser().then((robloxUser) => {
 					if (robloxUser?.id) {
 						robloxUserService
 							.avatarHeadshot(robloxUser.id, 720)
 							.then((avatarHeadshot) => {
-								storage =
-									storage.robloxUser && storage.robloxUser.id != robloxUser.id
+								_storage =
+									storage.robloxUser?.id && _storage.robloxUser?.id != robloxUser.id
 										? BrowserStorage.INITIAL_STORAGE
-										: storage;
-								storage.avatarHeadshot = avatarHeadshot;
-								storage.robloxUser = robloxUser;
+										: _storage;
+								_storage.avatarHeadshot = avatarHeadshot;
+								_storage.robloxUser = robloxUser;
 
-								setstorage(storage);
-
-								Browser.storage.local.set(storage);
+								Browser.storage.local.set(_storage);
 							});
 					}
 				});

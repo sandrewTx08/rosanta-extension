@@ -7,8 +7,8 @@ interface BrowserStorage {
 	catalogItemsAutoBuyerAssets: (CatalogItemsDetailsQueryResponse["data"][0] & {
 		imageBatch?: ImageBatchResponse["data"][0];
 	})[];
-	catalogItemsAutoBuyerAssetsFiltered: { [x: number]: boolean };
-	catalogItemsAutoBuyerEnabled: boolean;
+	catalogItemsAutoBuyerAssetsFilteredId: { [id: number]: boolean };
+	catalogItemsAutoBuyerEnabled?: boolean;
 	catalogItemsAutoBuyerNotification: boolean;
 	catalogItemsAutoBuyerAssetsTotal: number;
 	limitedUGCInGameNotifierAssets: (CatalogItemsDetailsQueryResponse["data"][0] & {
@@ -22,12 +22,11 @@ interface BrowserStorage {
 
 namespace BrowserStorage {
 	export const INITIAL_STORAGE: BrowserStorage = {
-		catalogItemsAutoBuyerEnabled: true,
 		catalogItemsAutoBuyerAssets: [],
 		catalogItemsAutoBuyerNotification: true,
 		catalogItemsAutoBuyerAssetsTotal: 0,
 		limitedUGCInGameNotifierAssets: [],
-		catalogItemsAutoBuyerAssetsFiltered: {},
+		catalogItemsAutoBuyerAssetsFilteredId: {},
 		limitedUGCInGameNotifierEnabled: false,
 	};
 }

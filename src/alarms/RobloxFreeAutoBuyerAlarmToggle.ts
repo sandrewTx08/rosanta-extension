@@ -7,7 +7,7 @@ import CatalogItemsLink from "../roblox/roblox-catalog/CatalogItemsLink";
 import ProductPurchaseDTO from "../roblox/roblox-catalog/ProductPurchaseDTO";
 
 export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
-	constructor(public purchasesMultiplier: number = 2) {
+	constructor() {
 		super(AlarmToggleTypes.catalogItemsAutoBuyerEnabled, 1);
 		this.onCreate();
 	}
@@ -57,7 +57,9 @@ export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
 				await this.purchaseItems(xcsrftoken, storage);
 			}
 
-			if (storage.catalogItemsAutoBuyerAssets.length <= this.purchasesMultiplier) {
+			if (
+				storage.catalogItemsAutoBuyerAssets.length <= storage.purchasesMultiplier
+			) {
 				this.onCreate();
 			}
 		}
@@ -66,7 +68,7 @@ export default class RobloxFreeAutoBuyerAlarmToggle extends AlarmToggle {
 	async purchaseItems(xcsrftoken: string, storage: BrowserStorage) {
 		const filteredIds: number[] = [];
 
-		for (let i = 0; i < this.purchasesMultiplier; i++) {
+		for (let i = 0; i < storage.purchasesMultiplier; i++) {
 			try {
 				filteredIds.push(storage.catalogItemsAutoBuyerAssets[i].id);
 			} catch (error) {

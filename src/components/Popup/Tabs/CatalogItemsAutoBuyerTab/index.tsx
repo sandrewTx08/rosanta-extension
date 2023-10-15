@@ -80,6 +80,42 @@ const CatalogItemsAutoBuyerTab: React.FC<{
 				/>
 			</Stack>
 
+			<h3 className="text-dark">Purchase</h3>
+			<Stack className="border p-3 rounded">
+				<Form.Label>Purchase per minute</Form.Label>
+
+				<Row>
+					<Col xs={2}>
+						<input
+							className="w-100 text-center"
+							type="number"
+							step={1}
+							value={storage.purchasesMultiplier}
+							max={12}
+							min={1}
+							onChange={(event) => {
+								Browser.storage.local.set({
+									purchasesMultiplier: Number.parseInt(event.target.value),
+								} as BrowserStorage);
+							}}
+						/>
+					</Col>
+
+					<Col>
+						<Form.Range
+							value={storage.purchasesMultiplier}
+							max={12}
+							min={1}
+							onChange={(event) => {
+								Browser.storage.local.set({
+									purchasesMultiplier: Number.parseInt(event.target.value),
+								} as BrowserStorage);
+							}}
+						/>
+					</Col>
+				</Row>
+			</Stack>
+
 			<ProgressBar
 				style={{ height: 26 }}
 				now={progress}

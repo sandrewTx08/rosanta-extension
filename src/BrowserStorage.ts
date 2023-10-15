@@ -18,6 +18,7 @@ interface BrowserStorage {
 	limitedUGCInGameNotifierEnabled: boolean;
 	robloxUser?: RobloxUser;
 	avatarHeadshot?: AvatarHeadshot;
+	purchasesMultiplier: number;
 }
 
 namespace BrowserStorage {
@@ -28,6 +29,7 @@ namespace BrowserStorage {
 		limitedUGCInGameNotifierAssets: [],
 		catalogItemsAutoBuyerAssetsFilteredId: {},
 		limitedUGCInGameNotifierEnabled: false,
+		purchasesMultiplier: 3,
 	};
 }
 

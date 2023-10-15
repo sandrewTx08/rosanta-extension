@@ -108,8 +108,7 @@ export default class RobloxCatalogService {
 
 		catalogItemsDetails = catalogItemsDetails
 			.filter(
-				({ saleLocationType, unitsAvailableForConsumption, description }) =>
-					description.match(gameURL) &&
+				({ saleLocationType, unitsAvailableForConsumption }) =>
 					saleLocationType == "ExperiencesDevApiOnly" &&
 					unitsAvailableForConsumption > 1,
 			)
@@ -127,8 +126,9 @@ export default class RobloxCatalogService {
 		>((data, i) => ({
 			...data,
 			imageBatch: imagesBatches[i],
-			gameURL:
-				"https://www.roblox.com/games/" + data.description.split(gameURL)[1],
+			gameURL: gameURL.test(data.description)
+				? "https://www.roblox.com/games/" + data.description.split(gameURL)[1]
+				: null,
 		}));
 
 		return catalogItemsDetails;

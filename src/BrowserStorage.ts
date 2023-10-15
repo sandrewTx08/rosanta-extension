@@ -12,7 +12,7 @@ interface BrowserStorage {
 	catalogItemsAutoBuyerNotification: boolean;
 	catalogItemsAutoBuyerAssetsTotal: number;
 	limitedUGCInGameNotifierAssets: (CatalogItemsDetailsQueryResponse["data"][0] & {
-		gameURL: string;
+		gameURL: string | null;
 		imageBatch?: ImageBatchResponse["data"][0];
 	})[];
 	limitedUGCInGameNotifierEnabled: boolean;

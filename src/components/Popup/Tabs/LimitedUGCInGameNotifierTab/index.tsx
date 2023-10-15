@@ -161,9 +161,11 @@ const LimitedUGCInGameTab: React.FC<{
 				active={storage.limitedUGCInGameNotifierEnabled}
 				headerRight={(data) => (
 					<>
-						<a href={data.gameURL} target="_blank">
-							<Controller className="p-1 rounded-circle icon-fill" size={25} />
-						</a>
+						{data.gameURL && (
+							<a href={data.gameURL} target="_blank">
+								<Controller className="p-1 rounded-circle icon-fill" size={25} />
+							</a>
+						)}
 
 						<ProgressBar className="w-100 small" max={data.totalQuantity}>
 							<ProgressBar
@@ -183,16 +185,20 @@ const LimitedUGCInGameTab: React.FC<{
 				)}
 				body={(data) => (
 					<>
-						<Col xs={3}>Game</Col>
-						<Col xs={9}>
-							<a
-								className="link-dark text-trucante text-break"
-								href={data.gameURL}
-								target="_blank"
-							>
-								{data.gameURL}
-							</a>
-						</Col>
+						{data.gameURL && (
+							<>
+								<Col xs={3}>Game</Col>
+								<Col xs={9}>
+									<a
+										className="link-dark text-trucante text-break"
+										href={data.gameURL}
+										target="_blank"
+									>
+										{data.gameURL}
+									</a>
+								</Col>
+							</>
+						)}
 						<Col xs={3}>Available</Col>
 						<Col xs={9}>
 							<ProgressBar max={data.totalQuantity}>

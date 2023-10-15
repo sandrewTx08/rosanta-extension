@@ -103,6 +103,7 @@ const CatalogItemsAutoBuyerTab: React.FC<{
 
 						<Col xs={9}>
 							{[
+								"Autobuyer is running on background",
 								"Autobuyer is enabled by default",
 								"Community is creating new awesome items",
 								"RoSanta is searching for new items, wait",

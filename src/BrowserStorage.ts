@@ -22,7 +22,7 @@ interface BrowserStorage {
 
 namespace BrowserStorage {
 	export const INITIAL_STORAGE: BrowserStorage = {
-		catalogItemsAutoBuyerEnabled: false,
+		catalogItemsAutoBuyerEnabled: true,
 		catalogItemsAutoBuyerAssets: [],
 		catalogItemsAutoBuyerNotification: true,
 		catalogItemsAutoBuyerAssetsTotal: 0,

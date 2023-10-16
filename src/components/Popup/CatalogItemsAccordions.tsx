@@ -34,11 +34,12 @@ const CatalogItemsAccordions = <
 				<Stack gap={2}>
 					<Accordion>
 						<Accordion.Item eventKey="0">
-							<InputGroup className="rounded p-3">
-								<InputGroup.Text>
+							<InputGroup className="bg-light border">
+								<InputGroup.Text className="bg-transparent border-0 text-primary">
 									<Search />
 								</InputGroup.Text>
 								<Form.Control
+									className="bg-transparent border-0"
 									disabled={data.length <= 0}
 									placeholder="Search item names"
 									onChange={(event) => {
@@ -141,6 +142,7 @@ const CatalogItemsAccordions = <
 													{Array.from({ length: 1 }).map((_, i) => (
 														<Placeholder
 															key={i}
+															bg="primary"
 															size="sm"
 															xs={Math.floor(Math.random() * 4) + 1}
 														/>
@@ -148,6 +150,7 @@ const CatalogItemsAccordions = <
 													{Array.from({ length: 1 }).map((_, i) => (
 														<Placeholder
 															key={i}
+															bg="primary"
 															size="sm"
 															xs={Math.floor(Math.random() * 4) + 1}
 														/>
@@ -161,6 +164,7 @@ const CatalogItemsAccordions = <
 													{Array.from({ length: 4 }).map((_, i) => (
 														<Placeholder
 															key={i}
+															bg="primary"
 															size="sm"
 															xs={Math.floor(Math.random() * 12) + 1}
 														/>

@@ -33,7 +33,7 @@ export default class RobloxUserController {
 			storage.robloxUser = null;
 		}
 
-		Browser.storage.local.set(storage);
+		await Browser.storage.local.set(storage);
 		return storage;
 	}
 }

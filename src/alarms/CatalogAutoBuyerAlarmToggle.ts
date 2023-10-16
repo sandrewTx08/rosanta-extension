@@ -32,17 +32,20 @@ export default class CatalogAutoBuyerAlarmToggle extends AlarmToggle {
 				storage.catalogItemsAutoBuyerAssetsFilteredId[id] = true;
 			}
 
-			return Browser.storage.local.set({
+			await Browser.storage.local.set({
+				...storage,
 				catalogItemsAutoBuyerAssetsTotal: catalogItemsAutoBuyerAssets.length,
 				catalogItemsAutoBuyerAssets,
+				catalogItemsAutoBuyerEnabled:
+					storage.catalogItemsAutoBuyerEnabled === undefined
+						? true
+						: storage.catalogItemsAutoBuyerEnabled,
 				catalogItemsAutoBuyerAssetsFilteredId:
 					storage.catalogItemsAutoBuyerAssetsFilteredId,
 			} as BrowserStorage);
-		} else if (storage.catalogItemsAutoBuyerEnabled === undefined) {
-			await Browser.storage.local.set({
-				catalogItemsAutoBuyerEnabled: true,
-			} as BrowserStorage);
+		}
 
+		if (storage.catalogItemsAutoBuyerEnabled === undefined) {
 			await Browser.windows.create({
 				url: "popup.html",
 				type: "panel",

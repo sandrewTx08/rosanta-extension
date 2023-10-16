@@ -7,7 +7,7 @@ const PopupHeader: React.FC<{
 	storage: BrowserStorage;
 }> = ({ storage }) => {
 	return (
-		<header className="pt-2 px-4" style={{ minHeight: 180 }}>
+		<header className="pt-2 px-4 bg-light" style={{ minHeight: 180 }}>
 			<Row>
 				<Col className="mx-auto" xs={6}>
 					<Row className="text-center">

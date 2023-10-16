@@ -41,7 +41,7 @@ const Popup: React.FC = () => {
 	}, []);
 
 	return (
-		<Stack gap={2} className="m-auto" style={{ width: 540, minHeight: 600 }}>
+		<Stack className="m-auto h-100 border" style={{ width: 540, minHeight: 600 }}>
 			<PopupHeader storage={storage} />
 
 			<Modal
@@ -63,7 +63,12 @@ const Popup: React.FC = () => {
 				</Modal.Body>
 			</Modal>
 
-			<Tabs defaultActiveKey={TabEventKeys.AUTOBUYER} justify unmountOnExit>
+			<Tabs
+				className="bg-light"
+				defaultActiveKey={TabEventKeys.AUTOBUYER}
+				justify
+				unmountOnExit
+			>
 				<Tab
 					className="p-3 pt-1"
 					eventKey={TabEventKeys.AUTOBUYER}

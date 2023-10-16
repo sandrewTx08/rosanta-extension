@@ -69,14 +69,10 @@ const Popup: React.FC = () => {
 				justify
 				unmountOnExit
 			>
-				<Tab
-					className="p-3 pt-1"
-					eventKey={TabEventKeys.AUTOBUYER}
-					title="Autobuyer"
-				>
+				<Tab className="p-3" eventKey={TabEventKeys.AUTOBUYER} title="Autobuyer">
 					<CatalogItemsAutoBuyerTab storage={[storage, setstorage]} />
 				</Tab>
-				<Tab className="p-3 pt-1" eventKey={TabEventKeys.UGC} title="UGC notifier">
+				<Tab className="p-3" eventKey={TabEventKeys.UGC} title="UGC notifier">
 					<LimitedUGCInGameNotifier storage={[storage, setstorage]} />
 				</Tab>
 			</Tabs>

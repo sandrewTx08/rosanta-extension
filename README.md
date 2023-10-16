@@ -14,7 +14,7 @@ On the recent update on Roblox, now creators can publish free bundles and heads,
 
 ### Solution
 
-RoSanta autobuyer track, compare, notify and display the newest free items from Roblox catalog then purchase before change its value.
+RoSanta autobuyer track, compare, notify and display the newest free items from Roblox catalog then purchase them before they change its value.
 
 ## Download
 

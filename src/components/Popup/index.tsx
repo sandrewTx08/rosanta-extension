@@ -8,11 +8,13 @@ import LimitedUGCInGameNotifier from "./Tabs/LimitedUGCInGameNotifierTab";
 import { robloxUserController } from "../../roblox";
 import PopupFooter from "./PopupFooter";
 import PopupHeader from "./PopupHeader";
+import About from "./Tabs/About";
 
 const Popup: React.FC = () => {
 	enum TabEventKeys {
 		AUTOBUYER,
 		UGC,
+		ABOUT,
 	}
 
 	const [storage, setstorage] = useState(BrowserStorage.INITIAL_STORAGE);
@@ -74,6 +76,9 @@ const Popup: React.FC = () => {
 				</Tab>
 				<Tab className="p-3" eventKey={TabEventKeys.UGC} title="UGC notifier">
 					<LimitedUGCInGameNotifier storage={[storage, setstorage]} />
+				</Tab>
+				<Tab className="p-3" eventKey={TabEventKeys.ABOUT} title="About">
+					<About />
 				</Tab>
 			</Tabs>
 

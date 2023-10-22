@@ -38,16 +38,9 @@ const CatalogItemsAutoBuyerTab: React.FC<{
 						});
 
 						if (event.target.checked) {
-							Browser.storage.local
-								.set({
-									catalogItemsAutoBuyerEnabled: event.target.checked,
-								})
-								.catch(() => {
-									setstorage({
-										...storage,
-										catalogItemsAutoBuyerEnabled: !storage.catalogItemsAutoBuyerEnabled,
-									});
-								});
+							Browser.storage.local.set({
+								catalogItemsAutoBuyerEnabled: event.target.checked,
+							} as BrowserStorage);
 						} else {
 							setstorage({
 								...storage,

@@ -41,17 +41,9 @@ const LimitedUGCInGameTab: React.FC<{
 						});
 
 						if (event.target.checked) {
-							Browser.storage.local
-								.set({
-									limitedUGCInGameNotifierEnabled: event.target.checked,
-								} as BrowserStorage)
-								.catch(() => {
-									setstorage({
-										...storage,
-										limitedUGCInGameNotifierEnabled:
-											!storage.limitedUGCInGameNotifierEnabled,
-									});
-								});
+							Browser.storage.local.set({
+								limitedUGCInGameNotifierEnabled: event.target.checked,
+							} as BrowserStorage);
 						} else {
 							setstorage({
 								...storage,
@@ -75,10 +67,8 @@ const LimitedUGCInGameTab: React.FC<{
 					label="Most recent"
 					checked={orderingtype == OrderingType.MOST_RECENT}
 					defaultChecked={orderingtype == OrderingType.MOST_RECENT}
-					onChange={(event) => {
-						if (event.target.checked) {
-							setorderingtype(OrderingType.MOST_RECENT);
-						}
+					onChange={() => {
+						setorderingtype(OrderingType.MOST_RECENT);
 					}}
 				/>
 
@@ -88,10 +78,8 @@ const LimitedUGCInGameTab: React.FC<{
 					label="Best matches"
 					checked={orderingtype == OrderingType.BEST_MATCH}
 					defaultChecked={orderingtype == OrderingType.BEST_MATCH}
-					onChange={(event) => {
-						if (event.target.checked) {
-							setorderingtype(OrderingType.BEST_MATCH);
-						}
+					onChange={() => {
+						setorderingtype(OrderingType.BEST_MATCH);
 					}}
 				/>
 			</Stack>

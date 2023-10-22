@@ -7,8 +7,8 @@ export default class AlarmToggle implements Browser.Alarms.CreateAlarmInfoType {
 		public name: keyof typeof AlarmToggleTypes,
 		public periodInMinutes: number,
 	) {
-		Browser.alarms.onAlarm.addListener((alarm) => {
-			if (alarm.name === this.name) {
+		Browser.alarms.onAlarm.addListener(({ name }) => {
+			if (name === this.name) {
 				this.onAlarm();
 			}
 		});

@@ -6,7 +6,7 @@
 
 ## About
 
-**RoSanta** is an open source, _autobuyer_, browser extension, automatically get free items from the Roblox website and provides catalog automations related.
+**RoSanta** automatically get free items from the Roblox website and provides catalog automations related.
 
 ### Why
 
@@ -14,7 +14,7 @@ On the recent update on Roblox, now creators can publish free bundles and heads,
 
 ### Solution
 
-RoSanta autobuyer track, compare, notify and display the newest free items from Roblox catalog then get them before they change its value.
+**RoSanta** autobuyer track, compare, notify and display the newest free items from Roblox catalog then get them before they change its value.
 
 ## Download
 

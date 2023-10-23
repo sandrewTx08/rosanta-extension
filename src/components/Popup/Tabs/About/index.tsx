@@ -6,7 +6,7 @@ export const About: React.FC = () => {
 			<Markdown>{`
 # About
 
-**RoSanta** is an open source, _autobuyer_, browser extension, automatically buying free items from the Roblox website and provides catalog automations related.
+**RoSanta** is an open source, _autobuyer_, browser extension, automatically get free items from the Roblox website and provides catalog automations related.
 
 ## Why
 

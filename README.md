@@ -1,7 +1,7 @@
 # RoSanta
 
 <div align="center">
-  <img width="250" src="public/icon.png" />
+  <img height="auto" width="800" src="https://github.com/sandrewTx08/rosanta-extension/assets/89039740/64082617-6608-4635-8028-49cc849bf31f" />
 </div>
 
 ## About

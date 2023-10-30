@@ -2,10 +2,10 @@ import Browser from "webextension-polyfill";
 import BrowserStorage from "../../../../BrowserStorage";
 import { useState } from "preact/hooks";
 import { Col, Form, ProgressBar, Row, Stack } from "react-bootstrap";
-import CatalogItemsAccordions from "../../CatalogItemsAccordions";
+import CatalogItemsDetailsAccordions from "../../CatalogItemsDetailsAccordions";
 import { Controller } from "react-bootstrap-icons";
 
-const LimitedUGCInGameTab: React.FC<{
+const InGameUgcNotifierTab: React.FC<{
 	storage: [
 		BrowserStorage,
 		React.Dispatch<React.SetStateAction<BrowserStorage>>,
@@ -17,7 +17,7 @@ const LimitedUGCInGameTab: React.FC<{
 	}
 
 	const quantitymax = Math.max(
-		...storage.limitedUGCInGameNotifierAssets.map(
+		...storage.limitedUgcInGameNotifier.map(
 			({ unitsAvailableForConsumption }) => unitsAvailableForConsumption,
 		),
 		0,
@@ -33,27 +33,27 @@ const LimitedUGCInGameTab: React.FC<{
 				<Form.Switch
 					type="switch"
 					label="Notifier"
-					defaultChecked={storage.limitedUGCInGameNotifierEnabled}
+					defaultChecked={storage.limitedUgcInGameNotifierEnabled}
 					onChange={(event) => {
 						setstorage({
 							...storage,
-							limitedUGCInGameNotifierEnabled: event.target.checked,
+							limitedUgcInGameNotifierEnabled: event.target.checked,
 						});
 
 						if (event.target.checked) {
 							Browser.storage.local.set({
-								limitedUGCInGameNotifierEnabled: event.target.checked,
+								limitedUgcInGameNotifierEnabled: event.target.checked,
 							} as BrowserStorage);
 						} else {
 							setstorage({
 								...storage,
-								limitedUGCInGameNotifierAssets: [],
-								limitedUGCInGameNotifierEnabled: false,
+								limitedUgcInGameNotifier: [],
+								limitedUgcInGameNotifierEnabled: false,
 							});
 
 							Browser.storage.local.set({
-								limitedUGCInGameNotifierAssets: [] as any[],
-								limitedUGCInGameNotifierEnabled: false,
+								limitedUgcInGameNotifier: [] as any[],
+								limitedUgcInGameNotifierEnabled: false,
 							} as BrowserStorage);
 						}
 					}}
@@ -73,7 +73,7 @@ const LimitedUGCInGameTab: React.FC<{
 				/>
 
 				<Form.Check
-					disabled={storage.limitedUGCInGameNotifierAssets.length <= 0}
+					disabled={storage.limitedUgcInGameNotifier.length < 1}
 					type="radio"
 					label="Best matches"
 					checked={orderingtype == OrderingType.BEST_MATCH}
@@ -89,7 +89,7 @@ const LimitedUGCInGameTab: React.FC<{
 				<Row>
 					<Col xs={3} className="text-center">
 						<input
-							disabled={quantitymax <= 0}
+							disabled={quantitymax < 1}
 							className="w-100 border text-center rounded"
 							type="number"
 							step={1}
@@ -104,7 +104,7 @@ const LimitedUGCInGameTab: React.FC<{
 					</Col>
 					<Col xs={7}>
 						<Form.Range
-							disabled={quantitymax <= 0}
+							disabled={quantitymax < 1}
 							defaultValue={quantitymin}
 							onChange={(event) => {
 								setquantitymin(Number.parseInt(event.target.value));
@@ -118,10 +118,10 @@ const LimitedUGCInGameTab: React.FC<{
 				</Row>
 			</Stack>
 
-			<CatalogItemsAccordions
+			<CatalogItemsDetailsAccordions
 				data={((
-					data: BrowserStorage["limitedUGCInGameNotifierAssets"],
-				): BrowserStorage["limitedUGCInGameNotifierAssets"] => {
+					data: BrowserStorage["limitedUgcInGameNotifier"],
+				): BrowserStorage["limitedUgcInGameNotifier"] => {
 					data = data.filter(
 						({ unitsAvailableForConsumption }) =>
 							unitsAvailableForConsumption >= quantitymin,
@@ -145,8 +145,8 @@ const LimitedUGCInGameTab: React.FC<{
 						case OrderingType.MOST_RECENT:
 							return data;
 					}
-				})(storage.limitedUGCInGameNotifierAssets)}
-				active={storage.limitedUGCInGameNotifierEnabled}
+				})(storage.limitedUgcInGameNotifier)}
+				active={storage.limitedUgcInGameNotifierEnabled}
 				headerRight={(data) => (
 					<>
 						{data.gameURL && (
@@ -209,4 +209,4 @@ const LimitedUGCInGameTab: React.FC<{
 	);
 };
 
-export default LimitedUGCInGameTab;
+export default InGameUgcNotifierTab;

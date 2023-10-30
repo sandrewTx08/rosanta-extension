@@ -4,11 +4,11 @@ import "../../../index.scss";
 import BrowserStorage from "../../BrowserStorage";
 import { Modal, Stack, Tab, Tabs } from "react-bootstrap";
 import CatalogItemsAutoBuyerTab from "./Tabs/CatalogItemsAutoBuyerTab";
-import LimitedUGCInGameNotifier from "./Tabs/LimitedUGCInGameNotifierTab";
-import { robloxUserController } from "../../roblox";
+import LimitedUGCInGameNotifier from "./Tabs/InGameUgcNotifierTab";
 import PopupFooter from "./PopupFooter";
 import PopupHeader from "./PopupHeader";
 import About from "./Tabs/About";
+import { robloxUserService } from "../../roblox";
 
 const Popup: React.FC = () => {
 	enum TabEventKeys {
@@ -20,7 +20,7 @@ const Popup: React.FC = () => {
 	const [storage, setstorage] = useState(BrowserStorage.INITIAL_STORAGE);
 
 	useEffect(() => {
-		function eventHandler(
+		function storageAreaOnChangedChangesType(
 			changes: Browser.Storage.StorageAreaOnChangedChangesType,
 		) {
 			setstorage((value) => {
@@ -33,17 +33,30 @@ const Popup: React.FC = () => {
 			});
 		}
 
-		robloxUserController.setUserAuthenticationStorage().then(setstorage);
+		// @ts-ignore
+		Browser.storage.local.get(null).then(setstorage);
 
-		Browser.storage.local.onChanged.addListener(eventHandler);
+		Browser.storage.local.onChanged.addListener(storageAreaOnChangedChangesType);
 
 		return () => {
-			Browser.storage.local.onChanged.removeListener(eventHandler);
+			Browser.storage.local.onChanged.removeListener(
+				storageAreaOnChangedChangesType,
+			);
 		};
 	}, []);
 
+	useEffect(() => {
+		if (storage.robloxUser?.id) {
+			robloxUserService
+				.avatarHeadshot(storage.robloxUser.id, 720)
+				.then((avatarHeadshot) => {
+					setstorage({ ...storage, avatarHeadshot });
+				});
+		}
+	}, [storage.robloxUser?.id]);
+
 	return (
-		<Stack className="m-auto h-100 border" style={{ width: 540, minHeight: 600 }}>
+		<Stack className="m-auto h-100 border" style={{ width: 540 }}>
 			<PopupHeader storage={storage} />
 
 			<Modal

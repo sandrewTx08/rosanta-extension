@@ -1,14 +1,13 @@
-import { AssetThumbnails } from "./AssetThumbnails";
 import CatalogItemsDetailsQueryParamDTO from "./CatalogItemsDetailsQueryParamDTO";
-import CatalogItemsDetailsQueryResponse from "./CatalogItemsDetailsQueryResponse";
+import CatalogItemsDetailsResponse from "./CatalogItemsDetailsResponse";
 import ProductPurchaseDTO from "./ProductPurchaseDTO";
-import PurchasesProductsResponse from "./PurchasesProductsResponse";
+import PurchaseProductsResponse from "./PurchaseProductsResponse";
 
 export default class RobloxCatalogRepository {
 	findManyAssetDetails(
 		catalogItemDetailsQueryParamDTO: CatalogItemsDetailsQueryParamDTO,
 		cursor: string,
-	): Promise<CatalogItemsDetailsQueryResponse> {
+	): Promise<CatalogItemsDetailsResponse> {
 		return fetch(
 			`https://catalog.roblox.com/v2/search/items/details?${new URLSearchParams({
 				...(catalogItemDetailsQueryParamDTO as {}),
@@ -17,25 +16,11 @@ export default class RobloxCatalogRepository {
 		).then((response) => response.json());
 	}
 
-	findManyAssetImages(
-		assetIds: number[],
-		size: `${number}x${number}`,
-		format: string,
-	): Promise<AssetThumbnails> {
-		return fetch(
-			`https://thumbnails.roblox.com/v1/assets?${new URLSearchParams({
-				assetIds: assetIds.join(","),
-				size,
-				format,
-			} as {}).toString()}`,
-		).then((response) => response.json());
-	}
-
 	purchaseProduct(
 		productId: number,
 		productPurchaseDTO: ProductPurchaseDTO,
 		xcsrftoken: string,
-	): Promise<PurchasesProductsResponse> {
+	): Promise<PurchaseProductsResponse> {
 		return fetch(
 			`https://economy.roblox.com/v1/purchases/products/${productId}`,
 			{

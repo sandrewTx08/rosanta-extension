@@ -1,5 +1,5 @@
 import ImageBatchQueryParamDTO from "./ImageBatchQueryParamDTO";
-import { ImageBatchResponse } from "./ImageBatchResponse";
+import ImageBatchResponse from "./ImageBatchResponse";
 import RobloxImageBatchRepository from "./RobloxImageBatchRepository";
 
 export default class RobloxImageBatchService {
@@ -11,23 +11,21 @@ export default class RobloxImageBatchService {
 
 	async findManyImagesBatches(
 		imageBatchQueryParamDTOs: ImageBatchQueryParamDTO[],
-		skip: number = 10,
+		skip: number = 20,
 	) {
-		const responses: Promise<ImageBatchResponse>[] = [];
+		const data: Promise<ImageBatchResponse>[] = [];
 
 		for (let i = 0; i < imageBatchQueryParamDTOs.length; i += skip) {
-			responses.push(
+			data.push(
 				this.#robloxImageBatchRepository.findManyImagesBatches(
 					imageBatchQueryParamDTOs.slice(i, i + skip),
 				),
 			);
 		}
 
-		return (await Promise.all(responses))
-			.reduce<ImageBatchResponse["data"]>(
-				(p, c) => (c?.data ? p.concat(c.data) : p),
-				[],
-			)
-			.sort(({ targetId: asc }, { targetId: desc }) => desc - asc);
+		return (await Promise.all(data)).reduce<ImageBatchResponse["data"]>(
+			(p, c) => (c?.data ? p.concat(c.data) : p),
+			[],
+		);
 	}
 }

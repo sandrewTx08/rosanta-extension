@@ -1,4 +1,4 @@
-import CatalogItemsDetailsQueryResponse from "../roblox-catalog/CatalogItemsDetailsQueryResponse";
+import CatalogItemsDetailsResponse from "../roblox-catalog/CatalogItemsDetailsResponse";
 import RobloxUserRepository from "./RobloxUserRespository";
 
 export default class RobloxUserService {
@@ -14,7 +14,7 @@ export default class RobloxUserService {
 
 	async isItemOwnedByUser(
 		userId: number,
-		itemType: CatalogItemsDetailsQueryResponse["data"][0]["itemType"],
+		itemType: CatalogItemsDetailsResponse["data"][0]["itemType"],
 		itemTargetId: number,
 	) {
 		let it: number;
@@ -28,16 +28,19 @@ export default class RobloxUserService {
 			default:
 			case "Asset": {
 				it = 0;
+				break;
 			}
 		}
 
-		return (
-			(await this.#robloxUserRepository.isItemOwnedByUser(
-				userId,
-				it,
-				itemTargetId,
-			)) === true
-		);
+		return {
+			itemTargetId,
+			owned:
+				(await this.#robloxUserRepository.isItemOwnedByUser(
+					userId,
+					it,
+					itemTargetId,
+				)) === true,
+		};
 	}
 
 	avatarHeadshot(userIds: number, size: number) {

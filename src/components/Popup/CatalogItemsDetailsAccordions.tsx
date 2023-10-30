@@ -12,8 +12,8 @@ import BrowserStorage from "../../BrowserStorage";
 import { useState } from "preact/hooks";
 import { Search } from "react-bootstrap-icons";
 
-const CatalogItemsAccordions = <
-	T extends BrowserStorage["catalogItemsAutoBuyerAssets"],
+const CatalogItemsDetailsAccordions = <
+	T extends BrowserStorage["autoBuyerCatalogItemsDetails"],
 >({
 	data,
 	active = false,
@@ -40,7 +40,7 @@ const CatalogItemsAccordions = <
 								</InputGroup.Text>
 								<Form.Control
 									className="bg-transparent border-0"
-									disabled={data.length <= 0}
+									disabled={data.length < 1}
 									placeholder="Search item names"
 									onChange={(event) => {
 										setsearch(event.target.value);
@@ -181,4 +181,4 @@ const CatalogItemsAccordions = <
 	);
 };
 
-export default CatalogItemsAccordions;
+export default CatalogItemsDetailsAccordions;

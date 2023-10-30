@@ -3,9 +3,7 @@ import BrowserStorage from "../../BrowserStorage";
 import { ArrowRepeat } from "react-bootstrap-icons";
 import Browser from "webextension-polyfill";
 
-const PopupHeader: React.FC<{
-	storage: BrowserStorage;
-}> = ({ storage }) => {
+const PopupHeader: React.FC<{ storage: BrowserStorage }> = ({ storage }) => {
 	return (
 		<header className="pt-2 px-4 bg-light" style={{ minHeight: 180 }}>
 			<Row>

@@ -1,35 +1,41 @@
-import CatalogItemsDetailsQueryResponse from "./roblox/roblox-catalog/CatalogItemsDetailsQueryResponse";
-import { ImageBatchResponse } from "./roblox/roblox-image-batch/ImageBatchResponse";
+import { Datum } from "./roblox/roblox-catalog/CatalogItemsDetailsResponse";
+import ImageBatchResponse from "./roblox/roblox-image-batch/ImageBatchResponse";
 import AvatarHeadshot from "./roblox/roblox-user/AvatarHeadshot";
 import RobloxUser from "./roblox/roblox-user/RobloxUser";
 
 interface BrowserStorage {
-	catalogItemsAutoBuyerAssets: (CatalogItemsDetailsQueryResponse["data"][0] & {
+	autoBuyerCatalogItemsDetails: (BrowserStorage.CatalogItemsDetails & {
 		imageBatch?: ImageBatchResponse["data"][0];
 	})[];
-	catalogItemsAutoBuyerAssetsFilteredId: { [id: number]: boolean };
-	catalogItemsAutoBuyerEnabled?: boolean;
-	catalogItemsAutoBuyerNotification: boolean;
-	catalogItemsAutoBuyerAssetsTotal: number;
-	limitedUGCInGameNotifierAssets: (CatalogItemsDetailsQueryResponse["data"][0] & {
+	autoBuyerCatalogItemsDetailsEnabled: boolean | null;
+	autoBuyerCatalogItemsDetailsNotification: boolean;
+	autoBuyerCatalogItemsDetailsTotal: number;
+	limitedUgcInGameNotifier: (BrowserStorage.CatalogItemsDetails & {
+		imageBatch?: ImageBatchResponse["data"][0];
 		gameURL: string | null;
-		imageBatch?: ImageBatchResponse["data"][0];
 	})[];
-	limitedUGCInGameNotifierEnabled: boolean;
+	limitedUgcInGameNotifierEnabled: boolean;
 	robloxUser?: RobloxUser | null;
-	avatarHeadshot?: AvatarHeadshot;
+	avatarHeadshot: AvatarHeadshot | null;
 	purchasesMultiplier: number;
+	catalogItemsDetailsOwnedId: Record<number, boolean>;
 }
 
 namespace BrowserStorage {
+	export interface CatalogItemsDetails extends Datum {
+		imageBatch?: ImageBatchResponse["data"][0];
+	}
+
 	export const INITIAL_STORAGE: BrowserStorage = {
-		catalogItemsAutoBuyerAssets: [],
-		catalogItemsAutoBuyerNotification: true,
-		catalogItemsAutoBuyerAssetsTotal: 0,
-		limitedUGCInGameNotifierAssets: [],
-		catalogItemsAutoBuyerAssetsFilteredId: {},
-		limitedUGCInGameNotifierEnabled: false,
-		purchasesMultiplier: 3,
+		autoBuyerCatalogItemsDetails: [],
+		autoBuyerCatalogItemsDetailsNotification: true,
+		autoBuyerCatalogItemsDetailsTotal: 0,
+		autoBuyerCatalogItemsDetailsEnabled: null,
+		limitedUgcInGameNotifier: [],
+		limitedUgcInGameNotifierEnabled: false,
+		catalogItemsDetailsOwnedId: {},
+		avatarHeadshot: null,
+		purchasesMultiplier: 5,
 	};
 }
 

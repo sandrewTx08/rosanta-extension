@@ -1,5 +1,5 @@
 import ImageBatchQueryParamDTO from "./ImageBatchQueryParamDTO";
-import { ImageBatchResponse } from "./ImageBatchResponse";
+import ImageBatchResponse from "./ImageBatchResponse";
 
 export default class RobloxImageBatchRepository {
 	findManyImagesBatches(

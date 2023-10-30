@@ -1,3 +1,4 @@
+import RobloxCatalogController from "./roblox-catalog/RobloxCatalogController";
 import RobloxCatalogRepository from "./roblox-catalog/RobloxCatalogRepository";
 import RobloxCatalogService from "./roblox-catalog/RobloxCatalogService";
 import RobloxImageBatchRepository from "./roblox-image-batch/RobloxImageBatchRepository";
@@ -17,8 +18,11 @@ export const robloxUserService = new RobloxUserService(
 export const robloxUserController = new RobloxUserController(robloxUserService);
 export const robloxCatalogService = new RobloxCatalogService(
 	new RobloxCatalogRepository(),
-	robloxImageBatchService,
+);
+export const robloxCatalogController = new RobloxCatalogController(
+	robloxCatalogService,
 	robloxUserService,
+	robloxImageBatchService,
 );
 export const robloxTokenService = new RobloxTokenService(
 	new RobloxTokenRepository(),

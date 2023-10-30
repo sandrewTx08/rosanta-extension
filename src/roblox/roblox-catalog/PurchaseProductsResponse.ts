@@ -1,4 +1,4 @@
-export default interface PurchasesProductsResponse {
+export default interface PurchaseProductsResponse {
 	purchased: boolean;
 	reason: string;
 	productId: number;

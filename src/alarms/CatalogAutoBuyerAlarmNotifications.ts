@@ -1,16 +1,19 @@
 import Browser from "webextension-polyfill";
-import CatalogAutoBuyerAlarmNotificationsTypes from "./CatalogAutoBuyerAlarmNotificationsTypes";
+import CatalogAutoBuyerAlarmNotificationsType from "./CatalogAutoBuyerAlarmNotificationsType";
+import Alarm from "./Alarm";
 
-export default class CatalogAutoBuyerAlarmNotifications {
+export default class CatalogAutoBuyerAlarmNotifications extends Alarm {
 	constructor() {
+		super(CatalogAutoBuyerAlarmNotificationsType.autobuyerDisabled, 40);
+
 		Browser.alarms.onAlarm.addListener(async ({ name }) => {
-			if (name === CatalogAutoBuyerAlarmNotificationsTypes.autobuyerDisabled) {
+			if (name === CatalogAutoBuyerAlarmNotificationsType.autobuyerDisabled) {
 				// @ts-ignore
 				const storage: BrowserStorage = await Browser.storage.local.get(null);
 
 				if (
-					storage.catalogItemsAutoBuyerNotification &&
-					!storage.catalogItemsAutoBuyerEnabled
+					storage.autoBuyerCatalogItemsDetailsNotification &&
+					!storage.autoBuyerCatalogItemsDetailsEnabled
 				) {
 					Browser.notifications.create({
 						type: "basic",
@@ -22,9 +25,6 @@ export default class CatalogAutoBuyerAlarmNotifications {
 			}
 		});
 
-		Browser.alarms.create(
-			CatalogAutoBuyerAlarmNotificationsTypes.autobuyerDisabled,
-			{ periodInMinutes: 40 },
-		);
+		this.createAlarm();
 	}
 }

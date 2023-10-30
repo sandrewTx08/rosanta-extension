@@ -1,57 +1,35 @@
 import Browser from "webextension-polyfill";
 import BrowserStorage from "../BrowserStorage";
 import {
+	robloxCatalogController,
 	robloxCatalogService,
 	robloxTokenService,
-	robloxUserController,
 } from "../roblox";
-import AlarmToggleTypes from "./AlarmToggleTypes";
+import AlarmToggleType from "./AlarmToggleType";
 import AlarmToggle from "./AlarmToggle";
 import CatalogItemsLink from "../roblox/roblox-catalog/CatalogItemsLink";
 import ProductPurchaseDTO from "../roblox/roblox-catalog/ProductPurchaseDTO";
 
 export default class CatalogAutoBuyerAlarmToggle extends AlarmToggle {
 	constructor() {
-		super(AlarmToggleTypes.catalogItemsAutoBuyerEnabled, 1);
-		this.onCreate();
+		super(AlarmToggleType.autoBuyerCatalogItemsDetailsEnabled, 1, 0);
 	}
 
 	override async onCreate() {
-		// @ts-ignore
-		const storage: BrowserStorage =
-			await robloxUserController.setUserAuthenticationStorage();
+		const storage = await Browser.storage.local.get(null);
 
 		if (storage.robloxUser?.id) {
-			const [catalogItemsAutoBuyerAssets, filteredIds] =
-				await robloxCatalogService.findManyFreeItemsAssetDetails(
-					storage.robloxUser.id,
-					storage.catalogItemsAutoBuyerAssetsFilteredId,
+			const { catalogItemsDetails, catalogItemsDetailsOwnedId } =
+				await robloxCatalogController.findManyFreeCatalogItemsDetails(
+					storage.robloxUser?.id,
+					storage.catalogItemsDetailsOwnedId,
 				);
 
-			for (const id of filteredIds) {
-				storage.catalogItemsAutoBuyerAssetsFilteredId[id] = true;
-			}
-
-			await Browser.storage.local.set({
-				...storage,
-				catalogItemsAutoBuyerAssetsTotal: catalogItemsAutoBuyerAssets.length,
-				catalogItemsAutoBuyerAssets,
-				catalogItemsAutoBuyerEnabled:
-					storage.catalogItemsAutoBuyerEnabled === undefined
-						? true
-						: storage.catalogItemsAutoBuyerEnabled,
-				catalogItemsAutoBuyerAssetsFilteredId:
-					storage.catalogItemsAutoBuyerAssetsFilteredId,
+			Browser.storage.local.set({
+				autoBuyerCatalogItemsDetailsTotal: catalogItemsDetails.length,
+				autoBuyerCatalogItemsDetails: catalogItemsDetails,
+				catalogItemsDetailsOwnedId: catalogItemsDetailsOwnedId,
 			} as BrowserStorage);
-		}
-
-		if (storage.catalogItemsAutoBuyerEnabled === undefined) {
-			await Browser.windows.create({
-				url: "popup.html",
-				type: "panel",
-				width: 580,
-				height: 600,
-			});
 		}
 	}
 
@@ -60,13 +38,13 @@ export default class CatalogAutoBuyerAlarmToggle extends AlarmToggle {
 		const storage: BrowserStorage = await Browser.storage.local.get(null);
 
 		if (storage.robloxUser?.id) {
-			if (storage.catalogItemsAutoBuyerAssets.length > 0) {
+			if (storage.autoBuyerCatalogItemsDetails.length > 0) {
 				const xcsrftoken = await robloxTokenService.getXCsrfToken();
 				await this.purchaseItems(xcsrftoken, storage);
 			}
 
 			if (
-				storage.catalogItemsAutoBuyerAssets.length <= storage.purchasesMultiplier
+				storage.autoBuyerCatalogItemsDetails.length <= storage.purchasesMultiplier
 			) {
 				this.onCreate();
 			}
@@ -74,46 +52,57 @@ export default class CatalogAutoBuyerAlarmToggle extends AlarmToggle {
 	}
 
 	async purchaseItems(xcsrftoken: string, storage: BrowserStorage) {
-		const filteredIds: number[] = [];
+		const purchases: Promise<void>[] = [];
+		let changed = false;
 
 		for (let i = 0; i < storage.purchasesMultiplier; i++) {
 			try {
-				filteredIds.push(storage.catalogItemsAutoBuyerAssets[i].id);
+				const catalogItemDetail = storage.autoBuyerCatalogItemsDetails[i];
+
+				purchases.push(
+					robloxCatalogService
+						.purchaseProduct(
+							catalogItemDetail.productId,
+							new ProductPurchaseDTO(0, 0, catalogItemDetail.creatorTargetId),
+							xcsrftoken,
+						)
+						.then(({ purchased }) => {
+							storage.catalogItemsDetailsOwnedId[
+								storage.autoBuyerCatalogItemsDetails[i].id
+							] = purchased;
+
+							if (purchased) {
+								const itemURL = CatalogItemsLink.parseCatalogDetails(catalogItemDetail);
+
+								changed = true;
+
+								if (storage.autoBuyerCatalogItemsDetailsNotification) {
+									Browser.notifications.create({
+										title: catalogItemDetail.name,
+										message: "Item successfully purchased",
+										iconUrl: catalogItemDetail.imageBatch?.imageUrl || "icon.png",
+										type: "basic",
+										contextMessage: itemURL,
+										appIconMaskUrl: "icon.png",
+									});
+								}
+							}
+						}),
+				);
 			} catch (error) {
 				break;
 			}
-
-			const { purchased } = await robloxCatalogService.purchaseProduct(
-				storage.catalogItemsAutoBuyerAssets[i].productId,
-				new ProductPurchaseDTO(
-					0,
-					0,
-					storage.catalogItemsAutoBuyerAssets[i].creatorTargetId,
-				),
-				xcsrftoken,
-			);
-
-			if (purchased && storage.catalogItemsAutoBuyerNotification) {
-				const itemURL = CatalogItemsLink.parseCatalogDetails(
-					storage.catalogItemsAutoBuyerAssets[i],
-				);
-
-				await Browser.notifications.create({
-					title: storage.catalogItemsAutoBuyerAssets[i].name,
-					message: "Item successfully purchased",
-					iconUrl:
-						storage.catalogItemsAutoBuyerAssets[i].imageBatch?.imageUrl || "icon.png",
-					type: "basic",
-					contextMessage: itemURL,
-					appIconMaskUrl: "icon.png",
-				});
-			}
 		}
 
-		await Browser.storage.local.set({
-			catalogItemsAutoBuyerAssets: storage.catalogItemsAutoBuyerAssets.filter(
-				({ id }) => id != filteredIds.find((id2) => id2 == id),
-			),
-		} as BrowserStorage);
+		await Promise.all(purchases);
+
+		if (changed) {
+			Browser.storage.local.set({
+				catalogItemsDetailsOwnedId: storage.catalogItemsDetailsOwnedId,
+				autoBuyerCatalogItemsDetails: storage.autoBuyerCatalogItemsDetails.filter(
+					({ id }) => !storage.catalogItemsDetailsOwnedId[id],
+				),
+			} as BrowserStorage);
+		}
 	}
 }

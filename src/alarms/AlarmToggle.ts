@@ -1,17 +1,18 @@
 import Browser from "webextension-polyfill";
-import AlarmToggleTypes from "./AlarmToggleTypes";
+import AlarmToggleTypes from "./AlarmToggleType";
 import BrowserStorage from "../BrowserStorage";
+import Alarm from "./Alarm";
 
-export default class AlarmToggle implements Browser.Alarms.CreateAlarmInfoType {
+export default class AlarmToggle
+	extends Alarm
+	implements Browser.Alarms.CreateAlarmInfoType
+{
 	constructor(
-		public name: keyof typeof AlarmToggleTypes,
-		public periodInMinutes: number,
+		name: keyof typeof AlarmToggleTypes,
+		periodInMinutes: number,
+		when: number,
 	) {
-		Browser.alarms.onAlarm.addListener(({ name }) => {
-			if (name === this.name) {
-				this.onAlarm();
-			}
-		});
+		super(name, periodInMinutes, when);
 
 		Browser.storage.local.onChanged.addListener(async (changes) => {
 			if (
@@ -31,15 +32,4 @@ export default class AlarmToggle implements Browser.Alarms.CreateAlarmInfoType {
 			Browser.storage.local.set(BrowserStorage.INITIAL_STORAGE);
 		});
 	}
-
-	createAlarm() {
-		Browser.alarms.create(this.name, {
-			periodInMinutes: this.periodInMinutes,
-			when: 0,
-		});
-	}
-
-	onAlarm() {}
-
-	onCreate() {}
 }

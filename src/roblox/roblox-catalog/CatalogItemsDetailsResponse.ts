@@ -1,4 +1,4 @@
-export default interface CatalogItemsDetailsQueryResponse {
+export default interface CatalogItemsDetailsResponse {
 	keyword: null;
 	elasticsearchDebugInfo: ElasticsearchDebugInfo;
 	previousPageCursor: null;

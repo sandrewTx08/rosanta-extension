@@ -9,31 +9,22 @@ export default class RobloxUserController {
 		this.#robloxUserService = robloxUserService;
 	}
 
-	async setUserAuthenticationStorage(_storage?: BrowserStorage) {
+	async getUserAuthenticationStorage() {
 		// @ts-ignore
-		let storage: BrowserStorage = _storage
-			? _storage
-			: await Browser.storage.local.get(null);
+		let storage: BrowserStorage = await Browser.storage.local.get(null);
 
 		const robloxUser = await this.#robloxUserService.getAuthenticatedUser();
 
 		if (robloxUser?.id) {
-			const avatarHeadshot = await this.#robloxUserService.avatarHeadshot(
-				robloxUser.id,
-				720,
-			);
+			if (storage.robloxUser?.id != robloxUser.id) {
+				storage = { ...BrowserStorage.INITIAL_STORAGE, robloxUser };
 
-			storage =
-				storage.robloxUser?.id != robloxUser.id
-					? BrowserStorage.INITIAL_STORAGE
-					: storage;
-			storage.avatarHeadshot = avatarHeadshot;
-			storage.robloxUser = robloxUser;
+				await Browser.storage.local.set(storage);
+			}
 		} else {
 			storage.robloxUser = null;
 		}
 
-		await Browser.storage.local.set(storage);
 		return storage;
 	}
 }

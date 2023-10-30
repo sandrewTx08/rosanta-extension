@@ -9,7 +9,7 @@ import {
 } from "react-bootstrap";
 import Browser from "webextension-polyfill";
 import BrowserStorage from "../../../../BrowserStorage";
-import CatalogItemsAccordions from "../../CatalogItemsAccordions";
+import CatalogItemsDetailsAccordions from "../../CatalogItemsDetailsAccordions";
 
 const CatalogItemsAutoBuyerTab: React.FC<{
 	storage: [
@@ -18,10 +18,10 @@ const CatalogItemsAutoBuyerTab: React.FC<{
 	];
 }> = ({ storage: [storage, setstorage] }) => {
 	const progress =
-		((storage.catalogItemsAutoBuyerAssetsTotal -
-			storage.catalogItemsAutoBuyerAssets.length) *
+		((storage.autoBuyerCatalogItemsDetailsTotal -
+			storage.autoBuyerCatalogItemsDetails.length) *
 			100) /
-			storage.catalogItemsAutoBuyerAssetsTotal || 0;
+			storage.autoBuyerCatalogItemsDetailsTotal || 0;
 
 	return (
 		<Stack gap={2}>
@@ -30,27 +30,30 @@ const CatalogItemsAutoBuyerTab: React.FC<{
 				<Form.Switch
 					type="switch"
 					label="Autobuyer"
-					defaultChecked={storage.catalogItemsAutoBuyerEnabled}
+					defaultChecked={
+						storage.autoBuyerCatalogItemsDetailsEnabled === null ||
+						storage.autoBuyerCatalogItemsDetailsEnabled
+					}
 					onChange={(event) => {
 						setstorage({
 							...storage,
-							catalogItemsAutoBuyerEnabled: event.target.checked,
+							autoBuyerCatalogItemsDetailsEnabled: event.target.checked,
 						});
 
 						if (event.target.checked) {
 							Browser.storage.local.set({
-								catalogItemsAutoBuyerEnabled: event.target.checked,
+								autoBuyerCatalogItemsDetailsEnabled: event.target.checked,
 							} as BrowserStorage);
 						} else {
 							setstorage({
 								...storage,
-								catalogItemsAutoBuyerAssets: [],
-								catalogItemsAutoBuyerEnabled: false,
+								autoBuyerCatalogItemsDetails: [],
+								autoBuyerCatalogItemsDetailsEnabled: false,
 							});
 
 							Browser.storage.local.set({
-								catalogItemsAutoBuyerAssets: [] as any[],
-								catalogItemsAutoBuyerEnabled: false,
+								autoBuyerCatalogItemsDetails: [] as any[],
+								autoBuyerCatalogItemsDetailsEnabled: false,
 							} as BrowserStorage);
 						}
 					}}
@@ -59,15 +62,15 @@ const CatalogItemsAutoBuyerTab: React.FC<{
 				<Form.Switch
 					type="switch"
 					label="Notifications"
-					defaultChecked={storage.catalogItemsAutoBuyerNotification}
+					defaultChecked={storage.autoBuyerCatalogItemsDetailsNotification}
 					onChange={(event) => {
 						setstorage({
 							...storage,
-							catalogItemsAutoBuyerNotification: event.target.checked,
+							autoBuyerCatalogItemsDetailsNotification: event.target.checked,
 						});
 
 						Browser.storage.local.set({
-							catalogItemsAutoBuyerNotification: event.target.checked,
+							autoBuyerCatalogItemsDetailsNotification: event.target.checked,
 						});
 					}}
 				/>
@@ -113,15 +116,18 @@ const CatalogItemsAutoBuyerTab: React.FC<{
 				style={{ height: 26 }}
 				now={progress}
 				label={progress.toFixed(0) + "%"}
-				hidden={storage.catalogItemsAutoBuyerAssets.length <= 0}
+				hidden={storage.autoBuyerCatalogItemsDetails.length < 1}
 			/>
 
 			<Alert
 				variant="light"
 				dismissible
 				hidden={
-					storage.catalogItemsAutoBuyerAssets.length <= 0 &&
-					!storage.catalogItemsAutoBuyerEnabled
+					!(
+						storage.autoBuyerCatalogItemsDetailsEnabled === null ||
+						(storage.autoBuyerCatalogItemsDetails.length > 1 &&
+							storage.autoBuyerCatalogItemsDetailsEnabled)
+					)
 				}
 			>
 				<Alert.Heading>
@@ -132,11 +138,12 @@ const CatalogItemsAutoBuyerTab: React.FC<{
 
 						<Col xs={9}>
 							{[
-								"Autobuyer is running on background",
 								"Autobuyer is enabled by default",
+								"Autobuyer is running on background",
 								"Community is creating new awesome items",
 								"RoSanta is searching for new items, wait",
 								"You'll be notified when new items are available",
+								"Avoid manually purchase while Autobuyer is enabled",
 							].find((_, i, c) => Math.random() < 1 / (c.length - i))}
 							.
 						</Col>
@@ -144,9 +151,12 @@ const CatalogItemsAutoBuyerTab: React.FC<{
 				</Alert.Heading>
 			</Alert>
 
-			<CatalogItemsAccordions
-				active={storage.catalogItemsAutoBuyerEnabled}
-				data={storage.catalogItemsAutoBuyerAssets}
+			<CatalogItemsDetailsAccordions
+				active={
+					storage.autoBuyerCatalogItemsDetailsEnabled === null ||
+					storage.autoBuyerCatalogItemsDetailsEnabled
+				}
+				data={storage.autoBuyerCatalogItemsDetails}
 			/>
 		</Stack>
 	);

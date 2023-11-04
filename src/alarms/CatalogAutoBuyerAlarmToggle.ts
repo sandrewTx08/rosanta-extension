@@ -16,17 +16,17 @@ export default class CatalogAutoBuyerAlarmToggle extends AlarmToggle {
 	}
 
 	override async onCreate() {
-		const storage = await Browser.storage.local.get(null);
+		// @ts-ignore
+		const storage: BrowserStorage = await Browser.storage.local.get(null);
 
 		if (storage.robloxUser?.id) {
-			const { catalogItemsDetails, catalogItemsDetailsOwnedId } =
+			let { catalogItemsDetails, catalogItemsDetailsOwnedId } =
 				await robloxCatalogController.findManyFreeCatalogItemsDetails(
 					storage.robloxUser?.id,
 					storage.catalogItemsDetailsOwnedId,
 				);
 
 			Browser.storage.local.set({
-				autoBuyerCatalogItemsDetailsTotal: catalogItemsDetails.length,
 				autoBuyerCatalogItemsDetails: catalogItemsDetails,
 				catalogItemsDetailsOwnedId: catalogItemsDetailsOwnedId,
 			} as BrowserStorage);
@@ -43,11 +43,7 @@ export default class CatalogAutoBuyerAlarmToggle extends AlarmToggle {
 				await this.purchaseItems(xcsrftoken, storage);
 			}
 
-			if (
-				storage.autoBuyerCatalogItemsDetails.length <= storage.purchasesMultiplier
-			) {
-				this.onCreate();
-			}
+			this.onCreate();
 		}
 	}
 
@@ -67,25 +63,10 @@ export default class CatalogAutoBuyerAlarmToggle extends AlarmToggle {
 							xcsrftoken,
 						)
 						.then(({ purchased }) => {
-							storage.catalogItemsDetailsOwnedId[
-								storage.autoBuyerCatalogItemsDetails[i].id
-							] = purchased;
+							storage.catalogItemsDetailsOwnedId[catalogItemDetail.id] = purchased;
 
 							if (purchased) {
-								const itemURL = CatalogItemsLink.parseCatalogDetails(catalogItemDetail);
-
 								changed = true;
-
-								if (storage.autoBuyerCatalogItemsDetailsNotification) {
-									Browser.notifications.create({
-										title: catalogItemDetail.name,
-										message: "Item successfully purchased",
-										iconUrl: catalogItemDetail.imageBatch?.imageUrl || "icon.png",
-										type: "basic",
-										contextMessage: itemURL,
-										appIconMaskUrl: "icon.png",
-									});
-								}
 							}
 						}),
 				);
@@ -97,6 +78,22 @@ export default class CatalogAutoBuyerAlarmToggle extends AlarmToggle {
 		await Promise.all(purchases);
 
 		if (changed) {
+			if (storage.autoBuyerCatalogItemsDetailsNotification) {
+				Browser.notifications.create({
+					title: "Items successfully purchased",
+					message: "Check the list of new items",
+					iconUrl: "icon.png",
+					type: "list",
+					appIconMaskUrl: "icon.png",
+					items: purchases.map((_, i) => ({
+						title: storage.autoBuyerCatalogItemsDetails[i].name,
+						message: CatalogItemsLink.parseCatalogDetails(
+							storage.autoBuyerCatalogItemsDetails[i],
+						),
+					})),
+				});
+			}
+
 			Browser.storage.local.set({
 				catalogItemsDetailsOwnedId: storage.catalogItemsDetailsOwnedId,
 				autoBuyerCatalogItemsDetails: storage.autoBuyerCatalogItemsDetails.filter(

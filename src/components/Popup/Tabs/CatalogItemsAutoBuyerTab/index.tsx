@@ -1,12 +1,4 @@
-import {
-	Alert,
-	Col,
-	Form,
-	ProgressBar,
-	Row,
-	Spinner,
-	Stack,
-} from "react-bootstrap";
+import { Alert, Col, Form, Row, Spinner, Stack } from "react-bootstrap";
 import Browser from "webextension-polyfill";
 import BrowserStorage from "../../../../BrowserStorage";
 import CatalogItemsDetailsAccordions from "../../CatalogItemsDetailsAccordions";
@@ -17,16 +9,10 @@ const CatalogItemsAutoBuyerTab: React.FC<{
 		React.Dispatch<React.SetStateAction<BrowserStorage>>,
 	];
 }> = ({ storage: [storage, setstorage] }) => {
-	const progress =
-		((storage.autoBuyerCatalogItemsDetailsTotal -
-			storage.autoBuyerCatalogItemsDetails.length) *
-			100) /
-			storage.autoBuyerCatalogItemsDetailsTotal || 0;
-
 	return (
-		<Stack gap={2}>
-			<h3 className="text-dark">Features</h3>
-			<Stack className="border p-3 rounded">
+		<Stack>
+			<div className="fs-3 text-dark">Features</div>
+			<Stack className="border rounded">
 				<Form.Switch
 					type="switch"
 					label="Autobuyer"
@@ -76,8 +62,8 @@ const CatalogItemsAutoBuyerTab: React.FC<{
 				/>
 			</Stack>
 
-			<h3 className="text-dark">Purchase</h3>
-			<Stack className="border p-3 rounded">
+			<div className="fs-3 text-dark">Purchase</div>
+			<Stack className="border rounded">
 				<Form.Label>Purchase per minute</Form.Label>
 
 				<Row>
@@ -112,13 +98,6 @@ const CatalogItemsAutoBuyerTab: React.FC<{
 				</Row>
 			</Stack>
 
-			<ProgressBar
-				style={{ height: 26 }}
-				now={progress}
-				label={progress.toFixed(0) + "%"}
-				hidden={storage.autoBuyerCatalogItemsDetails.length < 1}
-			/>
-
 			<Alert
 				variant="light"
 				dismissible
@@ -140,8 +119,6 @@ const CatalogItemsAutoBuyerTab: React.FC<{
 							{[
 								"Autobuyer is enabled by default",
 								"Autobuyer is running on background",
-								"Community is creating new awesome items",
-								"RoSanta is searching for new items, wait",
 								"You'll be notified when new items are available",
 								"Avoid manually purchase while Autobuyer is enabled",
 							].find((_, i, c) => Math.random() < 1 / (c.length - i))}

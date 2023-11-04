@@ -7,12 +7,12 @@ import CatalogItemsLink from "../roblox/roblox-catalog/CatalogItemsLink";
 
 export default class InGameUgcNotifierAlarmToggle extends AlarmToggle {
 	constructor() {
-		super(AlarmToggleTypes.limitedUgcInGameNotifierEnabled, 1, 0);
+		super(AlarmToggleTypes.ugcInGameNotifierEnabled, 1, 0);
 	}
 
 	override async onCreate() {
 		Browser.storage.local.set({
-			limitedUgcInGameNotifier:
+			ugcInGameNotifier:
 				await robloxCatalogController.findManyInGameUgcCatalogItemsDetails(),
 		} as BrowserStorage);
 	}
@@ -25,11 +25,11 @@ export default class InGameUgcNotifierAlarmToggle extends AlarmToggle {
 			await robloxCatalogController.findManyInGameUgcCatalogItemsDetails();
 
 		if (
-			storage.limitedUgcInGameNotifier[0].name !==
-			inGameUgcCatalogItemsDetails[0].name
+			storage.ugcInGameNotifier[0].id !== inGameUgcCatalogItemsDetails[0].id &&
+			storage.ugcInGameNotifier[1].id === inGameUgcCatalogItemsDetails[1].id
 		) {
 			await Browser.notifications.create({
-				message: "New limited UGC is now available",
+				message: "New UGC is now available",
 				title: inGameUgcCatalogItemsDetails[0].name,
 				iconUrl: inGameUgcCatalogItemsDetails[0].imageBatch?.imageUrl || "icon.png",
 				type: "basic",
@@ -41,7 +41,7 @@ export default class InGameUgcNotifierAlarmToggle extends AlarmToggle {
 		}
 
 		await Browser.storage.local.set({
-			limitedUgcInGameNotifier: inGameUgcCatalogItemsDetails,
+			ugcInGameNotifier: inGameUgcCatalogItemsDetails,
 		} as BrowserStorage);
 	}
 }

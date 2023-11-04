@@ -2,5 +2,5 @@ import BrowserStorage from "../BrowserStorage";
 
 export default Object.freeze({
 	autoBuyerCatalogItemsDetailsEnabled: "autoBuyerCatalogItemsDetailsEnabled",
-	limitedUgcInGameNotifierEnabled: "limitedUgcInGameNotifierEnabled",
+	ugcInGameNotifierEnabled: "ugcInGameNotifierEnabled",
 } as { [K in keyof Required<BrowserStorage>]: K });

@@ -9,12 +9,11 @@ interface BrowserStorage {
 	})[];
 	autoBuyerCatalogItemsDetailsEnabled: boolean | null;
 	autoBuyerCatalogItemsDetailsNotification: boolean;
-	autoBuyerCatalogItemsDetailsTotal: number;
-	limitedUgcInGameNotifier: (BrowserStorage.CatalogItemsDetails & {
+	ugcInGameNotifier: (BrowserStorage.CatalogItemsDetails & {
 		imageBatch?: ImageBatchResponse["data"][0];
 		gameURL: string | null;
 	})[];
-	limitedUgcInGameNotifierEnabled: boolean;
+	ugcInGameNotifierEnabled: boolean;
 	robloxUser?: RobloxUser | null;
 	avatarHeadshot: AvatarHeadshot | null;
 	purchasesMultiplier: number;
@@ -29,10 +28,9 @@ namespace BrowserStorage {
 	export const INITIAL_STORAGE: BrowserStorage = {
 		autoBuyerCatalogItemsDetails: [],
 		autoBuyerCatalogItemsDetailsNotification: true,
-		autoBuyerCatalogItemsDetailsTotal: 0,
 		autoBuyerCatalogItemsDetailsEnabled: null,
-		limitedUgcInGameNotifier: [],
-		limitedUgcInGameNotifierEnabled: false,
+		ugcInGameNotifier: [],
+		ugcInGameNotifierEnabled: false,
 		catalogItemsDetailsOwnedId: {},
 		avatarHeadshot: null,
 		purchasesMultiplier: 5,

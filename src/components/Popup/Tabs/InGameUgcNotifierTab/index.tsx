@@ -17,7 +17,7 @@ const InGameUgcNotifierTab: React.FC<{
 	}
 
 	const quantitymax = Math.max(
-		...storage.limitedUgcInGameNotifier.map(
+		...storage.ugcInGameNotifier.map(
 			({ unitsAvailableForConsumption }) => unitsAvailableForConsumption,
 		),
 		0,
@@ -27,41 +27,41 @@ const InGameUgcNotifierTab: React.FC<{
 	const [quantitymin, setquantitymin] = useState(0);
 
 	return (
-		<Stack gap={2}>
-			<h3 className="text-dark">Features</h3>
-			<Stack className="border p-3 rounded">
+		<Stack>
+			<div className="fs-3 text-dark">Features</div>
+			<Stack className="border rounded">
 				<Form.Switch
 					type="switch"
 					label="Notifier"
-					defaultChecked={storage.limitedUgcInGameNotifierEnabled}
+					defaultChecked={storage.ugcInGameNotifierEnabled}
 					onChange={(event) => {
 						setstorage({
 							...storage,
-							limitedUgcInGameNotifierEnabled: event.target.checked,
+							ugcInGameNotifierEnabled: event.target.checked,
 						});
 
 						if (event.target.checked) {
 							Browser.storage.local.set({
-								limitedUgcInGameNotifierEnabled: event.target.checked,
+								ugcInGameNotifierEnabled: event.target.checked,
 							} as BrowserStorage);
 						} else {
 							setstorage({
 								...storage,
-								limitedUgcInGameNotifier: [],
-								limitedUgcInGameNotifierEnabled: false,
+								ugcInGameNotifier: [],
+								ugcInGameNotifierEnabled: false,
 							});
 
 							Browser.storage.local.set({
-								limitedUgcInGameNotifier: [] as any[],
-								limitedUgcInGameNotifierEnabled: false,
+								ugcInGameNotifier: [] as any[],
+								ugcInGameNotifierEnabled: false,
 							} as BrowserStorage);
 						}
 					}}
 				/>
 			</Stack>
 
-			<h3 className="text-dark">Filtering</h3>
-			<Stack className="border p-3 rounded">
+			<div className="fs-3 text-dark">Filtering</div>
+			<Stack className="border rounded">
 				<Form.Check
 					type="radio"
 					label="Most recent"
@@ -73,7 +73,7 @@ const InGameUgcNotifierTab: React.FC<{
 				/>
 
 				<Form.Check
-					disabled={storage.limitedUgcInGameNotifier.length < 1}
+					disabled={storage.ugcInGameNotifier.length < 1}
 					type="radio"
 					label="Best matches"
 					checked={orderingtype == OrderingType.BEST_MATCH}
@@ -84,8 +84,8 @@ const InGameUgcNotifierTab: React.FC<{
 				/>
 			</Stack>
 
-			<h3 className="text-dark">Quantity</h3>
-			<Stack className="border p-3 rounded">
+			<div className="fs-3 text-dark">Quantity</div>
+			<Stack className="border rounded">
 				<Row>
 					<Col xs={3} className="text-center">
 						<input
@@ -119,17 +119,10 @@ const InGameUgcNotifierTab: React.FC<{
 			</Stack>
 
 			<CatalogItemsDetailsAccordions
-				data={((
-					data: BrowserStorage["limitedUgcInGameNotifier"],
-				): BrowserStorage["limitedUgcInGameNotifier"] => {
-					data = data.filter(
-						({ unitsAvailableForConsumption }) =>
-							unitsAvailableForConsumption >= quantitymin,
-					);
-
+				data={(() => {
 					switch (orderingtype) {
 						case OrderingType.BEST_MATCH:
-							return data
+							storage.ugcInGameNotifier = storage.ugcInGameNotifier
 								.filter(
 									({ unitsAvailableForConsumption, totalQuantity = 0 }) =>
 										unitsAvailableForConsumption - totalQuantity != 0,
@@ -140,13 +133,20 @@ const InGameUgcNotifierTab: React.FC<{
 										{ unitsAvailableForConsumption: desc1, totalQuantity: desc2 = 0 },
 									) => desc1 + desc2 - (asc1 + asc2),
 								);
+							break;
 
 						default:
 						case OrderingType.MOST_RECENT:
-							return data;
+							storage.ugcInGameNotifier = storage.ugcInGameNotifier;
+							break;
 					}
-				})(storage.limitedUgcInGameNotifier)}
-				active={storage.limitedUgcInGameNotifierEnabled}
+
+					return storage.ugcInGameNotifier.filter(
+						({ unitsAvailableForConsumption }) =>
+							unitsAvailableForConsumption > quantitymin,
+					);
+				})()}
+				active={storage.ugcInGameNotifierEnabled}
 				headerRight={(data) => (
 					<>
 						{data.gameURL && (

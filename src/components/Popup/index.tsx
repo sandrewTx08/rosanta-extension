@@ -2,9 +2,9 @@ import { useEffect, useState } from "preact/hooks";
 import Browser from "webextension-polyfill";
 import "../../../index.scss";
 import BrowserStorage from "../../BrowserStorage";
-import { Modal, Stack, Tab, Tabs } from "react-bootstrap";
+import { Modal, Tab, Tabs } from "react-bootstrap";
 import CatalogItemsAutoBuyerTab from "./Tabs/CatalogItemsAutoBuyerTab";
-import LimitedUGCInGameNotifier from "./Tabs/InGameUgcNotifierTab";
+import InGameUgcNotifierTab from "./Tabs/InGameUgcNotifierTab";
 import PopupFooter from "./PopupFooter";
 import PopupHeader from "./PopupHeader";
 import About from "./Tabs/About";
@@ -56,7 +56,7 @@ const Popup: React.FC = () => {
 	}, [storage.robloxUser?.id]);
 
 	return (
-		<Stack className="m-auto h-100 border" style={{ width: 540 }}>
+		<div className="m-auto h-100 border" style={{ width: 540 }}>
 			<PopupHeader storage={storage} />
 
 			<Modal
@@ -84,19 +84,19 @@ const Popup: React.FC = () => {
 				justify
 				unmountOnExit
 			>
-				<Tab className="p-3" eventKey={TabEventKeys.AUTOBUYER} title="Autobuyer">
+				<Tab eventKey={TabEventKeys.AUTOBUYER} title="Autobuyer">
 					<CatalogItemsAutoBuyerTab storage={[storage, setstorage]} />
 				</Tab>
-				<Tab className="p-3" eventKey={TabEventKeys.UGC} title="UGC notifier">
-					<LimitedUGCInGameNotifier storage={[storage, setstorage]} />
+				<Tab eventKey={TabEventKeys.UGC} title="UGC notifier">
+					<InGameUgcNotifierTab storage={[storage, setstorage]} />
 				</Tab>
-				<Tab className="p-3" eventKey={TabEventKeys.ABOUT} title="About">
+				<Tab eventKey={TabEventKeys.ABOUT} title="About">
 					<About />
 				</Tab>
 			</Tabs>
 
 			<PopupFooter />
-		</Stack>
+		</div>
 	);
 };
 

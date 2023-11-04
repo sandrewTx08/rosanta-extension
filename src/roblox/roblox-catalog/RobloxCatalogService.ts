@@ -35,6 +35,8 @@ export default class RobloxCatalogService {
 	async findManyCatalogItemsDetails(
 		catalogItemsDetailsQueryParamDTO: CatalogItemsDetailsQueryParamDTO,
 		nextPageCursor: string = "",
+		retryCount: number = 0,
+		retryLimit: number = 5,
 	) {
 		let data: CatalogItemsDetailsResponse["data"] = [];
 
@@ -46,7 +48,7 @@ export default class RobloxCatalogService {
 		if (page?.data) {
 			data = data.concat(page.data);
 
-			while (true) {
+			while (retryCount < retryLimit) {
 				if (page?.nextPageCursor) {
 					const page2 = await this.findOneCatalogItemsDetails(
 						catalogItemsDetailsQueryParamDTO,
@@ -57,10 +59,12 @@ export default class RobloxCatalogService {
 						page = page2;
 						data = data.concat(page2.data);
 					} else {
+						++retryCount;
 						data = data.concat(
 							await this.findManyCatalogItemsDetails(
 								catalogItemsDetailsQueryParamDTO,
 								page.nextPageCursor,
+								retryCount,
 							),
 						);
 						break;
@@ -70,10 +74,12 @@ export default class RobloxCatalogService {
 				}
 			}
 		} else {
+			++retryCount;
 			data = data.concat(
 				await this.findManyCatalogItemsDetails(
 					catalogItemsDetailsQueryParamDTO,
 					nextPageCursor,
+					retryCount,
 				),
 			);
 		}

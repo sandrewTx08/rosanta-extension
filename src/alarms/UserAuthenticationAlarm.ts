@@ -13,18 +13,6 @@ export default class UserAuthenticationAlarm extends Alarm {
 	override async onAlarm() {
 		const storage = await robloxUserController.getUserAuthenticationStorage();
 
-		if (
-			storage.autoBuyerCatalogItemsDetailsEnabled === null &&
-			storage.avatarHeadshot === null
-		) {
-			Browser.windows.create({
-				url: "popup.html",
-				type: "panel",
-				width: 580,
-				height: 600,
-			});
-		}
-
 		Browser.storage.local.set({
 			robloxUser: storage.robloxUser,
 			avatarHeadshot: storage.avatarHeadshot,

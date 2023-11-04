@@ -19,6 +19,7 @@ export interface Datum {
 	unitsAvailableForConsumption: number;
 	creatorType: CreatorType;
 	creatorTargetId: number;
+	collectibleItemId: string;
 	creatorName: string;
 	price: number;
 	priceStatus?: PriceStatus;

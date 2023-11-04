@@ -5,18 +5,17 @@ import Browser from "webextension-polyfill";
 
 const PopupHeader: React.FC<{ storage: BrowserStorage }> = ({ storage }) => {
 	return (
-		<header className="pt-2 px-4 bg-light" style={{ minHeight: 180 }}>
+		<header id="header" className="py-2 px-4 bg-light">
 			<Row>
 				<Col className="mx-auto" xs={6}>
 					<Row className="text-center">
 						<Col xs={12}>
 							<a
 								target="_black"
-								className="d-block w-auto h-100"
 								href="https://github.com/sandrewTx08/rosanta-extension"
 								rel="noopener noreferrer"
 							>
-								<img width={120} className="h-100" src="icon.png" />
+								<img className="img-fluid" src="icon.png" />
 							</a>
 						</Col>
 
@@ -39,14 +38,13 @@ const PopupHeader: React.FC<{ storage: BrowserStorage }> = ({ storage }) => {
 						<Row className="text-center gy-2">
 							<Col xs={12}>
 								<a
-									className="rounded h-100 link-warning"
+									className="rounded link-warning"
 									href={`https://www.roblox.com/users/${storage.robloxUser?.id}/profile`}
 									target="_blank"
 									rel="noopener noreferrer"
 								>
 									<img
-										width={120}
-										className="rounded shadow-sm h-100"
+										className="rounded shadow-sm img-fluid"
 										src={storage.avatarHeadshot.data[0].imageUrl}
 										alt="Error loading avatar image"
 									/>

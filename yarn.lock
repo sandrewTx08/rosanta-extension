@@ -726,11 +726,6 @@ globals@^11.1.0:
   resolved "https://registry.yarnpkg.com/globals/-/globals-11.12.0.tgz#ab8795338868a0babd8525758018c2a7eb95c42e"
   integrity sha512-WOBp/EEGUiIsJSp7wcv/y6MO+lV9UoncWqxuFfm8eBwzWNgyfBd6Gz+IeKQ9jCmyhoH99g15M3T+QaVHFjizVA==
 
-gotham-fonts@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/gotham-fonts/-/gotham-fonts-1.0.3.tgz#3c94310cc22984367eb71a2c6b001958a314b990"
-  integrity sha512-wgVsnZBVnX8JmBUm3WS/lh9sBM+GHRV02UajwjF8hBWGEemIHyBCJnSa6UDXjFSK1PRUNtLd4yjVfvJ6zh3eww==
-
 has-flag@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/has-flag/-/has-flag-3.0.0.tgz#b5d454dc2199ae225699f3467e5a07f3b955bafd"

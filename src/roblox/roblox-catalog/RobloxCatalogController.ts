@@ -25,7 +25,7 @@ export default class RobloxCatalogController {
 		robloxUserId: number,
 		catalogItemsDetailsOwnedId: Record<number, boolean>,
 	) {
-		const catalogItemsDetails = await this.catalogItemsDetailsWithoutOwnedIds(
+		const catalogItemsDetails = await this.catalogItemsDetailsWithoutOwnedByIds(
 			robloxUserId,
 			catalogItemsDetailsOwnedId,
 			(
@@ -51,13 +51,22 @@ export default class RobloxCatalogController {
 			)
 				.reduce((p, c) => p.concat(c), [])
 				.filter(({ id }, i, a) => i === a.findIndex(({ id: id2 }) => id === id2))
-				.filter(({ priceStatus }) => priceStatus === "Free"),
+				.filter(
+					({ saleLocationType, priceStatus }) =>
+						saleLocationType === "NotApplicable" && priceStatus === "Free",
+				),
 		);
 
-		catalogItemsDetails.catalogItemsDetails =
+		catalogItemsDetails.catalogItemsDetails = (
 			await this.catalogItemsDetailsWithImageBatchOrderByDescId(
 				catalogItemsDetails.catalogItemsDetails,
-			);
+			)
+		).sort(
+			(
+				{ id: asc, creatorTargetId, productId: asc2 },
+				{ id: desc, productId: desc2 },
+			) => (creatorTargetId === 1 ? 1 : desc2 ? desc2 - asc2 : desc - asc),
+		);
 
 		return catalogItemsDetails;
 	}
@@ -103,7 +112,7 @@ export default class RobloxCatalogController {
 			}));
 	}
 
-	async catalogItemsDetailsWithoutOwnedIds(
+	async catalogItemsDetailsWithoutOwnedByIds(
 		robloxUserId: number,
 		catalogItemsDetailsOwnedId: Record<number, boolean>,
 		catalogItemsDetails: BrowserStorage.CatalogItemsDetails[],

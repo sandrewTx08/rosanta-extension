@@ -39,7 +39,7 @@ const CatalogItemsDetailsAccordions = <
 
 	useEffect(() => {
 		setpage(0);
-	}, [data, search]);
+	}, [search, data[0]?.id]);
 
 	return (
 		active && (

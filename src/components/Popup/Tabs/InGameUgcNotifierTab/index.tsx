@@ -125,6 +125,7 @@ const InGameUgcNotifierTab: React.FC<{
 							storage.ugcInGameNotifier = storage.ugcInGameNotifier
 								.filter(
 									({ unitsAvailableForConsumption, totalQuantity = 0 }) =>
+										unitsAvailableForConsumption >= 50 &&
 										unitsAvailableForConsumption - totalQuantity != 0,
 								)
 								.sort(

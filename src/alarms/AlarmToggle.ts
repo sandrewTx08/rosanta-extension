@@ -1,6 +1,5 @@
 import Browser from "webextension-polyfill";
 import AlarmToggleTypes from "./AlarmToggleType";
-import BrowserStorage from "../BrowserStorage";
 import Alarm from "./Alarm";
 
 export default class AlarmToggle
@@ -26,10 +25,6 @@ export default class AlarmToggle
 					Browser.alarms.clear(this.name);
 				}
 			}
-		});
-
-		Browser.runtime.onInstalled.addListener(() => {
-			Browser.storage.local.set(BrowserStorage.INITIAL_STORAGE);
 		});
 	}
 }

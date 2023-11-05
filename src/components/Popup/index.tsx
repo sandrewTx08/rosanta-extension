@@ -81,13 +81,13 @@ const Popup: React.FC = () => {
 			<Tabs
 				className="bg-light"
 				defaultActiveKey={TabEventKeys.AUTOBUYER}
-				justify
+				fill
 				unmountOnExit
 			>
-				<Tab eventKey={TabEventKeys.AUTOBUYER} title="Autobuyer">
+				<Tab eventKey={TabEventKeys.AUTOBUYER} title="Free items Autobuyer">
 					<CatalogItemsAutoBuyerTab storage={[storage, setstorage]} />
 				</Tab>
-				<Tab eventKey={TabEventKeys.UGC} title="UGC notifier">
+				<Tab eventKey={TabEventKeys.UGC} title="Limited UGC games notifier">
 					<InGameUgcNotifierTab storage={[storage, setstorage]} />
 				</Tab>
 				<Tab eventKey={TabEventKeys.ABOUT} title="About">

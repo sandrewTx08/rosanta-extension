@@ -28,11 +28,11 @@ const InGameUgcNotifierTab: React.FC<{
 
 	return (
 		<Stack>
-			<div className="fs-3 text-dark">Features</div>
+			<div className="fs-3 text-dark">Limited UGC games notifier</div>
 			<Stack className="border rounded">
 				<Form.Switch
 					type="switch"
-					label="Notifier"
+					label="Notify new items"
 					defaultChecked={storage.ugcInGameNotifierEnabled}
 					onChange={(event) => {
 						setstorage({

@@ -50,10 +50,11 @@ export default class RobloxCatalogController {
 				])
 			)
 				.reduce((p, c) => p.concat(c), [])
-				.filter(({ id }, i, a) => i === a.findIndex(({ id: id2 }) => id === id2))
 				.filter(
-					({ saleLocationType, priceStatus }) =>
-						saleLocationType === "NotApplicable" && priceStatus === "Free",
+					({ saleLocationType, priceStatus, id }, i, a) =>
+						saleLocationType === "NotApplicable" &&
+						priceStatus === "Free" &&
+						i === a.findIndex(({ id: id2 }) => id === id2),
 				),
 		);
 

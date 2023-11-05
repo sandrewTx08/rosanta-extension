@@ -11,7 +11,7 @@ const CatalogItemsAutoBuyerTab: React.FC<{
 }> = ({ storage: [storage, setstorage] }) => {
 	return (
 		<Stack>
-			<div className="fs-3 text-dark">Features</div>
+			<div className="fs-3 text-dark">Free items Autobuyer</div>
 			<Stack className="border rounded">
 				<Form.Switch
 					type="switch"

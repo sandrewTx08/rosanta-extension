@@ -7,6 +7,7 @@ import {
 	InputGroup,
 	Form,
 	Pagination,
+	OverlayTrigger,
 } from "react-bootstrap";
 import CatalogItemsLink from "../../roblox/roblox-catalog/CatalogItemsLink";
 import BrowserStorage from "../../BrowserStorage";
@@ -82,17 +83,29 @@ const CatalogItemsDetailsAccordions = <
 									>
 										<Accordion.Header className="rows">
 											<Col className="text-center" xs={1}>
-												<a
-													href={CatalogItemsLink.parseCatalogDetails(data)}
-													target="_blank"
+												<OverlayTrigger
+													placement="right-end"
+													overlay={
+														<img
+															src={data.imageBatch?.imageUrl}
+															className="z-2"
+															height={400}
+															alt=""
+														/>
+													}
 												>
-													<img
-														height={40}
-														className="w-auto"
-														src={data.imageBatch?.imageUrl || "icon.png"}
-														alt=""
-													/>
-												</a>
+													<a
+														href={CatalogItemsLink.parseCatalogDetails(data)}
+														target="_blank"
+													>
+														<img
+															height={40}
+															className="w-100"
+															src={data.imageBatch?.imageUrl || "icon.png"}
+															alt=""
+														/>
+													</a>
+												</OverlayTrigger>
 											</Col>
 
 											<Col className="text-break mx-4">{data.name}</Col>

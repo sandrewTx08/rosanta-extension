@@ -78,6 +78,7 @@ const CatalogItemsDetailsAccordions = <
 								.slice(page * pageLimit, (page + 1) * pageLimit)
 								.map((data) => (
 									<Accordion.Item
+										className="z-0"
 										key={data.id + data.productId}
 										eventKey={data.id.toString()}
 									>
@@ -211,7 +212,7 @@ const CatalogItemsDetailsAccordions = <
 
 					<Pagination
 						style={{ bottom: 6 }}
-						className="position-sticky z-3 rounded-pill d-flex justify-content-center p-2 m-0"
+						className="position-sticky z-3 d-flex justify-content-center p-2 m-0"
 					>
 						<Pagination.First
 							disabled={page < 0}

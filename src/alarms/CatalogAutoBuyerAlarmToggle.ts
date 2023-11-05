@@ -7,7 +7,6 @@ import {
 } from "../roblox";
 import AlarmToggleType from "./AlarmToggleType";
 import AlarmToggle from "./AlarmToggle";
-import CatalogItemsLink from "../roblox/roblox-catalog/CatalogItemsLink";
 import ProductPurchaseDTO from "../roblox/roblox-catalog/ProductPurchaseDTO";
 
 export default class CatalogAutoBuyerAlarmToggle extends AlarmToggle {
@@ -43,7 +42,11 @@ export default class CatalogAutoBuyerAlarmToggle extends AlarmToggle {
 				await this.purchaseItems(xcsrftoken, storage);
 			}
 
-			this.onCreate();
+			if (
+				storage.autoBuyerCatalogItemsDetails.length <= storage.purchasesMultiplier
+			) {
+				this.onCreate();
+			}
 		}
 	}
 
@@ -78,19 +81,20 @@ export default class CatalogAutoBuyerAlarmToggle extends AlarmToggle {
 		await Promise.all(purchases);
 
 		if (changed) {
-			if (storage.autoBuyerCatalogItemsDetailsNotification) {
+			if (
+				storage.autoBuyerCatalogItemsDetailsNotification &&
+				storage.autoBuyerCatalogItemsDetails.length <= storage.purchasesMultiplier
+			) {
+				const catalogItemsDetailsOwnedIdLength = (
+					Object.keys(storage.catalogItemsDetailsOwnedId) as unknown as number[]
+				).reduce((p, c) => (storage.catalogItemsDetailsOwnedId[c] ? ++p : p), 0);
+
 				Browser.notifications.create({
-					title: "Items successfully purchased",
-					message: "Check the list of new items",
+					title: `Autobuyer finished the scan with ${catalogItemsDetailsOwnedIdLength} items owned`,
+					message: `${storage.robloxUser?.name} owned a total of ${catalogItemsDetailsOwnedIdLength} free items`,
 					iconUrl: "icon.png",
-					type: "list",
+					type: "basic",
 					appIconMaskUrl: "icon.png",
-					items: purchases.map((_, i) => ({
-						title: storage.autoBuyerCatalogItemsDetails[i].name,
-						message: CatalogItemsLink.parseCatalogDetails(
-							storage.autoBuyerCatalogItemsDetails[i],
-						),
-					})),
 				});
 			}
 

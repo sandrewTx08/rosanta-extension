@@ -101,12 +101,9 @@ const CatalogItemsAutoBuyerTab: React.FC<{
 			<Alert
 				variant="light"
 				dismissible
-				hidden={
-					!(
-						storage.autoBuyerCatalogItemsDetailsEnabled === null ||
-						(storage.autoBuyerCatalogItemsDetails.length > 1 &&
-							storage.autoBuyerCatalogItemsDetailsEnabled)
-					)
+				show={
+					storage.autoBuyerCatalogItemsDetailsEnabled === null ||
+					storage.autoBuyerCatalogItemsDetailsEnabled
 				}
 			>
 				<Alert.Heading>

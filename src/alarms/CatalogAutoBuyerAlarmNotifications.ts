@@ -4,7 +4,7 @@ import Alarm from "./Alarm";
 
 export default class CatalogAutoBuyerAlarmNotifications extends Alarm {
 	constructor() {
-		super(CatalogAutoBuyerAlarmNotificationsType.autobuyerDisabled, 40);
+		super(CatalogAutoBuyerAlarmNotificationsType.autobuyerDisabled, 1440);
 
 		Browser.alarms.onAlarm.addListener(async ({ name }) => {
 			if (name === CatalogAutoBuyerAlarmNotificationsType.autobuyerDisabled) {

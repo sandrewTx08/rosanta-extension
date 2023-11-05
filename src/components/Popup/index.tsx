@@ -24,9 +24,9 @@ const Popup: React.FC = () => {
 			changes: Browser.Storage.StorageAreaOnChangedChangesType,
 		) {
 			setstorage((value) => {
-				for (const [key, change] of Object.entries(changes)) {
+				for (const key of Object.keys(changes)) {
 					// @ts-ignore
-					value[key] = change.newValue || value[key];
+					value[key] = changes[key].newValue || value[key];
 				}
 
 				return { ...value };

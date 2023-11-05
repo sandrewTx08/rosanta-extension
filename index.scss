@@ -19,7 +19,7 @@ $alert-margin-bottom: 0;
 	gap: $spacer;
 
 	.vstack {
-		gap: $spacer / 2;
+		gap: calc($spacer / 2);
 	}
 }
 

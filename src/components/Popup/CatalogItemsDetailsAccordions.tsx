@@ -55,10 +55,10 @@ const CatalogItemsDetailsAccordions = <
 					</div>
 				)}
 
-				<Accordion>
+				<Accordion flush className="border rounded">
 					<Accordion.Item eventKey="0">
-						<InputGroup className="bg-light border">
-							<InputGroup.Text className="bg-transparent border-0 text-primary">
+						<InputGroup className="bg-light border-0">
+							<InputGroup.Text className="bg-transparent border-0 rounded-circle text-primary">
 								<Search />
 							</InputGroup.Text>
 							<Form.Control
@@ -198,7 +198,7 @@ const CatalogItemsDetailsAccordions = <
 
 					<Pagination
 						style={{ bottom: 6 }}
-						className="position-sticky d-flex justify-content-center pt-2"
+						className="position-sticky z-3 rounded-pill d-flex justify-content-center p-2 m-0"
 					>
 						<Pagination.First
 							disabled={page < 0}

@@ -151,11 +151,15 @@ const InGameUgcNotifierTab: React.FC<{
 					<>
 						{data.gameURL && (
 							<a href={data.gameURL} target="_blank">
-								<Controller className="p-1 rounded-circle icon-fill" size={25} />
+								<Controller className="p-1 pulse rounded-circle icon-fill" size={25} />
 							</a>
 						)}
 
-						<ProgressBar className="w-100 small" max={data.totalQuantity}>
+						<ProgressBar
+							className="w-100 rounded-pill"
+							max={data.totalQuantity}
+							title={(data.totalQuantity || 0).toString()}
+						>
 							<ProgressBar
 								variant="danger"
 								now={(data.totalQuantity || 0) - data.unitsAvailableForConsumption}
